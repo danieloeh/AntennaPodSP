@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="de.danoeh.antennapodsp"
+          android:versionCode="33"
+          android:versionName="0.9.8.0">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+    <uses-sdk
+        android:minSdkVersion="10"
+        android:targetSdkVersion="19"/>
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true"/>
+
+    <uses-feature
+        android:name="android.hardware.screen.portrait"
+        android:required="false"/>
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false"/>
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+    <application
+        android:name=".PodcastApp"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:logo="@drawable/ic_launcher"
+        android:theme="@style/Theme.AntennaPod.Light">
+
+        <activity
+            android:name=".activity.InitActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/Theme.Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.MainActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/app_name">
+        </activity>
+
+
+        <service
+            android:name=".service.download.DownloadService"
+            android:enabled="true"/>
+        <service
+            android:name=".service.playback.PlaybackService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
+
+        <receiver
+            android:name=".receiver.MediaButtonReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="de.danoeh.antennapod.NOTIFY_BUTTON_RECEIVER"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".receiver.FeedUpdateReceiver">
+            <intent-filter>
+                <action android:name="de.danoeh.antennapod.feedupdatereceiver.refreshFeeds"/>
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".activity.AboutActivity"
+            android:label="@string/about_pref">
+        </activity>
+
+        <receiver android:name=".receiver.ConnectivityActionReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".receiver.AlarmUpdateReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REPLACED"/>
+
+                <data
+                    android:path="de.danoeh.antennapodsp"
+                    android:scheme="package"/>
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

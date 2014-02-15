@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/fragmentLayout"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:visibility="gone">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1.5dp"
+        android:background="#AAAAAA"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/layoutInfo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?attr/borderless_button">
+
+            <ImageView
+                android:id="@+id/imgvCover"
+                android:contentDescription="@string/cover_label"
+                android:layout_width="@dimen/external_player_height"
+                android:layout_height="@dimen/external_player_height"
+                android:layout_alignParentLeft="true"
+                android:adjustViewBounds="true"
+                android:cropToPadding="true"
+                android:scaleType="fitXY"/>
+
+            <TextView
+                android:id="@+id/txtvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_toRightOf="@id/imgvCover"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/txtvPosition"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtvTitle"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_toRightOf="@id/imgvCover"
+                android:maxLines="1"
+                android:textSize="@dimen/text_size_micro"/>
+
+            <TextView
+                android:id="@+id/txtvStatus"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/txtvTitle"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_toRightOf="@id/txtvPosition"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="@dimen/text_size_micro"/>
+        </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/butPlay"
+            android:contentDescription="@string/pause_label"
+            android:layout_width="@dimen/external_player_height"
+            android:layout_height="@dimen/external_player_height"
+            android:background="?attr/borderless_button"/>
+    </LinearLayout>
+
+</LinearLayout>
