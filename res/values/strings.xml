@@ -344,4 +344,9 @@
     <string name="init_error_msg_prefix">Error happened during initialization:</string>
     <string name="init_error_detail">Make sure that you have a working internet connection or try again later.</string>
     <string name="try_again_label">Try again</string>
+
+
+    <string name="episode_dialog_downloading_msg">This episode is currently being downloaded.</string>
+    <string name="episode_dialog_not_downloaded_msg">This episode has not been downloaded yet.</string>
+    <string name="episode_dialog_stream">Play immediately</string>
 </resources>

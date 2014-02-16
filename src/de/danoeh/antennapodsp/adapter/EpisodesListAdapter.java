@@ -87,7 +87,7 @@ public class EpisodesListAdapter extends BaseAdapter {
         FeedMedia media = item.getMedia();
         if (media != null) {
             TypedArray drawables = context.obtainStyledAttributes(new int[]{
-                    R.attr.av_download, R.attr.navigation_refresh});
+                    R.attr.navigation_accept, R.attr.navigation_refresh});
             final int[] labels = new int[]{R.string.status_downloaded_label, R.string.downloading_label};
             if (!media.isDownloaded()) {
                 if (DownloadRequester.getInstance().isDownloadingFile(media)) {
@@ -97,7 +97,7 @@ public class EpisodesListAdapter extends BaseAdapter {
                             .getDrawable(1));
                     holder.downloadStatus.setContentDescription(context.getString(labels[1]));
 
-                    holder.downloadProgress.setVisibility(View.INVISIBLE);
+                    holder.downloadProgress.setVisibility(View.VISIBLE);
                     holder.downloadProgress.setProgress(itemAccess.getItemDownloadProgressPercent(item));
                 } else {
                     holder.downloadProgress.setVisibility(View.INVISIBLE);

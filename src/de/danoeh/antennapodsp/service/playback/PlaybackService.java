@@ -67,6 +67,8 @@ public class PlaybackService extends Service {
     public static final String EXTRA_PREPARE_IMMEDIATELY = "extra.de.danoeh.antennapod.service.prepareImmediately";
 
     public static final String ACTION_PLAYER_STATUS_CHANGED = "action.de.danoeh.antennapod.service.playerStatusChanged";
+    public static final String EXTRA_NEW_PLAYER_STATUS = "extra.de.danoeh.antennapod.service.playerStatusChanged.newStatus";
+
     private static final String AVRCP_ACTION_PLAYER_STATUS_CHANGED = "com.android.music.playstatechanged";
 
     public static final String ACTION_PLAYER_NOTIFICATION = "action.de.danoeh.antennapod.service.playerNotification";
@@ -391,8 +393,10 @@ public class PlaybackService extends Service {
                     break;
 
             }
+            Intent i = new Intent(ACTION_PLAYER_STATUS_CHANGED);
+            i.putExtra(EXTRA_NEW_PLAYER_STATUS, newInfo.playerStatus.ordinal());
+            sendBroadcast(i);
 
-            sendBroadcast(new Intent(ACTION_PLAYER_STATUS_CHANGED));
             refreshRemoteControlClientState(newInfo);
             bluetoothNotifyChange(newInfo);
         }

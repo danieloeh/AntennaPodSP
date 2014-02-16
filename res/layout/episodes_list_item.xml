@@ -84,7 +84,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@id/imgvDownloadStatus"
-                android:layout_toRightOf="@id/txtvLenSize"/>
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_alignParentLeft="true"/>
         </RelativeLayout>
     </LinearLayout>
 

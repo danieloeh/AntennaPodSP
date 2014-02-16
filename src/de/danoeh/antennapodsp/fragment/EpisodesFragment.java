@@ -1,24 +1,32 @@
 package de.danoeh.antennapodsp.fragment;
 
-import android.content.Context;
+import android.app.AlertDialog;
+import android.content.*;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ListFragment;
-import android.support.v7.appcompat.R;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
+import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.R;
 import de.danoeh.antennapodsp.adapter.EpisodesListAdapter;
 import de.danoeh.antennapodsp.asynctask.DownloadObserver;
+import de.danoeh.antennapodsp.dialog.DownloadRequestErrorDialogCreator;
 import de.danoeh.antennapodsp.feed.EventDistributor;
 import de.danoeh.antennapodsp.feed.Feed;
 import de.danoeh.antennapodsp.feed.FeedItem;
 import de.danoeh.antennapodsp.feed.FeedMedia;
 import de.danoeh.antennapodsp.service.download.Downloader;
+import de.danoeh.antennapodsp.service.playback.PlaybackService;
+import de.danoeh.antennapodsp.service.playback.PlayerStatus;
 import de.danoeh.antennapodsp.storage.DBReader;
 import de.danoeh.antennapodsp.storage.DBTasks;
+import de.danoeh.antennapodsp.storage.DownloadRequestException;
+import de.danoeh.antennapodsp.storage.DownloadRequester;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -52,6 +60,7 @@ public class EpisodesFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().registerReceiver(playerStatusReceiver, new IntentFilter(PlaybackService.ACTION_PLAYER_STATUS_CHANGED));
     }
 
     private void refreshFeed() {
@@ -124,6 +133,11 @@ public class EpisodesFragment extends ListFragment {
     public void onDestroyView() {
         super.onDestroyView();
         currentLoadTask.cancel(true);
+        try {
+            getActivity().unregisterReceiver(playerStatusReceiver);
+        } catch (IllegalArgumentException e) {
+            if (AppConfig.DEBUG) e.printStackTrace();
+        }
     }
 
     @Override
@@ -133,16 +147,70 @@ public class EpisodesFragment extends ListFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 position = position - getListView().getHeaderViewsCount();
-                if (position >= 0) {
-                    FeedItem item = (FeedItem) episodesListAdapter.getItem(position);
-                    if (item.hasMedia()) {
-                        DBTasks.playMedia(getActivity(), item.getMedia(), false, true, true);
-                    }
+                if (position < 0) {
+                    return;
                 }
+                FeedItem item = (FeedItem) episodesListAdapter.getItem(position);
+                if (item.hasMedia() && item.getMedia().isDownloaded()) {
+                    // episode downloaded
+                    DBTasks.playMedia(getActivity(), item.getMedia(), false, true, false);
+                } else if (item.hasMedia()) {
+                    final FeedMedia media = item.getMedia();
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+                    dialog.setCancelable(true)
+                            .setTitle(media.getEpisodeTitle());
+
+                    if (DownloadRequester.getInstance().isDownloadingFile(media)) {
+                        // episode downloading
+                        dialog.setMessage(R.string.episode_dialog_downloading_msg)
+                                .setPositiveButton(R.string.episode_dialog_stream, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        DBTasks.playMedia(getActivity(), media, false, true, true);
+                                    }
+                                })
+                                .setNegativeButton(R.string.cancel_download_label, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        DownloadRequester.getInstance().cancelDownload(getActivity(), media);
+                                    }
+                                });
+
+                    } else {
+                        // episode not downloaded
+                        dialog.setMessage(R.string.episode_dialog_not_downloaded_msg)
+                                .setPositiveButton(R.string.download_label, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        try {
+                                            DownloadRequester.getInstance().downloadMedia(getActivity(), media);
+                                        } catch (DownloadRequestException e) {
+                                            e.printStackTrace();
+                                            DownloadRequestErrorDialogCreator.newRequestErrorDialog(getActivity(), e.getMessage());
+                                        }
+                                    }
+                                })
+                                .setNegativeButton(R.string.episode_dialog_stream, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        DBTasks.playMedia(getActivity(), media, false, true, true);
+                                    }
+                                });
+                    }
+
+                    dialog.create().show();
+
+                }
+
+
             }
         });
         // add header so that list is below actionbar
-        int actionBarHeight = getResources().getDimensionPixelSize(R.dimen.abc_action_bar_default_height);
+        int actionBarHeight = getResources().getDimensionPixelSize(android.support.v7.appcompat.R.dimen.abc_action_bar_default_height);
         LinearLayout header = new LinearLayout(getActivity());
         header.setOrientation(LinearLayout.HORIZONTAL);
         AbsListView.LayoutParams lp = new AbsListView.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, actionBarHeight);
@@ -194,7 +262,25 @@ public class EpisodesFragment extends ListFragment {
     private final EventDistributor.EventListener contentUpdateListener = new EventDistributor.EventListener() {
         @Override
         public void update(EventDistributor eventDistributor, Integer arg) {
-            episodesListAdapter.notifyDataSetChanged();
+            if ((arg & EVENTS) != 0) {
+                episodesListAdapter.notifyDataSetChanged();
+            }
+        }
+    };
+
+    private final BroadcastReceiver playerStatusReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (StringUtils.equals(intent.getAction(), PlaybackService.ACTION_PLAYER_STATUS_CHANGED)) {
+                int statusOrdinal = intent.getIntExtra(PlaybackService.EXTRA_NEW_PLAYER_STATUS, -1);
+                if (statusOrdinal != -1) {
+                    if (PlayerStatus.fromOrdinal(statusOrdinal) == PlayerStatus.INITIALIZED) {
+                        if (episodesListAdapter != null) {
+                            episodesListAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+            }
         }
     };
 
