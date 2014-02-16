@@ -8,8 +8,7 @@ import android.support.v4.view.WindowCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.View;
-import android.view.Window;
+import android.view.*;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import de.danoeh.antennapodsp.AppConfig;
 import de.danoeh.antennapodsp.R;
@@ -18,6 +17,7 @@ import de.danoeh.antennapodsp.fragment.EpisodesFragment;
 import de.danoeh.antennapodsp.fragment.ExternalPlayerFragment;
 import de.danoeh.antennapodsp.preferences.UserPreferences;
 import de.danoeh.antennapodsp.service.download.DownloadService;
+import de.danoeh.antennapodsp.storage.DBTasks;
 import de.danoeh.antennapodsp.storage.DownloadRequester;
 import de.danoeh.antennapodsp.util.StorageUtils;
 
@@ -45,7 +45,7 @@ public class MainActivity extends ActionBarActivity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR_OVERLAY);
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setDisplayShowHomeEnabled(false);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setCustomView(R.layout.abs_layout);
 
         setContentView(R.layout.main);
@@ -72,7 +72,6 @@ public class MainActivity extends ActionBarActivity {
         externalPlayerFragment = ExternalPlayerFragment.newInstance(playerInitialState);
         fT.replace(R.id.player_view, externalPlayerFragment);
         fT.commit();
-
     }
 
     @Override
@@ -166,6 +165,38 @@ public class MainActivity extends ActionBarActivity {
             slidingUpPanelLayout.setDragView(fragment.getCollapseView());
         } else {
             slidingUpPanelLayout.setDragView(fragment.getExpandView());
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuItem refreshAll = menu.findItem(R.id.all_feed_refresh);
+        if (DownloadService.isRunning
+                && DownloadRequester.getInstance().isDownloadingFeeds()) {
+            refreshAll.setVisible(false);
+        } else {
+            refreshAll.setVisible(true);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.all_feed_refresh:
+                DBTasks.refreshAllFeeds(this, null);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }
