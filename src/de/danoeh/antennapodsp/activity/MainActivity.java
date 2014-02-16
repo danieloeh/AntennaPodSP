@@ -29,6 +29,8 @@ public class MainActivity extends ActionBarActivity {
 
     public static final String ARG_FEED_ID = "feedID";
 
+    private static final String SAVED_STATE_ACTION_BAR_HIDDEN = "actionbar_hidden";
+
     private static final int EVENTS = EventDistributor.DOWNLOAD_HANDLED
             | EventDistributor.DOWNLOAD_QUEUED;
 
@@ -52,20 +54,32 @@ public class MainActivity extends ActionBarActivity {
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
+        int playerInitialState = ExternalPlayerFragment.ARG_INIT_ANCHORED;
+        if (savedInstanceState != null && savedInstanceState.getBoolean(SAVED_STATE_ACTION_BAR_HIDDEN)) {
+            getSupportActionBar().hide();
+            slidingUpPanelLayout.expandPane();
+            playerInitialState = ExternalPlayerFragment.ARG_INIT_EPXANDED;
+        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fT = fragmentManager.beginTransaction();
-
-        long feedID = getIntent().getLongExtra(ARG_FEED_ID, 1L);
-        EpisodesFragment epf = EpisodesFragment.newInstance(feedID);
+        EpisodesFragment epf = (EpisodesFragment) fragmentManager.findFragmentById(R.id.main_view);
+        if (epf == null) {
+            long feedID = getIntent().getLongExtra(ARG_FEED_ID, 1L);
+            epf = EpisodesFragment.newInstance(feedID);
+        }
         fT.replace(R.id.main_view, epf);
-
-        externalPlayerFragment = ExternalPlayerFragment.newInstance(ExternalPlayerFragment.ARG_INIT_ANCHORED);
+        externalPlayerFragment = ExternalPlayerFragment.newInstance(playerInitialState);
         fT.replace(R.id.player_view, externalPlayerFragment);
         fT.commit();
 
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(SAVED_STATE_ACTION_BAR_HIDDEN, !getSupportActionBar().isShowing());
+    }
 
     @Override
     protected void onPause() {
@@ -145,6 +159,13 @@ public class MainActivity extends ActionBarActivity {
         } else {
             super.onBackPressed();
         }
+    }
 
+    public void onPlayerFragmentCreated(ExternalPlayerFragment fragment, ExternalPlayerFragment.FragmentState fragmentState) {
+        if (fragmentState == ExternalPlayerFragment.FragmentState.EXPANDED ) {
+            slidingUpPanelLayout.setDragView(fragment.getCollapseView());
+        } else {
+            slidingUpPanelLayout.setDragView(fragment.getExpandView());
+        }
     }
 }

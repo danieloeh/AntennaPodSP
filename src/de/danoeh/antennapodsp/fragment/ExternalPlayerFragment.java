@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 import de.danoeh.antennapodsp.AppConfig;
 import de.danoeh.antennapodsp.R;
+import de.danoeh.antennapodsp.activity.MainActivity;
 import de.danoeh.antennapodsp.asynctask.ImageLoader;
 import de.danoeh.antennapodsp.service.playback.PlaybackService;
 import de.danoeh.antennapodsp.util.Converter;
@@ -143,7 +144,7 @@ public class ExternalPlayerFragment extends Fragment {
                 }
             }
         });
-
+        ((MainActivity)getActivity()).onPlayerFragmentCreated(this, fragmentState);
         return root;
     }
 

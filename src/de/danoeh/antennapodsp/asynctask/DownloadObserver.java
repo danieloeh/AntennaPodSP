@@ -25,7 +25,7 @@ public class DownloadObserver {
      */
     public static final int WAITING_INTERVAL_MS = 1000;
 
-    private final Activity activity;
+    private volatile Activity activity;
     private final Handler handler;
     private final Callback callback;
 
@@ -62,7 +62,11 @@ public class DownloadObserver {
 
     public void onPause() {
         if (AppConfig.DEBUG) Log.d(TAG, "DownloadObserver paused");
-        activity.unregisterReceiver(contentChangedReceiver);
+        try {
+            activity.unregisterReceiver(contentChangedReceiver);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
         activity.unbindService(mConnection);
         stopRefresher();
     }
@@ -145,6 +149,11 @@ public class DownloadObserver {
                 }
             });
         }
+    }
+
+    public void setActivity(Activity activity) {
+        if (activity == null) throw new IllegalArgumentException("activity = null");
+        this.activity = activity;
     }
 
 }

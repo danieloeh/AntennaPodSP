@@ -1,5 +1,6 @@
 package de.danoeh.antennapodsp.fragment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.*;
 import android.os.AsyncTask;
@@ -48,6 +49,7 @@ public class EpisodesFragment extends ListFragment {
     private List<Downloader> downloaderList = null;
 
     private boolean feedsLoaded = false;
+    private boolean listviewSetup = false;
 
     public static EpisodesFragment newInstance(long feedID) {
         EpisodesFragment f = new EpisodesFragment();
@@ -60,7 +62,8 @@ public class EpisodesFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActivity().registerReceiver(playerStatusReceiver, new IntentFilter(PlaybackService.ACTION_PLAYER_STATUS_CHANGED));
+        setRetainInstance(true);
+        refreshFeed();
     }
 
     private void refreshFeed() {
@@ -97,35 +100,56 @@ public class EpisodesFragment extends ListFragment {
 
     private void onFeedLoaded(Feed result) {
         feed = result;
+        if (feedsLoaded && listviewSetup) {
+            // feed has only been refreshed
+            episodesListAdapter.notifyDataSetChanged();
+        } else {
+            EventDistributor.getInstance().register(contentUpdateListener);
+            downloadObserver = new DownloadObserver(getActivity(), new Handler(),
+                    downloadObserverCallback);
+            downloadObserver.onResume();
+            feedsLoaded = true;
+            if (getListView() != null && !listviewSetup) {
+                setupListView();
+            }
+        }
+    }
+
+    private void setupListView() {
+        setListShown(true);
         if (episodesListAdapter == null) {
             episodesListAdapter = new EpisodesListAdapter(getActivity(), itemAccess);
             getListView().setAdapter(episodesListAdapter);
         }
-        setListShown(true);
-        episodesListAdapter.notifyDataSetChanged();
-        EventDistributor.getInstance().register(contentUpdateListener);
-        downloadObserver = new DownloadObserver(getActivity(), new Handler(),
-                downloadObserverCallback);
-        downloadObserver.onResume();
-        feedsLoaded = true;
+        listviewSetup = true;
     }
 
+
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
         if (feedsLoaded) {
+            downloadObserver.setActivity(activity);
             downloadObserver.onResume();
-            EventDistributor.getInstance().register(contentUpdateListener);
+        }
+        if (listviewSetup) {
             episodesListAdapter.notifyDataSetChanged();
         }
+        EventDistributor.getInstance().register(contentUpdateListener);
+        activity.registerReceiver(playerStatusReceiver, new IntentFilter(PlaybackService.ACTION_PLAYER_STATUS_CHANGED));
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onDetach() {
+        super.onDetach();
         if (feedsLoaded) {
             downloadObserver.onPause();
-            EventDistributor.getInstance().unregister(contentUpdateListener);
+        }
+        EventDistributor.getInstance().unregister(contentUpdateListener);
+        try {
+            getActivity().unregisterReceiver(playerStatusReceiver);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
         }
     }
 
@@ -138,6 +162,8 @@ public class EpisodesFragment extends ListFragment {
         } catch (IllegalArgumentException e) {
             if (AppConfig.DEBUG) e.printStackTrace();
         }
+        listviewSetup = false;
+        episodesListAdapter = null;
     }
 
     @Override
@@ -217,8 +243,11 @@ public class EpisodesFragment extends ListFragment {
         header.setLayoutParams(lp);
         getListView().addHeaderView(header);
 
-        setListShown(false);
-        refreshFeed();
+        if (feedsLoaded) {
+            setupListView();
+        } else {
+            setListShown(false);
+        }
     }
 
     private final EpisodesListAdapter.ItemAccess itemAccess = new EpisodesListAdapter.ItemAccess() {
@@ -249,13 +278,17 @@ public class EpisodesFragment extends ListFragment {
     private final DownloadObserver.Callback downloadObserverCallback = new DownloadObserver.Callback() {
         @Override
         public void onContentChanged() {
-            episodesListAdapter.notifyDataSetChanged();
+            if (episodesListAdapter != null) {
+                episodesListAdapter.notifyDataSetChanged();
+            }
         }
 
         @Override
         public void onDownloadDataAvailable(List<Downloader> downloaderList) {
             EpisodesFragment.this.downloaderList = downloaderList;
-            episodesListAdapter.notifyDataSetChanged();
+            if (episodesListAdapter != null) {
+                episodesListAdapter.notifyDataSetChanged();
+            }
         }
     };
 
@@ -263,7 +296,10 @@ public class EpisodesFragment extends ListFragment {
         @Override
         public void update(EventDistributor eventDistributor, Integer arg) {
             if ((arg & EVENTS) != 0) {
-                episodesListAdapter.notifyDataSetChanged();
+                if (listviewSetup) {
+                    refreshFeed();
+                    episodesListAdapter.notifyDataSetChanged();
+                }
             }
         }
     };
