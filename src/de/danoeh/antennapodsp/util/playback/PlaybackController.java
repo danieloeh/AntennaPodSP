@@ -337,6 +337,8 @@ public abstract class PlaybackController {
                             onBufferEnd();
                             break;
                         case PlaybackService.NOTIFICATION_TYPE_PLAYBACK_END:
+                            media = null;
+                            mediaInfoLoaded = false;
                             onPlaybackEnd();
                             break;
                         case PlaybackService.NOTIFICATION_TYPE_PLAYBACK_SPEED_CHANGE:
@@ -362,7 +364,6 @@ public abstract class PlaybackController {
             if (isConnectedToPlaybackService()) {
                 if (intent.getAction().equals(
                         PlaybackService.ACTION_SHUTDOWN_PLAYBACK_SERVICE)) {
-                    release();
                     onShutdownNotification();
                 }
             }

@@ -395,8 +395,7 @@ public class PlaybackService extends Service {
             }
             Intent i = new Intent(ACTION_PLAYER_STATUS_CHANGED);
             i.putExtra(EXTRA_NEW_PLAYER_STATUS, newInfo.playerStatus.ordinal());
-            sendBroadcast(i);
-
+            sendBroadcast(new Intent(ACTION_PLAYER_STATUS_CHANGED));
             refreshRemoteControlClientState(newInfo);
             bluetoothNotifyChange(newInfo);
         }
@@ -489,44 +488,15 @@ public class PlaybackService extends Service {
             DBWriter.addItemToPlaybackHistory(PlaybackService.this, (FeedMedia) media);
         }
 
-        // Load next episode if previous episode was in the queue and if there
-        // is an episode in the queue left.
-        // Start playback immediately if continuous playback is enabled
-        Playable nextMedia = null;
-        boolean loadNextItem = isInQueue && nextItem != null;
-        playNextEpisode = playNextEpisode && loadNextItem
-                && UserPreferences.isFollowQueue();
-        if (loadNextItem) {
-            if (AppConfig.DEBUG)
-                Log.d(TAG, "Loading next item in queue");
-            nextMedia = nextItem.getMedia();
-        }
-        final boolean prepareImmediately;
-        final boolean startWhenPrepared;
-        final boolean stream;
 
-        if (playNextEpisode) {
-            if (AppConfig.DEBUG)
-                Log.d(TAG, "Playback of next episode will start immediately.");
-            prepareImmediately = startWhenPrepared = true;
-        } else {
-            if (AppConfig.DEBUG)
-                Log.d(TAG, "No more episodes available to play");
+        if (AppConfig.DEBUG)
+            Log.d(TAG, "No more episodes available to play");
 
-            prepareImmediately = startWhenPrepared = false;
-            stopForeground(true);
-        }
+        stopForeground(true);
+        writePlaybackPreferencesNoMediaPlaying();
+        sendNotificationBroadcast(NOTIFICATION_TYPE_PLAYBACK_END, 0);
+        stopSelf();
 
-        writePlaybackPreferences();
-        if (nextMedia != null) {
-            stream = !media.localFileAvailable();
-            mediaPlayer.playMediaObject(nextMedia, stream, startWhenPrepared, prepareImmediately);
-            sendNotificationBroadcast(NOTIFICATION_TYPE_RELOAD,
-                    (nextMedia.getMediaType() == MediaType.VIDEO) ? EXTRA_CODE_VIDEO : EXTRA_CODE_AUDIO);
-        } else {
-            sendNotificationBroadcast(NOTIFICATION_TYPE_PLAYBACK_END, 0);
-            //stopSelf();
-        }
     }
 
     public void setSleepTimer(long waitingTime) {
@@ -589,6 +559,22 @@ public class PlaybackService extends Service {
                     PlaybackPreferences.NO_MEDIA_PLAYING);
         }
 
+        editor.commit();
+    }
+
+    private void writePlaybackPreferencesNoMediaPlaying() {
+        SharedPreferences.Editor editor = PreferenceManager
+                .getDefaultSharedPreferences(getApplicationContext()).edit();
+        PlaybackServiceMediaPlayer.PSMPInfo info = mediaPlayer.getPSMPInfo();
+        MediaType mediaType = mediaPlayer.getCurrentMediaType();
+        boolean stream = mediaPlayer.isStreaming();
+        editor.putLong(PlaybackPreferences.PREF_CURRENTLY_PLAYING_MEDIA,
+                PlaybackPreferences.NO_MEDIA_PLAYING);
+        editor.putLong(PlaybackPreferences.PREF_CURRENTLY_PLAYING_FEED_ID,
+                PlaybackPreferences.NO_MEDIA_PLAYING);
+        editor.putLong(
+                PlaybackPreferences.PREF_CURRENTLY_PLAYING_FEEDMEDIA_ID,
+                PlaybackPreferences.NO_MEDIA_PLAYING);
         editor.commit();
     }
 

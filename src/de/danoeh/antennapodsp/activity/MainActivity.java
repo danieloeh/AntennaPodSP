@@ -199,4 +199,8 @@ public class MainActivity extends ActionBarActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    public void resetPlayer() {
+        slidingUpPanelLayout.collapsePane();
+    }
 }

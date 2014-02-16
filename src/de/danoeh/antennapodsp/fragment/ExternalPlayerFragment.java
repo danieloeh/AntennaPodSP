@@ -1,7 +1,6 @@
 package de.danoeh.antennapodsp.fragment;
 
 import android.content.Intent;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,7 +16,6 @@ import de.danoeh.antennapodsp.activity.MainActivity;
 import de.danoeh.antennapodsp.asynctask.ImageLoader;
 import de.danoeh.antennapodsp.service.playback.PlaybackService;
 import de.danoeh.antennapodsp.util.Converter;
-import de.danoeh.antennapodsp.util.ShareUtils;
 import de.danoeh.antennapodsp.util.playback.Playable;
 import de.danoeh.antennapodsp.util.playback.PlaybackController;
 
@@ -34,7 +32,9 @@ public class ExternalPlayerFragment extends Fragment {
 
     private ViewGroup fragmentLayout;
 
-    public static enum FragmentState {EXPANDED, ANCHORED};
+    public static enum FragmentState {EXPANDED, ANCHORED}
+
+    ;
 
     // expanded layout components
     private LinearLayout topviewExpanded;
@@ -144,7 +144,7 @@ public class ExternalPlayerFragment extends Fragment {
                 }
             }
         });
-        ((MainActivity)getActivity()).onPlayerFragmentCreated(this, fragmentState);
+        ((MainActivity) getActivity()).onPlayerFragmentCreated(this, fragmentState);
         return root;
     }
 
@@ -157,6 +157,7 @@ public class ExternalPlayerFragment extends Fragment {
 
         sbPositionExanded.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             float prog = 0;
+
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 prog = controller.onSeekBarProgressChanged(seekBar, progress, fromUser, txtvPositionExpanded);
@@ -206,6 +207,8 @@ public class ExternalPlayerFragment extends Fragment {
                         && position != PlaybackController.INVALID_TIME) {
                     txtvPositionExpanded.setText(Converter.getDurationStringLong(position));
                     txtvLengthExpanded.setText(Converter.getDurationStringLong(duration));
+                    setProgressBarProgress(position, duration);
+
                 }
             }
 
@@ -276,31 +279,16 @@ public class ExternalPlayerFragment extends Fragment {
 
             @Override
             public void onShutdownNotification() {
-                if (fragmentLayout != null) {
-                    fragmentLayout.setVisibility(View.GONE);
-                }
-                /*
-                controller = setupPlaybackController();
-                if (butPlay != null) {
-                    butPlay.setOnClickListener(controller
-                            .newOnPlayButtonClickListener());
-                }
-                */
-
+                ((MainActivity) getActivity()).resetPlayer();
+                setFragmentState(FragmentState.ANCHORED);
+                resetLayout();
             }
 
             @Override
             public void onPlaybackEnd() {
-                if (fragmentLayout != null) {
-                    fragmentLayout.setVisibility(View.GONE);
-                }
-                /*
-                controller = setupPlaybackController();
-                if (butPlay != null) {
-                    butPlay.setOnClickListener(controller
-                            .newOnPlayButtonClickListener());
-                }
-                */
+                ((MainActivity) getActivity()).resetPlayer();
+                setFragmentState(FragmentState.ANCHORED);
+                resetLayout();
             }
 
             @Override
@@ -366,8 +354,7 @@ public class ExternalPlayerFragment extends Fragment {
                 } else {
                     butActionExpanded.setVisibility(View.VISIBLE);
                 }
-
-                fragmentLayout.setVisibility(View.VISIBLE);
+                setProgressBarProgress(media.getPosition(), media.getDuration());
                 /*
                 if (controller.isPlayingVideo()) {
                     butPlay.setVisibility(View.GONE);
@@ -394,5 +381,20 @@ public class ExternalPlayerFragment extends Fragment {
 
     public View getCollapseView() {
         return layoutInfoExpanded;
+    }
+
+    private void setProgressBarProgress(int position, int duration) {
+        float progress = ((float) position) / duration;
+        sbPositionExanded.setProgress((int) (progress * sbPositionExanded.getMax()));
+    }
+
+    private void resetLayout() {
+        imgvCoverExpanded.setImageBitmap(null);
+        imgvCoverAnchored.setImageBitmap(null);
+        txtvTitleExpanded.setText(getString(R.string.no_media_playing_label));
+        txtvTitleAnchored.setText(getString(R.string.no_media_playing_label));
+        txtvPositionExpanded.setText("");
+        txtvLengthExpanded.setText("");
+        txtvDescriptionExpanded.setText("");
     }
 }
