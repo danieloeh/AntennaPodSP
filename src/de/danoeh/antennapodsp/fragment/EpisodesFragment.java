@@ -5,7 +5,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ListFragment;
+import android.support.v7.appcompat.R;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import de.danoeh.antennapodsp.adapter.EpisodesListAdapter;
 import de.danoeh.antennapodsp.asynctask.DownloadObserver;
 import de.danoeh.antennapodsp.feed.EventDistributor;
@@ -14,6 +18,7 @@ import de.danoeh.antennapodsp.feed.FeedItem;
 import de.danoeh.antennapodsp.feed.FeedMedia;
 import de.danoeh.antennapodsp.service.download.Downloader;
 import de.danoeh.antennapodsp.storage.DBReader;
+import de.danoeh.antennapodsp.storage.DBTasks;
 
 import java.util.List;
 
@@ -124,6 +129,26 @@ public class EpisodesFragment extends ListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                position = position - getListView().getHeaderViewsCount();
+                if (position >= 0) {
+                    FeedItem item = (FeedItem) episodesListAdapter.getItem(position);
+                    if (item.hasMedia()) {
+                        DBTasks.playMedia(getActivity(), item.getMedia(), false, true, true);
+                    }
+                }
+            }
+        });
+        // add header so that list is below actionbar
+        int actionBarHeight = getResources().getDimensionPixelSize(R.dimen.abc_action_bar_default_height);
+        LinearLayout header = new LinearLayout(getActivity());
+        header.setOrientation(LinearLayout.HORIZONTAL);
+        AbsListView.LayoutParams lp = new AbsListView.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, actionBarHeight);
+        header.setLayoutParams(lp);
+        getListView().addHeaderView(header);
+
         setListShown(false);
         refreshFeed();
     }

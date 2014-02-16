@@ -4,7 +4,6 @@
     <style name="Theme.Splash" parent="@style/Theme.AppCompat.Light">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@drawable/splash_bitmap</item>
-
     </style>
 
     <style name="Theme.AntennaPod.Light" parent="@style/Theme.AppCompat.Light">

@@ -81,7 +81,7 @@ public class EpisodesListAdapter extends BaseAdapter {
         if (state == FeedItem.State.PLAYING) {
             holder.statusPlaying.setVisibility(View.VISIBLE);
         } else {
-            holder.statusPlaying.setVisibility(View.GONE);
+            holder.statusPlaying.setVisibility(View.INVISIBLE);
         }
 
         FeedMedia media = item.getMedia();

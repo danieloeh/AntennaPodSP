@@ -1,86 +1,253 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/fragmentLayout"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-              android:visibility="gone">
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/fragmentLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+    <FrameLayout
+        android:id="@+id/top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/external_player_height"
+        android:layout_alignParentTop="true">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/topviewExpanded"
+            android:visibility="gone">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageButton
+                    android:id="@+id/butActionExpanded"
+                    android:contentDescription="@string/pause_label"
+                    android:layout_width="@dimen/external_player_height"
+                    android:layout_height="@dimen/external_player_height"
+                    android:background="?attr/borderless_button"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:src="?attr/location_web_site"
+                    />
+
+                <RelativeLayout
+                    android:id="@+id/layoutInfo_expanded"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@id/butActionExpanded"
+                    android:background="?attr/borderless_button">
+
+                    <ImageView
+                        android:id="@+id/imgvCoverExpanded"
+                        android:contentDescription="@string/cover_label"
+                        android:layout_width="@dimen/external_player_height"
+                        android:layout_height="@dimen/external_player_height"
+                        android:layout_alignParentLeft="true"
+                        android:adjustViewBounds="true"
+                        android:cropToPadding="true"
+                        android:scaleType="fitXY"/>
+
+                    <TextView
+                        android:id="@+id/txtvTitleExpanded"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_toRightOf="@id/imgvCoverExpanded"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:textSize="18sp"
+                        android:fontFamily="sans-serif-condensed"/>
+                </RelativeLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/topviewAnchored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1.5dp"
+                android:background="#AAAAAA"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:id="@+id/layoutInfo_anchored"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?attr/borderless_button">
+
+                    <ImageView
+                        android:id="@+id/imgvCoverAnchored"
+                        android:contentDescription="@string/cover_label"
+                        android:layout_width="@dimen/external_player_height"
+                        android:layout_height="@dimen/external_player_height"
+                        android:layout_alignParentLeft="true"
+                        android:adjustViewBounds="true"
+                        android:cropToPadding="true"
+                        android:scaleType="fitXY"/>
+
+                    <TextView
+                        android:id="@+id/txtvTitleAnchored"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_toRightOf="@id/imgvCoverAnchored"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textSize="18sp"
+                        android:fontFamily="sans-serif-condensed"/>
+
+                    <TextView
+                        android:id="@+id/txtvStatusAnchored"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@id/txtvTitleAnchored"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_toRightOf="@id/imgvCoverAnchored"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textColor="?android:attr/textColorTertiary"
+                        android:textSize="@dimen/text_size_micro"/>
+                </RelativeLayout>
+
+                <ImageButton
+                    android:id="@+id/butPlayAnchored"
+                    android:contentDescription="@string/pause_label"
+                    android:layout_width="@dimen/external_player_height"
+                    android:layout_height="@dimen/external_player_height"
+                    android:background="?attr/borderless_button"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </FrameLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1.5dp"
+        android:layout_below="@id/top_layout"
         android:background="#AAAAAA"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/top_layout">
+
 
         <RelativeLayout
-            android:id="@+id/layoutInfo"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="?attr/borderless_button">
+            android:id="@+id/player_control"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_alignParentBottom="true"
+            android:background="?attr/overlay_background">
 
-            <ImageView
-                android:id="@+id/imgvCover"
-                android:contentDescription="@string/cover_label"
-                android:layout_width="@dimen/external_player_height"
-                android:layout_height="@dimen/external_player_height"
-                android:layout_alignParentLeft="true"
-                android:adjustViewBounds="true"
-                android:cropToPadding="true"
-                android:scaleType="fitXY"/>
+            <ImageButton
+                android:id="@+id/butPlayExpanded"
+                android:contentDescription="@string/pause_label"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:background="?attr/borderless_button"
+                android:src="?attr/av_pause"/>
 
-            <TextView
-                android:id="@+id/txtvTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_toRightOf="@id/imgvCover"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textStyle="bold"/>
+            <ImageButton
+                android:id="@+id/butRevExpanded"
+                android:contentDescription="@string/rewind_label"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@id/butPlayExpanded"
+                android:background="?attr/borderless_button"
+                android:src="?attr/av_rewind"/>
 
-            <TextView
-                android:id="@+id/txtvPosition"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/txtvTitle"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="4dp"
-                android:layout_toRightOf="@id/imgvCover"
-                android:maxLines="1"
-                android:textSize="@dimen/text_size_micro"/>
-
-            <TextView
-                android:id="@+id/txtvStatus"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/txtvTitle"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="4dp"
-                android:layout_toRightOf="@id/txtvPosition"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textColor="?android:attr/textColorSecondary"
-                android:textSize="@dimen/text_size_micro"/>
+            <ImageButton
+                android:id="@+id/butFFExpanded"
+                android:contentDescription="@string/fast_forward_label"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@id/butPlayExpanded"
+                android:background="?attr/borderless_button"
+                android:src="?attr/av_fast_forward"/>
         </RelativeLayout>
 
-        <ImageButton
-            android:id="@+id/butPlay"
-            android:contentDescription="@string/pause_label"
-            android:layout_width="@dimen/external_player_height"
-            android:layout_height="@dimen/external_player_height"
-            android:background="?attr/borderless_button"/>
-    </LinearLayout>
+        <RelativeLayout
+            android:id="@+id/playtime_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/player_control"
+            android:layout_alignParentLeft="true"
+            android:background="?attr/overlay_drawable">
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/txtvPositionExpanded"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/position_default_label"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="@dimen/text_size_micro"/>
+
+            <TextView
+                android:id="@+id/txtvLengthExpanded"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/position_default_label"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="@dimen/text_size_micro"/>
+
+            <SeekBar
+                android:id="@+id/sbPositionExpanded"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_toLeftOf="@id/txtvLengthExpanded"
+                android:layout_toRightOf="@id/txtvPositionExpanded"
+                android:max="500"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_above="@id/playtime_layout"
+            android:layout_alignParentTop="true">
+
+            <TextView
+                android:id="@+id/txtvDescriptionExpanded"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="16dp"/>
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>
