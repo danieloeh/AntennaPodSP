@@ -32,12 +32,18 @@ public class HandlerState {
      */
     protected StringBuffer contentBuf;
 
+    /**
+     * Temporarily saved objects.
+     */
+    protected HashMap<String, Object> tempObjects;
+
     public HandlerState(Feed feed) {
         this.feed = feed;
         items = new ArrayList<FeedItem>();
         tagstack = new Stack<SyndElement>();
         namespaces = new HashMap<String, Namespace>();
         defaultNamespaces = new Stack<Namespace>();
+        tempObjects = new HashMap<String, Object>();
     }
 
     public Feed getFeed() {
@@ -85,6 +91,10 @@ public class HandlerState {
 
     public StringBuffer getContentBuf() {
         return contentBuf;
+    }
+
+    public HashMap<String, Object> getTempObjects() {
+        return tempObjects;
     }
 
 }

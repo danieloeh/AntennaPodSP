@@ -15,6 +15,7 @@ import de.danoeh.antennapodsp.asynctask.ImageLoader;
 import de.danoeh.antennapodsp.feed.FeedItem;
 import de.danoeh.antennapodsp.feed.FeedMedia;
 import de.danoeh.antennapodsp.storage.DownloadRequester;
+import de.danoeh.antennapodsp.util.Converter;
 
 public class EpisodesListAdapter extends BaseAdapter {
 
@@ -69,6 +70,7 @@ public class EpisodesListAdapter extends BaseAdapter {
             holder.downloadProgress = (ProgressBar) convertView
                     .findViewById(R.id.pbar_download_progress);
             holder.imageView = (ImageView) convertView.findViewById(R.id.imgvImage);
+            holder.txtvDuration = (TextView) convertView.findViewById(R.id.txtvDuration);
             convertView.setTag(holder);
         } else {
             holder = (Holder) convertView.getTag();
@@ -86,22 +88,39 @@ public class EpisodesListAdapter extends BaseAdapter {
 
         FeedMedia media = item.getMedia();
         if (media != null) {
+            final boolean isDownloadingMedia = DownloadRequester.getInstance().isDownloadingFile(media);
+
+            if (media.getDuration() > 0) {
+                holder.txtvDuration.setText(Converter.getDurationStringLong(media.getDuration()));
+            } else {
+                holder.txtvDuration.setText("");
+            }
+
+            if (isDownloadingMedia) {
+                holder.downloadProgress.setVisibility(View.VISIBLE);
+                holder.txtvDuration.setVisibility(View.GONE);
+            } else {
+                holder.txtvDuration.setVisibility(View.VISIBLE);
+                holder.downloadProgress.setVisibility(View.GONE);
+            }
+
             TypedArray drawables = context.obtainStyledAttributes(new int[]{
-                    R.attr.navigation_accept, R.attr.navigation_refresh});
-            final int[] labels = new int[]{R.string.status_downloaded_label, R.string.downloading_label};
+                    R.attr.navigation_accept, R.attr.navigation_refresh, R.attr.av_download});
+            final int[] labels = new int[]{R.string.status_downloaded_label, R.string.downloading_label, R.string.status_not_downloaded_label};
             if (!media.isDownloaded()) {
-                if (DownloadRequester.getInstance().isDownloadingFile(media)) {
+                if (isDownloadingMedia) {
                     // item is being downloaded
                     holder.downloadStatus.setVisibility(View.VISIBLE);
                     holder.downloadStatus.setImageDrawable(drawables
                             .getDrawable(1));
                     holder.downloadStatus.setContentDescription(context.getString(labels[1]));
 
-                    holder.downloadProgress.setVisibility(View.VISIBLE);
                     holder.downloadProgress.setProgress(itemAccess.getItemDownloadProgressPercent(item));
                 } else {
-                    holder.downloadProgress.setVisibility(View.INVISIBLE);
-                    holder.downloadStatus.setVisibility(View.INVISIBLE);
+                    // item is not downloaded and not being downloaded
+                    holder.downloadStatus.setVisibility(View.VISIBLE);
+                    holder.downloadStatus.setImageDrawable(drawables.getDrawable(2));
+                    holder.downloadStatus.setContentDescription(context.getString(labels[2]));
                 }
             } else {
                 // item is not being downloaded
@@ -109,8 +128,6 @@ public class EpisodesListAdapter extends BaseAdapter {
                 holder.downloadStatus
                         .setImageDrawable(drawables.getDrawable(0));
                 holder.downloadStatus.setContentDescription(context.getString(labels[0]));
-
-                holder.downloadProgress.setVisibility(View.INVISIBLE);
             }
         } else {
             holder.downloadStatus.setVisibility(View.INVISIBLE);
@@ -132,6 +149,7 @@ public class EpisodesListAdapter extends BaseAdapter {
         ImageView imageView;
         ImageView statusPlaying;
         ProgressBar downloadProgress;
+        TextView txtvDuration;
     }
 
     public static interface ItemAccess {

@@ -75,6 +75,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"
                 tools:ignore="ContentDescription"/>
 
             <ProgressBar
@@ -87,6 +88,17 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_alignParentLeft="true"/>
+
+            <TextView
+                android:id="@+id/txtvDuration"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/imgvDownloadStatus"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_alignParentLeft="true"
+                android:textColor="?android:attr/textColorTertiary"
+                android:textSize="@dimen/text_size_micro"/>
         </RelativeLayout>
     </LinearLayout>
 

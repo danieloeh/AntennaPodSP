@@ -6,6 +6,7 @@ import de.danoeh.antennapodsp.feed.FeedImage;
 import de.danoeh.antennapodsp.feed.FeedItem;
 import de.danoeh.antennapodsp.feed.FeedMedia;
 import de.danoeh.antennapodsp.syndication.handler.HandlerState;
+import de.danoeh.antennapodsp.syndication.namespace.NSITunes;
 import de.danoeh.antennapodsp.syndication.namespace.NSRSS20;
 import de.danoeh.antennapodsp.syndication.namespace.Namespace;
 import de.danoeh.antennapodsp.syndication.namespace.SyndElement;
@@ -120,6 +121,14 @@ public class NSAtom extends Namespace {
     @Override
     public void handleElementEnd(String localName, HandlerState state) {
         if (localName.equals(ENTRY)) {
+
+            if (state.getCurrentItem() != null &&
+                    state.getTempObjects().containsKey(NSITunes.DURATION)) {
+                if (state.getCurrentItem().hasMedia()) {
+                    state.getCurrentItem().getMedia().setDuration((Integer) state.getTempObjects().get(NSITunes.DURATION));
+                }
+                state.getTempObjects().remove(NSITunes.DURATION);
+            }
             state.setCurrentItem(null);
         }
 
