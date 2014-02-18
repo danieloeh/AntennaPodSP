@@ -82,7 +82,7 @@ public class AppInitializer {
         upe.putBoolean(PREF_MOBILE_UPDATE, appPreferences.allowMobileUpdates);
         upe.putBoolean(PREF_ENABLE_AUTODL, appPreferences.enableAutodownload);
 
-        upe.putString(PREF_EPISODE_CACHE_SIZE, appPreferences.episodeCacheSize);
+        upe.putString(PREF_EPISODE_CACHE_SIZE, String.valueOf(appPreferences.episodeCacheSize));
         upe.putBoolean(PREF_PAUSE_PLAYBACK_FOR_FOCUS_LOSS, appPreferences.pauseForFocusLoss);
 
         upe.commit();

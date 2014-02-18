@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.AppPreferences;
 import de.danoeh.antennapodsp.feed.*;
 import de.danoeh.antennapodsp.service.download.DownloadStatus;
 
@@ -847,6 +848,26 @@ public class PodDBAdapter {
         return c;
     }
 
+    // TODO: Get n most recent items from every single feed
+    private static final String GET_N_MOST_RECENT_ITEMS_OF_ALL_FEEDS = "SELECT %s FROM " + TABLE_NAME_FEED_ITEMS + " ORDER BY " + KEY_PUBDATE + " DESC LIMIT %d";
+
+    public Cursor getAutoCleanupCandidatesCursor() {
+        final String query = String.format("SELECT " + SEL_FI_SMALL_STR + " FROM " + TABLE_NAME_FEED_ITEMS
+                + " INNER JOIN " + TABLE_NAME_FEED_MEDIA + " ON "
+                + TABLE_NAME_FEED_ITEMS + "." + KEY_ID + "="
+                + TABLE_NAME_FEED_MEDIA + "." + KEY_FEEDITEM + " WHERE "
+                + TABLE_NAME_FEED_MEDIA + "." + KEY_DOWNLOADED + ">0"
+                + " AND (%s) NOT IN (" + GET_N_MOST_RECENT_ITEMS_OF_ALL_FEEDS + ")",
+                TABLE_NAME_FEED_ITEMS + "." + KEY_ID, TABLE_NAME_FEED_ITEMS + "." + KEY_ID, new AppPreferences().numberOfNewAutomaticallyDownloadedEpisodes);
+        Cursor c = db.rawQuery(query, null);
+        return c;
+    }
+
+    public Cursor getNewAutomaticallyDownloadedFeedItemsCursor() {
+        final String query = String.format(GET_N_MOST_RECENT_ITEMS_OF_ALL_FEEDS, new AppPreferences().numberOfNewAutomaticallyDownloadedEpisodes);
+        return db.rawQuery(query, null);
+    }
+
     /**
      * Returns a cursor which contains feed media objects with a playback
      * completion date in ascending order.
@@ -957,6 +978,17 @@ public class PodDBAdapter {
         int result = 0;
         if (c.moveToFirst()) {
             result = c.getInt(0);
+        }
+        c.close();
+        return result;
+    }
+
+    public long getSizeOfAllDownloadedEpisodes() {
+        final String query = String.format("SELECT SUM(%s) FROM %s WHERE %s > 0", KEY_SIZE, TABLE_NAME_FEED_MEDIA, KEY_DOWNLOADED);
+        Cursor c = db.rawQuery(query, null);
+        long result = 0;
+        if (c.moveToFirst()) {
+            result = c.getLong(0);
         }
         c.close();
         return result;

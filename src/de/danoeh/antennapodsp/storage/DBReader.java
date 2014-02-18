@@ -444,6 +444,20 @@ public final class DBReader {
     }
 
     /**
+     * Returns an unsorted list of all FeedItems that can be deleted by the auto-cleanup method in DBTasks.
+     * */
+    public static List<FeedItem> getAutoCleanupCandidates(Context context) {
+        PodDBAdapter adapter = new PodDBAdapter(context);
+        adapter.open();
+        Cursor itemlistCursor = adapter.getAutoCleanupCandidatesCursor();
+        List<FeedItem> items = extractItemlistFromCursor(adapter,
+                itemlistCursor);
+        itemlistCursor.close();
+        adapter.close();
+        return items;
+    }
+
+    /**
      * Loads a list of FeedItems whose 'read'-attribute is set to false.
      *
      * @param context A context that is used for opening a database connection.
@@ -776,5 +790,14 @@ public final class DBReader {
         adapter.close();
 
         return media;
+    }
+
+    public static long getDownloadedEpisodesSize(Context context) {
+        PodDBAdapter adapter = new PodDBAdapter(context);
+        adapter.open();
+        long result = adapter.getSizeOfAllDownloadedEpisodes();
+        adapter.close();
+        return result;
+
     }
 }

@@ -14,7 +14,9 @@ import de.danoeh.antennapodsp.util.NetworkUtils;
 import de.danoeh.antennapodsp.util.QueueAccess;
 import de.danoeh.antennapodsp.util.comparator.FeedItemPubdateComparator;
 import de.danoeh.antennapodsp.util.exception.MediaFileNotFoundException;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -380,9 +382,9 @@ public final class DBTasks {
                             unreadItems);
                     int downloadedEpisodes = DBReader
                             .getNumberOfDownloadedEpisodes(context);
-                    int deletedEpisodes = performAutoCleanup(context,
+                    long deletedEpisodes = performAutoCleanup(context,
                             getPerformAutoCleanupArgs(context, undownloadedEpisodes));
-                    int episodeSpaceLeft = undownloadedEpisodes;
+                    long episodeSpaceLeft = undownloadedEpisodes;
                     boolean cacheIsUnlimited = UserPreferences.getEpisodeCacheSize() == UserPreferences
                             .getEpisodeCacheSizeUnlimited();
 
@@ -440,17 +442,17 @@ public final class DBTasks {
 
     }
 
-    private static int getPerformAutoCleanupArgs(Context context,
-                                                 final int episodeNumber) {
-        if (episodeNumber >= 0
+    private static long getPerformAutoCleanupArgs(Context context,
+                                                 final int episodeSize) {
+        if (episodeSize >= 0
                 && UserPreferences.getEpisodeCacheSize() != UserPreferences
                 .getEpisodeCacheSizeUnlimited()) {
-            int downloadedEpisodes = DBReader
-                    .getNumberOfDownloadedEpisodes(context);
-            if (downloadedEpisodes + episodeNumber >= UserPreferences
+            long downloadedEpisodesSize = DBReader
+                    .getDownloadedEpisodesSize(context);
+            if (downloadedEpisodesSize + episodeSize >= UserPreferences
                     .getEpisodeCacheSize()) {
 
-                return downloadedEpisodes + episodeNumber
+                return downloadedEpisodesSize + episodeSize
                         - UserPreferences.getEpisodeCacheSize();
             }
         }
@@ -469,43 +471,63 @@ public final class DBTasks {
         performAutoCleanup(context, getPerformAutoCleanupArgs(context, 0));
     }
 
-    private static int performAutoCleanup(final Context context,
-                                          final int episodeNumber) {
-        List<FeedItem> candidates = new ArrayList<FeedItem>();
-        List<FeedItem> downloadedItems = DBReader.getDownloadedItems(context);
-        QueueAccess queue = QueueAccess.IDListAccess(DBReader.getQueueIDList(context));
-        List<FeedItem> delete;
-        for (FeedItem item : downloadedItems) {
-            if (item.hasMedia() && item.getMedia().isDownloaded()
-                    && !queue.contains(item.getId()) && item.isRead()) {
-                candidates.add(item);
-            }
 
+    /**
+     * Performs an automatic cleanup. Episodes that have been downloaded first will also be deleted first.
+     * The episode that is currently playing as well as the n most recent episodes (the exact value is determined
+     * by AppPreferences.numberOfNewAutomaticallyDownloadedEpisodes) will never be deleted.
+     * @param context
+     * @param episodeSize The maximum amount of space that should be free'd by this method
+     * @return
+     */
+    private static long performAutoCleanup(final Context context,
+                                          final long episodeSize) {
+        if (AppConfig.DEBUG) Log.d(TAG, String.format("performAutoCleanup(%d)", episodeSize));
+
+        if (episodeSize <= 0) {
+            return 0;
         }
 
+        List<FeedItem> candidates = DBReader.getAutoCleanupCandidates(context);
+        List<FeedItem> deleteList = new ArrayList<FeedItem>();
+        long deletedEpisodesSize = 0;
         Collections.sort(candidates, new Comparator<FeedItem>() {
             @Override
             public int compare(FeedItem lhs, FeedItem rhs) {
-                Date l = lhs.getMedia().getPlaybackCompletionDate();
-                Date r = rhs.getMedia().getPlaybackCompletionDate();
-
-                if (l == null) {
-                    l = new Date(0);
+                File lFile = new File(lhs.getMedia().getFile_url());
+                File rFile = new File(rhs.getMedia().getFile_url());
+                if (!lFile.exists() || !rFile.exists()) {
+                    return 0;
                 }
-                if (r == null) {
-                    r = new Date(0);
+                if (FileUtils.isFileOlder(lFile, rFile)) {
+                    return -1;
+                } else {
+                    return 1;
                 }
-                return l.compareTo(r);
             }
         });
 
-        if (candidates.size() > episodeNumber) {
-            delete = candidates.subList(0, episodeNumber);
-        } else {
-            delete = candidates;
+        // listened episodes will be deleted first
+        Iterator<FeedItem> it = candidates.iterator();
+        for (FeedItem i = it.next(); it.hasNext() && deletedEpisodesSize <= episodeSize; i = it.next()) {
+            if (!i.getMedia().isPlaying() && i.getMedia().getPlaybackCompletionDate() != null) {
+                it.remove();
+                deleteList.add(i);
+                deletedEpisodesSize += i.getMedia().getSize();
+            }
         }
 
-        for (FeedItem item : delete) {
+        // delete unlistened old episodes if necessary
+        it = candidates.iterator();
+        for (FeedItem i = it.next(); it.hasNext() && deletedEpisodesSize <= episodeSize; i = it.next()) {
+            if (!i.getMedia().isPlaying()) {
+                it.remove();
+                deleteList.add(i);
+                deletedEpisodesSize += i.getMedia().getSize();
+            }
+        }
+
+        for (FeedItem item : deleteList) {
             try {
                 DBWriter.deleteFeedMediaOfItem(context, item.getMedia().getId()).get();
             } catch (InterruptedException e) {
@@ -515,14 +537,10 @@ public final class DBTasks {
             }
         }
 
-        int counter = delete.size();
+        if (AppConfig.DEBUG) Log.d(TAG, String.format("performAutoCleanup(%d) deleted %d episodes and free'd %d bytes of memory",
+                episodeSize, deleteList.size(), deletedEpisodesSize));
 
-        if (AppConfig.DEBUG)
-            Log.d(TAG, String.format(
-                    "Auto-delete deleted %d episodes (%d requested)", counter,
-                    episodeNumber));
-
-        return counter;
+        return deletedEpisodesSize;
     }
 
     /**

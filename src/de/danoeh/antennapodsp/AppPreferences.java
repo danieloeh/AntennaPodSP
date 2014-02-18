@@ -18,13 +18,14 @@ public class AppPreferences {
 
     // Preferences
 
-    boolean pauseOnHeadsetDisconnect = true;
-    boolean followQueue = false;
-    boolean downloadMediaOnWifiOnly = true;
-    boolean allowMobileUpdates = true;
-    boolean enableAutodownload = false;
-    String episodeCacheSize = "5";
-    boolean pauseForFocusLoss = true;
+    public boolean pauseOnHeadsetDisconnect = true;
+    public boolean followQueue = false;
+    public boolean downloadMediaOnWifiOnly = true;
+    public boolean allowMobileUpdates = true;
+    public boolean enableAutodownload = false;
+    public long episodeCacheSize = 300 * 1024 * 1024;
+    public boolean pauseForFocusLoss = true;
+    public int numberOfNewAutomaticallyDownloadedEpisodes = 3;
 
 
     /**

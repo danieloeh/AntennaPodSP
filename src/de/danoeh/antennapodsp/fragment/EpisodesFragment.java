@@ -176,7 +176,7 @@ public class EpisodesFragment extends ListFragment {
                 if (position < 0) {
                     return;
                 }
-                FeedItem item = (FeedItem) episodesListAdapter.getItem(position);
+                final FeedItem item = (FeedItem) episodesListAdapter.getItem(position);
                 if (item.hasMedia() && item.getMedia().isDownloaded()) {
                     // episode downloaded
                     DBTasks.playMedia(getActivity(), item.getMedia(), false, true, false);
@@ -212,7 +212,7 @@ public class EpisodesFragment extends ListFragment {
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
                                         try {
-                                            DownloadRequester.getInstance().downloadMedia(getActivity(), media);
+                                            DBTasks.downloadFeedItems(getActivity(), item);
                                         } catch (DownloadRequestException e) {
                                             e.printStackTrace();
                                             DownloadRequestErrorDialogCreator.newRequestErrorDialog(getActivity(), e.getMessage());
