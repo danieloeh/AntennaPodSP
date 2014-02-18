@@ -44,6 +44,7 @@
 
                     <ImageView
                         android:id="@+id/imgvCoverExpanded"
+                        android:clickable="true"
                         android:contentDescription="@string/cover_label"
                         android:layout_width="@dimen/external_player_height"
                         android:layout_height="@dimen/external_player_height"
@@ -151,6 +152,7 @@
         android:background="#AAAAAA"/>
 
     <RelativeLayout
+        android:clickable="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/top_layout">
@@ -241,7 +243,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_above="@id/playtime_layout"
-            android:layout_alignParentTop="true">
+            android:layout_alignParentTop="true"
+            android:clickable="true">
 
             <TextView
                 android:id="@+id/txtvDescriptionExpanded"
