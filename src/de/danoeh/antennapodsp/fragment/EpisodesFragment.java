@@ -189,50 +189,24 @@ public class EpisodesFragment extends ListFragment {
                     if (DownloadRequester.getInstance().isDownloadingFile(media)) {
                         // episode downloading
                         dialog.setMessage(R.string.episode_dialog_downloading_msg)
-                                .setPositiveButton(R.string.episode_dialog_stream, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        DBTasks.playMedia(getActivity(), media, false, true, true);
-                                    }
-                                })
-                                .setNegativeButton(R.string.cancel_download_label, new DialogInterface.OnClickListener() {
+                                .setNeutralButton(R.string.cancel_download_label, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
                                         DownloadRequester.getInstance().cancelDownload(getActivity(), media);
                                     }
                                 });
-
+                        dialog.create().show();
                     } else {
                         // episode not downloaded
-                        dialog.setMessage(R.string.episode_dialog_not_downloaded_msg)
-                                .setPositiveButton(R.string.download_label, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        try {
-                                            DBTasks.downloadFeedItems(getActivity(), item);
-                                        } catch (DownloadRequestException e) {
-                                            e.printStackTrace();
-                                            DownloadRequestErrorDialogCreator.newRequestErrorDialog(getActivity(), e.getMessage());
-                                        }
-                                    }
-                                })
-                                .setNegativeButton(R.string.episode_dialog_stream, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        DBTasks.playMedia(getActivity(), media, false, true, true);
-                                    }
-                                });
+                        try {
+                            DBTasks.downloadFeedItems(getActivity(), item);
+                        } catch (DownloadRequestException e) {
+                            e.printStackTrace();
+                            DownloadRequestErrorDialogCreator.newRequestErrorDialog(getActivity(), e.getMessage());
+                        }
                     }
-
-                    dialog.create().show();
-
                 }
-
-
             }
         });
         // add header so that list is below actionbar
@@ -319,8 +293,6 @@ public class EpisodesFragment extends ListFragment {
             }
         }
     };
-
-
 
 
 }
