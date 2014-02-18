@@ -57,7 +57,7 @@ public class DownloadObserver {
     public void onResume() {
         if (AppConfig.DEBUG) Log.d(TAG, "DownloadObserver resumed");
         activity.registerReceiver(contentChangedReceiver, new IntentFilter(DownloadService.ACTION_DOWNLOADS_CONTENT_CHANGED));
-        activity.bindService(new Intent(activity, DownloadService.class), mConnection, 0);
+        connectToDownloadService();
     }
 
     public void onPause() {
@@ -74,6 +74,10 @@ public class DownloadObserver {
     private BroadcastReceiver contentChangedReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            // reconnect to DownloadService if connection has been closed
+            if (downloadService == null) {
+                connectToDownloadService();
+            }
             callback.onContentChanged();
             startRefresher();
         }
@@ -83,6 +87,10 @@ public class DownloadObserver {
         void onContentChanged();
 
         void onDownloadDataAvailable(List<Downloader> downloaderList);
+    }
+
+    private void connectToDownloadService() {
+        activity.bindService(new Intent(activity, DownloadService.class), mConnection, 0);
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -142,9 +150,11 @@ public class DownloadObserver {
                 @Override
                 public void run() {
                     callback.onContentChanged();
-                    List<Downloader> downloaderList = downloadService.getDownloads();
-                    if (downloaderList == null || downloaderList.isEmpty()) {
-                        Thread.currentThread().interrupt();
+                    if (downloadService != null) {
+                        List<Downloader> downloaderList = downloadService.getDownloads();
+                        if (downloaderList == null || downloaderList.isEmpty()) {
+                            Thread.currentThread().interrupt();
+                        }
                     }
                 }
             });
