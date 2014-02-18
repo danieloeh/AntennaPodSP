@@ -6,6 +6,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerPNames;
+import org.apache.http.conn.params.ConnManagerParams;
+import org.apache.http.conn.params.ConnPerRoute;
+import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -33,6 +36,7 @@ public class AntennapodHttpClient {
     public static final int SOCKET_TIMEOUT = 30000;
 
     public static final int MAX_CONNECTIONS = 6;
+    public static final int MAX_CONNECTIONS_PER_ROUTE = 4;
 
 
     private static volatile HttpClient httpClient = null;
@@ -76,6 +80,12 @@ public class AntennapodHttpClient {
     private static ClientConnectionManager createClientConnectionManager() {
         HttpParams params = new BasicHttpParams();
         params.setIntParameter(ConnManagerPNames.MAX_TOTAL_CONNECTIONS, MAX_CONNECTIONS);
+        params.setParameter(ConnManagerParams.MAX_CONNECTIONS_PER_ROUTE, new ConnPerRoute(){
+            @Override
+            public int getMaxForRoute(HttpRoute httpRoute) {
+                return MAX_CONNECTIONS_PER_ROUTE;
+            }
+        });
         return new ThreadSafeClientConnManager(params, prepareSchemeRegistry());
     }
 

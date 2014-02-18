@@ -445,13 +445,28 @@ public final class DBReader {
 
     /**
      * Returns an unsorted list of all FeedItems that can be deleted by the auto-cleanup method in DBTasks.
-     * */
+     */
     public static List<FeedItem> getAutoCleanupCandidates(Context context) {
         PodDBAdapter adapter = new PodDBAdapter(context);
         adapter.open();
         Cursor itemlistCursor = adapter.getAutoCleanupCandidatesCursor();
         List<FeedItem> items = extractItemlistFromCursor(adapter,
                 itemlistCursor);
+        itemlistCursor.close();
+        adapter.close();
+        return items;
+    }
+
+    /**
+     * Returns a list of all FeedItems that will be downloaded automatically.
+     */
+    public static List<FeedItem> getNewAutomaticallyDownloadedFeedItems(Context context) {
+        PodDBAdapter adapter = new PodDBAdapter(context);
+        adapter.open();
+        Cursor itemlistCursor = adapter.getNewAutomaticallyDownloadedFeedItemsCursor();
+        List<FeedItem> items = extractItemlistFromCursor(adapter,
+                itemlistCursor);
+        DBReader.loadFeedDataOfFeedItemlist(context, items);
         itemlistCursor.close();
         adapter.close();
         return items;
@@ -798,6 +813,5 @@ public final class DBReader {
         long result = adapter.getSizeOfAllDownloadedEpisodes();
         adapter.close();
         return result;
-
     }
 }

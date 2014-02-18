@@ -864,7 +864,7 @@ public class PodDBAdapter {
     }
 
     public Cursor getNewAutomaticallyDownloadedFeedItemsCursor() {
-        final String query = String.format(GET_N_MOST_RECENT_ITEMS_OF_ALL_FEEDS, new AppPreferences().numberOfNewAutomaticallyDownloadedEpisodes);
+        final String query = String.format(GET_N_MOST_RECENT_ITEMS_OF_ALL_FEEDS, SEL_FI_SMALL_STR, new AppPreferences().numberOfNewAutomaticallyDownloadedEpisodes);
         return db.rawQuery(query, null);
     }
 

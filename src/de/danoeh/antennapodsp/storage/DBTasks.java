@@ -151,8 +151,6 @@ public final class DBTasks {
                         refreshFeeds(context, DBReader.getFeedList(context));
                     }
                     isRefreshing.set(false);
-
-                    autodownloadUndownloadedItems(context);
                 }
             }.start();
         } else {
@@ -358,9 +356,8 @@ public final class DBTasks {
     }
 
     /**
-     * Looks for undownloaded episodes in the queue or list of unread items and request a download if
-     * 1. Network is available
-     * 2. There is free space in the episode cache
+     * Downloads the most recent episodes automatically. The exact number of
+     * episodes that will be downloaded can be set in the AppPreferences.
      * This method is executed on an internal single thread executor.
      *
      * @param context Used for accessing the DB.
@@ -374,6 +371,30 @@ public final class DBTasks {
                     Log.d(TAG, "Performing auto-dl of undownloaded episodes");
                 if (NetworkUtils.autodownloadNetworkAvailable(context)
                         && UserPreferences.isEnableAutodownload()) {
+                    List<FeedItem> itemsToDownload = DBReader.getNewAutomaticallyDownloadedFeedItems(context);
+                    Iterator<FeedItem> it = itemsToDownload.iterator();
+                    for (FeedItem item = it.next(); it.hasNext(); item = it.next()) {
+                        if (item.getMedia().isDownloaded()) {
+                            it.remove();
+                        }
+                    }
+
+                    if (AppConfig.DEBUG)
+                        Log.d(TAG, "Enqueueing " + itemsToDownload.size()
+                                + " items for automatic download");
+
+                    if (!itemsToDownload.isEmpty()) {
+                        try {
+                            downloadFeedItems(false, context,
+                                    itemsToDownload.toArray(new FeedItem[itemsToDownload
+                                            .size()]));
+                        } catch (DownloadRequestException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+
+                    /*
                     final List<FeedItem> queue = DBReader.getQueue(context);
                     final List<FeedItem> unreadItems = DBReader
                             .getUnreadItemsList(context);
@@ -424,17 +445,7 @@ public final class DBTasks {
                             }
                         }
                     }
-                    if (AppConfig.DEBUG)
-                        Log.d(TAG, "Enqueueing " + itemsToDownload.size()
-                                + " items for download");
-
-                    try {
-                        downloadFeedItems(false, context,
-                                itemsToDownload.toArray(new FeedItem[itemsToDownload
-                                        .size()]));
-                    } catch (DownloadRequestException e) {
-                        e.printStackTrace();
-                    }
+                    */
 
                 }
             }
@@ -443,7 +454,7 @@ public final class DBTasks {
     }
 
     private static long getPerformAutoCleanupArgs(Context context,
-                                                 final int episodeSize) {
+                                                  final int episodeSize) {
         if (episodeSize >= 0
                 && UserPreferences.getEpisodeCacheSize() != UserPreferences
                 .getEpisodeCacheSizeUnlimited()) {
@@ -476,12 +487,13 @@ public final class DBTasks {
      * Performs an automatic cleanup. Episodes that have been downloaded first will also be deleted first.
      * The episode that is currently playing as well as the n most recent episodes (the exact value is determined
      * by AppPreferences.numberOfNewAutomaticallyDownloadedEpisodes) will never be deleted.
+     *
      * @param context
      * @param episodeSize The maximum amount of space that should be free'd by this method
      * @return
      */
     private static long performAutoCleanup(final Context context,
-                                          final long episodeSize) {
+                                           final long episodeSize) {
         if (AppConfig.DEBUG) Log.d(TAG, String.format("performAutoCleanup(%d)", episodeSize));
 
         if (episodeSize <= 0) {
@@ -537,8 +549,9 @@ public final class DBTasks {
             }
         }
 
-        if (AppConfig.DEBUG) Log.d(TAG, String.format("performAutoCleanup(%d) deleted %d episodes and free'd %d bytes of memory",
-                episodeSize, deleteList.size(), deletedEpisodesSize));
+        if (AppConfig.DEBUG)
+            Log.d(TAG, String.format("performAutoCleanup(%d) deleted %d episodes and free'd %d bytes of memory",
+                    episodeSize, deleteList.size(), deletedEpisodesSize));
 
         return deletedEpisodesSize;
     }
@@ -684,6 +697,8 @@ public final class DBTasks {
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
+
+            autodownloadUndownloadedItems(context.getApplicationContext());
             return savedFeed;
         }
     }
