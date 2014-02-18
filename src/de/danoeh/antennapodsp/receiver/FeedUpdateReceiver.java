@@ -24,7 +24,7 @@ public class FeedUpdateReceiver extends BroadcastReceiver {
                 Log.d(TAG, "Received intent");
             boolean mobileUpdate = UserPreferences.isAllowMobileUpdate();
             if (mobileUpdate || connectedToWifi(context)) {
-                DBTasks.refreshExpiredFeeds(context);
+                DBTasks.refreshAllFeeds(context, null);
             } else {
                 if (AppConfig.DEBUG)
                     Log.d(TAG,

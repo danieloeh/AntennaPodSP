@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.AppPreferences;
 import de.danoeh.antennapodsp.preferences.UserPreferences;
 
 /**
@@ -25,7 +26,7 @@ public class AlarmUpdateReceiver extends BroadcastReceiver {
                 Log.d(TAG, "Resetting update alarm after app upgrade");
         }
 
-        UserPreferences.restartUpdateAlarm(UserPreferences.getUpdateInterval());
+        new AppPreferences().setUpdateAlarm();
 
     }
 

@@ -79,7 +79,6 @@ public class AppInitializer {
         upe.putBoolean(PREF_PAUSE_ON_HEADSET_DISCONNECT, appPreferences.pauseOnHeadsetDisconnect);
         upe.putBoolean(PREF_FOLLOW_QUEUE, appPreferences.followQueue);
         upe.putBoolean(PREF_DOWNLOAD_MEDIA_ON_WIFI_ONLY, appPreferences.downloadMediaOnWifiOnly);
-        UserPreferences.setUpdateInterval(context, appPreferences.updateInterval);
         upe.putBoolean(PREF_MOBILE_UPDATE, appPreferences.allowMobileUpdates);
         upe.putBoolean(PREF_ENABLE_AUTODL, appPreferences.enableAutodownload);
 
@@ -87,6 +86,10 @@ public class AppInitializer {
         upe.putBoolean(PREF_PAUSE_PLAYBACK_FOR_FOCUS_LOSS, appPreferences.pauseForFocusLoss);
 
         upe.commit();
+
+        if (isFirstLaunch) {
+            appPreferences.setUpdateAlarm();
+        }
 
         // update init preferences
 

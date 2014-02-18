@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.AppPreferences;
 import de.danoeh.antennapodsp.R;
 import de.danoeh.antennapodsp.receiver.FeedUpdateReceiver;
 import org.apache.commons.lang3.StringUtils;
@@ -286,8 +287,7 @@ public class UserPreferences implements
         } else if (key.equals(PREF_UPDATE_INTERVAL)) {
             updateInterval = readUpdateInterval(sp.getString(
                     PREF_UPDATE_INTERVAL, "0"));
-            restartUpdateAlarm(updateInterval);
-
+            new AppPreferences().setUpdateAlarm();
         } else if (key.equals(PREF_AUTO_DELETE)) {
             autoDelete = sp.getBoolean(PREF_AUTO_DELETE, false);
 
@@ -448,22 +448,19 @@ public class UserPreferences implements
 
     /**
      * Updates alarm registered with the AlarmManager service or deactivates it.
-     *
-     * @param millis new value to register with AlarmManager. If millis is 0, the
-     *               alarm is deactivated.
      */
-    public static void restartUpdateAlarm(long millis) {
+    public static void restartUpdateAlarm(long triggerAtMillis, long intervalMillis) {
         instanceAvailable();
         if (AppConfig.DEBUG)
-            Log.d(TAG, "Restarting update alarm. New value: " + millis);
+            Log.d(TAG, "Restarting update alarm.");
         AlarmManager alarmManager = (AlarmManager) instance.context
                 .getSystemService(Context.ALARM_SERVICE);
         PendingIntent updateIntent = PendingIntent.getBroadcast(
                 instance.context, 0, new Intent(
                 FeedUpdateReceiver.ACTION_REFRESH_FEEDS), 0);
         alarmManager.cancel(updateIntent);
-        if (millis != 0) {
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, millis, millis,
+        if (intervalMillis != 0) {
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerAtMillis, intervalMillis,
                     updateIntent);
             if (AppConfig.DEBUG)
                 Log.d(TAG, "Changed alarm to new interval");

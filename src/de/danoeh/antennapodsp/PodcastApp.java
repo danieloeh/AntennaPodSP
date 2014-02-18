@@ -7,6 +7,7 @@ import de.danoeh.antennapodsp.asynctask.ImageLoader;
 import de.danoeh.antennapodsp.feed.EventDistributor;
 import de.danoeh.antennapodsp.preferences.PlaybackPreferences;
 import de.danoeh.antennapodsp.preferences.UserPreferences;
+import de.danoeh.antennapodsp.storage.DBTasks;
 
 /**
  * Main application class.
@@ -33,6 +34,8 @@ public class PodcastApp extends Application {
         UserPreferences.createInstance(this);
         PlaybackPreferences.createInstance(this);
         EventDistributor.getInstance();
+
+        DBTasks.refreshAllFeeds(this, null);
     }
 
     @Override
