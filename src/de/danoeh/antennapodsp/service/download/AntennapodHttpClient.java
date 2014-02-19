@@ -2,6 +2,7 @@ package de.danoeh.antennapodsp.service.download;
 
 import android.util.Log;
 import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.AppPreferences;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.conn.ClientConnectionManager;
@@ -49,7 +50,7 @@ public class AntennapodHttpClient {
             if (AppConfig.DEBUG) Log.d(TAG, "Creating new instance of HTTP client");
 
             HttpParams params = new BasicHttpParams();
-            params.setParameter(CoreProtocolPNames.USER_AGENT, AppConfig.USER_AGENT);
+            params.setParameter(CoreProtocolPNames.USER_AGENT, AppPreferences.USER_AGENT);
             params.setIntParameter("http.protocol.max-redirects", MAX_REDIRECTS);
             params.setBooleanParameter("http.protocol.reject-relative-redirect",
                     false);
@@ -80,7 +81,7 @@ public class AntennapodHttpClient {
     private static ClientConnectionManager createClientConnectionManager() {
         HttpParams params = new BasicHttpParams();
         params.setIntParameter(ConnManagerPNames.MAX_TOTAL_CONNECTIONS, MAX_CONNECTIONS);
-        params.setParameter(ConnManagerParams.MAX_CONNECTIONS_PER_ROUTE, new ConnPerRoute(){
+        params.setParameter(ConnManagerParams.MAX_CONNECTIONS_PER_ROUTE, new ConnPerRoute() {
             @Override
             public int getMaxForRoute(HttpRoute httpRoute) {
                 return MAX_CONNECTIONS_PER_ROUTE;

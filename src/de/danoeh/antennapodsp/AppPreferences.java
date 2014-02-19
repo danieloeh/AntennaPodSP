@@ -16,9 +16,14 @@ public class AppPreferences {
      */
     String[] feedUrls = {"http://feeds.feedburner.com/EinschlafenPodcastEnhanced?format=xml"};
 
+    /**
+     * User-Agent header for HTTP-requests.
+     */
+    public final static String USER_AGENT = "EinschlafenPodcastAndroid/1.0";
+
     // Preferences
 
-    public boolean pauseOnHeadsetDisconnect = true;
+    public boolean pauseOnHeadsetDisconnect = false;
     public boolean followQueue = false;
     public boolean downloadMediaOnWifiOnly = true;
     public boolean allowMobileUpdates = true;
