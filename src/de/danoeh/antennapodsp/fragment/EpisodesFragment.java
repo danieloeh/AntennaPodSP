@@ -124,6 +124,23 @@ public class EpisodesFragment extends ListFragment {
         listviewSetup = true;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        EventDistributor.getInstance().unregister(contentUpdateListener);
+        try {
+            getActivity().unregisterReceiver(playerStatusReceiver);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventDistributor.getInstance().register(contentUpdateListener);
+        getActivity().registerReceiver(playerStatusReceiver, new IntentFilter(PlaybackService.ACTION_PLAYER_STATUS_CHANGED));
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -135,8 +152,6 @@ public class EpisodesFragment extends ListFragment {
         if (listviewSetup) {
             episodesListAdapter.notifyDataSetChanged();
         }
-        EventDistributor.getInstance().register(contentUpdateListener);
-        activity.registerReceiver(playerStatusReceiver, new IntentFilter(PlaybackService.ACTION_PLAYER_STATUS_CHANGED));
     }
 
     @Override
@@ -144,12 +159,6 @@ public class EpisodesFragment extends ListFragment {
         super.onDetach();
         if (feedsLoaded) {
             downloadObserver.onPause();
-        }
-        EventDistributor.getInstance().unregister(contentUpdateListener);
-        try {
-            getActivity().unregisterReceiver(playerStatusReceiver);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
         }
     }
 

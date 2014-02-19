@@ -395,7 +395,7 @@ public class PlaybackService extends Service {
             }
             Intent i = new Intent(ACTION_PLAYER_STATUS_CHANGED);
             i.putExtra(EXTRA_NEW_PLAYER_STATUS, newInfo.playerStatus.ordinal());
-            sendBroadcast(new Intent(ACTION_PLAYER_STATUS_CHANGED));
+            sendBroadcast(i);
             refreshRemoteControlClientState(newInfo);
             bluetoothNotifyChange(newInfo);
         }
