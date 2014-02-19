@@ -12,6 +12,7 @@ import android.view.*;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import de.danoeh.antennapodsp.AppConfig;
 import de.danoeh.antennapodsp.R;
+import de.danoeh.antennapodsp.SPAUtil;
 import de.danoeh.antennapodsp.feed.EventDistributor;
 import de.danoeh.antennapodsp.fragment.EpisodesFragment;
 import de.danoeh.antennapodsp.fragment.ExternalPlayerFragment;
@@ -80,6 +81,8 @@ public class MainActivity extends ActionBarActivity {
                 slidingUpPanelLayout.hidePane();
             }
         });
+
+        SPAUtil.askForPodcatcherInstallation(getApplicationContext());
     }
 
     @Override

@@ -14,12 +14,25 @@ public class AppPreferences {
     /**
      * List of feeds.
      */
-    String[] feedUrls = {"http://feeds.feedburner.com/EinschlafenPodcastEnhanced?format=xml"};
+    public String[] feedUrls = {"http://feeds.feedburner.com/EinschlafenPodcastEnhanced?format=xml"};
 
     /**
      * User-Agent header for HTTP-requests.
      */
     public final static String USER_AGENT = "EinschlafenPodcastAndroid/1.0";
+
+    /**
+     * As soon as the user installs a second AntennaPod single purpose app, this app will ask the user
+     * if a universal podcatcher app should be installed. If the user accepts, the device will install the
+     * app that this URL points to.
+     */
+    public final static String PODCATCHER_MARKET_URL = "market://search?q=pname:de.danoeh.antennapod";
+    /**
+     * Package name of the universal podcatcher
+     */
+    public final static String PODCATCHER_PACKAGE_NAME = "de.danoeh.antennapod";
+
+    public final static String PODCATCHER_WEBSITE = "http://antennapod.com";
 
     // Preferences
 

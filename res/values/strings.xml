@@ -350,4 +350,12 @@
     <string name="episode_dialog_downloading_msg">This episode is currently being downloaded.</string>
     <string name="episode_dialog_not_downloaded_msg">This episode has not been downloaded yet.</string>
     <string name="episode_dialog_stream">Play immediately</string>
+
+
+    <!-- SPA-Util strings -->
+    <string name="spa_ask_installation_dialog_title">Install podcatcher?</string>
+    <string name="spa_ask_installation_dialog_msg">It looks like you have installed multiple apps to listen to more than one podcast. Instead of having several app for listening to podcasts installed on your device, you can also install one univseral podcatcher to manage all of your podcast subscriptions. Would you like to install a podcatcher now?</string>
+    <string name="spa_ask_installation_dialog_accept">Install podcatcher</string>
+    <string name="spa_ask_installation_dialog_deny">Not install podcatcher</string>
+
 </resources>

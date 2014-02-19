@@ -105,6 +105,21 @@
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
             </intent-filter>
         </receiver>
+
+        <receiver android:name=".receiver.SPAReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED"/>
+                <data
+                    android:path="de.danoeh.antennapodsp*"
+                    android:scheme="package"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="de.danoeh.antennapdsp.intent.SP_APPS_QUERY_FEEDS"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="de.danoeh.antennapodsp.intent.SP_APPS_USER_ASKED_FOR_INSTALLATION"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
