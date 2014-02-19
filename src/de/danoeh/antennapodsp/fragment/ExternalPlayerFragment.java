@@ -56,7 +56,6 @@ public class ExternalPlayerFragment extends Fragment {
     private ImageView imgvCoverAnchored;
     private ViewGroup layoutInfoAnchored;
     private TextView txtvTitleAnchored;
-    private TextView txtvStatusAnchored;
     private ImageButton butPlayAnchored;
 
     private PlaybackController controller;
@@ -129,7 +128,6 @@ public class ExternalPlayerFragment extends Fragment {
         layoutInfoAnchored = (ViewGroup) root.findViewById(R.id.layoutInfo_anchored);
         txtvTitleAnchored = (TextView) root.findViewById(R.id.txtvTitleAnchored);
         butPlayAnchored = (ImageButton) root.findViewById(R.id.butPlayAnchored);
-        txtvStatusAnchored = (TextView) root.findViewById(R.id.txtvStatusAnchored);
 
         layoutInfoAnchored.setOnClickListener(new OnClickListener() {
 
@@ -251,12 +249,10 @@ public class ExternalPlayerFragment extends Fragment {
 
             @Override
             public void postStatusMsg(int msg) {
-                txtvStatusAnchored.setText(msg);
             }
 
             @Override
             public void clearStatusMsg() {
-                txtvStatusAnchored.setText("");
             }
 
             @Override
@@ -362,6 +358,7 @@ public class ExternalPlayerFragment extends Fragment {
                     butPlay.setVisibility(View.VISIBLE);
                 }
                 */
+                ((MainActivity)getActivity()).openPlayer();
                 return true;
             } else {
                 Log.w(TAG,

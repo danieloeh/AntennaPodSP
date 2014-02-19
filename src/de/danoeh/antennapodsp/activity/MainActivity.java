@@ -51,6 +51,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.main);
         slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         slidingUpPanelLayout.setPanelSlideListener(panelSlideListener);
+        slidingUpPanelLayout.setShadowDrawable(getResources().getDrawable(com.sothree.slidinguppanel.library.R.drawable.above_shadow));
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
@@ -72,6 +73,13 @@ public class MainActivity extends ActionBarActivity {
         externalPlayerFragment = ExternalPlayerFragment.newInstance(playerInitialState);
         fT.replace(R.id.player_view, externalPlayerFragment);
         fT.commit();
+
+        slidingUpPanelLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                slidingUpPanelLayout.hidePane();
+            }
+        });
     }
 
     @Override
@@ -161,7 +169,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onPlayerFragmentCreated(ExternalPlayerFragment fragment, ExternalPlayerFragment.FragmentState fragmentState) {
-        if (fragmentState == ExternalPlayerFragment.FragmentState.EXPANDED ) {
+        if (fragmentState == ExternalPlayerFragment.FragmentState.EXPANDED) {
             slidingUpPanelLayout.setDragView(fragment.getCollapseView());
         } else {
             slidingUpPanelLayout.setDragView(fragment.getExpandView());
@@ -201,6 +209,23 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void resetPlayer() {
-        slidingUpPanelLayout.collapsePane();
+        slidingUpPanelLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                slidingUpPanelLayout.collapsePane();
+                slidingUpPanelLayout.hidePane();
+
+            }
+        });
+    }
+
+    public void openPlayer() {
+        slidingUpPanelLayout.showPane();
+        slidingUpPanelLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                slidingUpPanelLayout.collapsePane();
+            }
+        });
     }
 }
