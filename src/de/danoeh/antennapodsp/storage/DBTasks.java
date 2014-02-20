@@ -336,25 +336,6 @@ public final class DBTasks {
         }
     }
 
-    private static int getNumberOfUndownloadedEpisodes(
-            final List<FeedItem> queue, final List<FeedItem> unreadItems) {
-        int counter = 0;
-        for (FeedItem item : queue) {
-            if (item.hasMedia() && !item.getMedia().isDownloaded()
-                    && !item.getMedia().isPlaying()
-                    && item.getFeed().getPreferences().getAutoDownload()) {
-                counter++;
-            }
-        }
-        for (FeedItem item : unreadItems) {
-            if (item.hasMedia() && !item.getMedia().isDownloaded()
-                    && item.getFeed().getPreferences().getAutoDownload()) {
-                counter++;
-            }
-        }
-        return counter;
-    }
-
     /**
      * Downloads the most recent episodes automatically. The exact number of
      * episodes that will be downloaded can be set in the AppPreferences.
@@ -471,12 +452,13 @@ public final class DBTasks {
     }
 
     /**
-     * Removed downloaded episodes outside of the queue if the episode cache is full. Episodes with a smaller
-     * 'playbackCompletionDate'-value will be deleted first.
-     * <p/>
-     * This method should NOT be executed on the GUI thread.
+     * Performs an automatic cleanup. Episodes that have been downloaded first will also be deleted first.
+     * The episode that is currently playing as well as the n most recent episodes (the exact value is determined
+     * by AppPreferences.numberOfNewAutomaticallyDownloadedEpisodes) will never be deleted.
+     * This method will only delete as many episodes as necessary to get below the episode cache size
      *
-     * @param context Used for accessing the DB.
+     * @param context
+     * @return
      */
     public static void performAutoCleanup(final Context context) {
         performAutoCleanup(context, getPerformAutoCleanupArgs(context, 0));

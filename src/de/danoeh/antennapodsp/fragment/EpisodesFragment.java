@@ -36,9 +36,7 @@ public class EpisodesFragment extends ListFragment {
 
     private static final String ARG_FEED_ID = "feedID";
 
-    private static final int EVENTS = EventDistributor.QUEUE_UPDATE
-            | EventDistributor.UNREAD_ITEMS_UPDATE
-            | EventDistributor.FEED_LIST_UPDATE
+    private static final int EVENTS = EventDistributor.FEED_LIST_UPDATE
             | EventDistributor.DOWNLOAD_HANDLED;
 
     private Feed feed;

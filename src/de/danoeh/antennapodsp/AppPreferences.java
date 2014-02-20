@@ -14,7 +14,7 @@ public class AppPreferences {
     /**
      * List of feeds.
      */
-    public String[] feedUrls = {"http://feeds.feedburner.com/EinschlafenPodcastEnhanced?format=xml"};
+    public static final String[] feedUrls = {"http://feeds.feedburner.com/EinschlafenPodcastEnhanced?format=xml"};
 
     /**
      * User-Agent header for HTTP-requests.
@@ -37,7 +37,6 @@ public class AppPreferences {
     // Preferences
 
     public boolean pauseOnHeadsetDisconnect = false;
-    public boolean followQueue = false;
     public boolean downloadMediaOnWifiOnly = true;
     public boolean allowMobileUpdates = true;
     public boolean enableAutodownload = true;

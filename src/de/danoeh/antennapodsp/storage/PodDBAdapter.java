@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class PodDBAdapter {
     private static final String TAG = "PodDBAdapter";
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "Antennapod.db";
 
     /**
@@ -1143,65 +1143,6 @@ public class PodDBAdapter {
                               final int newVersion) {
             Log.w("DBAdapter", "Upgrading from version " + oldVersion + " to "
                     + newVersion + ".");
-            if (oldVersion <= 1) {
-                db.execSQL("ALTER TABLE " + TABLE_NAME_FEEDS + " ADD COLUMN "
-                        + KEY_TYPE + " TEXT");
-            }
-            if (oldVersion <= 2) {
-                db.execSQL("ALTER TABLE " + TABLE_NAME_SIMPLECHAPTERS
-                        + " ADD COLUMN " + KEY_LINK + " TEXT");
-            }
-            if (oldVersion <= 3) {
-                db.execSQL("ALTER TABLE " + TABLE_NAME_FEED_ITEMS
-                        + " ADD COLUMN " + KEY_ITEM_IDENTIFIER + " TEXT");
-            }
-            if (oldVersion <= 4) {
-                db.execSQL("ALTER TABLE " + TABLE_NAME_FEEDS + " ADD COLUMN "
-                        + KEY_FEED_IDENTIFIER + " TEXT");
-            }
-            if (oldVersion <= 5) {
-                db.execSQL("ALTER TABLE " + TABLE_NAME_DOWNLOAD_LOG
-                        + " ADD COLUMN " + KEY_REASON_DETAILED + " TEXT");
-                db.execSQL("ALTER TABLE " + TABLE_NAME_DOWNLOAD_LOG
-                        + " ADD COLUMN " + KEY_DOWNLOADSTATUS_TITLE + " TEXT");
-            }
-            if (oldVersion <= 6) {
-                db.execSQL("ALTER TABLE " + TABLE_NAME_SIMPLECHAPTERS
-                        + " ADD COLUMN " + KEY_CHAPTER_TYPE + " INTEGER");
-            }
-            if (oldVersion <= 7) {
-                db.execSQL("ALTER TABLE " + TABLE_NAME_FEED_MEDIA
-                        + " ADD COLUMN " + KEY_PLAYBACK_COMPLETION_DATE
-                        + " INTEGER");
-            }
-            if (oldVersion <= 8) {
-                final int KEY_ID_POSITION = 0;
-                final int KEY_MEDIA_POSITION = 1;
-
-                // Add feeditem column to feedmedia table
-                db.execSQL("ALTER TABLE " + TABLE_NAME_FEED_MEDIA
-                        + " ADD COLUMN " + KEY_FEEDITEM
-                        + " INTEGER");
-                Cursor feeditemCursor = db.query(TABLE_NAME_FEED_ITEMS, new String[]{KEY_ID, KEY_MEDIA}, "? > 0", new String[]{KEY_MEDIA}, null, null, null);
-                if (feeditemCursor.moveToFirst()) {
-                    db.beginTransaction();
-                    ContentValues contentValues = new ContentValues();
-                    do {
-                        long mediaId = feeditemCursor.getLong(KEY_MEDIA_POSITION);
-                        contentValues.put(KEY_FEEDITEM, feeditemCursor.getLong(KEY_ID_POSITION));
-                        db.update(TABLE_NAME_FEED_MEDIA, contentValues, KEY_ID + "=?", new String[]{String.valueOf(mediaId)});
-                        contentValues.clear();
-                    } while (feeditemCursor.moveToNext());
-                    db.setTransactionSuccessful();
-                    db.endTransaction();
-                }
-                feeditemCursor.close();
-            }
-            if (oldVersion <= 9) {
-                db.execSQL("ALTER TABLE " + TABLE_NAME_FEEDS
-                        + " ADD COLUMN " + KEY_AUTO_DOWNLOAD
-                        + " INTEGER DEFAULT 1");
-            }
         }
     }
 }
