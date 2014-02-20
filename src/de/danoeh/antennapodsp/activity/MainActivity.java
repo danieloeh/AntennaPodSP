@@ -222,12 +222,16 @@ public class MainActivity extends ActionBarActivity {
         });
     }
 
-    public void openPlayer() {
+    public void openPlayer(final ExternalPlayerFragment.FragmentState state) {
         slidingUpPanelLayout.showPane();
         slidingUpPanelLayout.post(new Runnable() {
             @Override
             public void run() {
-                slidingUpPanelLayout.collapsePane();
+                if (state == ExternalPlayerFragment.FragmentState.ANCHORED) {
+                    slidingUpPanelLayout.collapsePane();
+                } else if (state == ExternalPlayerFragment.FragmentState.EXPANDED) {
+                    slidingUpPanelLayout.expandPane();
+                }
             }
         });
     }

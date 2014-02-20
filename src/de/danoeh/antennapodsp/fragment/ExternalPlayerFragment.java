@@ -358,7 +358,7 @@ public class ExternalPlayerFragment extends Fragment {
                     butPlay.setVisibility(View.VISIBLE);
                 }
                 */
-                ((MainActivity)getActivity()).openPlayer();
+                ((MainActivity)getActivity()).openPlayer(fragmentState);
                 return true;
             } else {
                 Log.w(TAG,
