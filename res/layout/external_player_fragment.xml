@@ -8,6 +8,7 @@
 
     <FrameLayout
         android:id="@+id/top_layout"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="@dimen/external_player_height"
         android:layout_alignParentTop="true">
@@ -221,17 +222,19 @@
         </RelativeLayout>
 
         <LinearLayout
+            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_above="@id/playtime_layout"
             android:layout_alignParentTop="true"
-            android:clickable="true">
+            android:clickable="true"
+            android:layout_marginTop="1.5dp">
 
-            <TextView
-                android:id="@+id/txtvDescriptionExpanded"
+            <WebView
+                android:id="@+id/webvDescription"
+                android:background="@color/white"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="16dp"/>
+                android:layout_height="match_parent"/>
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

@@ -1,14 +1,20 @@
 package de.danoeh.antennapodsp.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.*;
 import de.danoeh.antennapodsp.AppConfig;
 import de.danoeh.antennapodsp.R;
@@ -16,8 +22,12 @@ import de.danoeh.antennapodsp.activity.MainActivity;
 import de.danoeh.antennapodsp.asynctask.ImageLoader;
 import de.danoeh.antennapodsp.service.playback.PlaybackService;
 import de.danoeh.antennapodsp.util.Converter;
+import de.danoeh.antennapodsp.util.ShownotesProvider;
 import de.danoeh.antennapodsp.util.playback.Playable;
 import de.danoeh.antennapodsp.util.playback.PlaybackController;
+import org.apache.commons.lang3.StringEscapeUtils;
+
+import java.util.concurrent.Callable;
 
 /**
  * Fragment which is supposed to be displayed outside of the MediaplayerActivity
@@ -47,7 +57,7 @@ public class ExternalPlayerFragment extends Fragment {
     private ImageButton butFFExpanded;
     private TextView txtvPositionExpanded;
     private TextView txtvLengthExpanded;
-    private TextView txtvDescriptionExpanded;
+    private WebView webvDescription;
     private SeekBar sbPositionExanded;
 
 
@@ -119,7 +129,7 @@ public class ExternalPlayerFragment extends Fragment {
         txtvPositionExpanded = (TextView) root.findViewById(R.id.txtvPositionExpanded);
         txtvLengthExpanded = (TextView) root.findViewById(R.id.txtvLengthExpanded);
         sbPositionExanded = (SeekBar) root.findViewById(R.id.sbPositionExpanded);
-        txtvDescriptionExpanded = (TextView) root.findViewById(R.id.txtvDescriptionExpanded);
+        webvDescription = (WebView) root.findViewById(R.id.webvDescription);
         layoutInfoExpanded = (RelativeLayout) root.findViewById(R.id.layoutInfo_expanded);
 
         // Anchored components
@@ -340,11 +350,8 @@ public class ExternalPlayerFragment extends Fragment {
 
                 txtvPositionExpanded.setText(Converter.getDurationStringLong(media.getPosition()));
                 txtvLengthExpanded.setText(Converter.getDurationStringLong(media.getDuration()));
-                try {
-                    txtvDescriptionExpanded.setText(media.loadShownotes().call());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                loadDescriptionWebview(media);
+
                 if (media.getWebsiteLink() == null) {
                     butActionExpanded.setVisibility(View.INVISIBLE);
                 } else {
@@ -358,7 +365,7 @@ public class ExternalPlayerFragment extends Fragment {
                     butPlay.setVisibility(View.VISIBLE);
                 }
                 */
-                ((MainActivity)getActivity()).openPlayer(fragmentState);
+                ((MainActivity) getActivity()).openPlayer(fragmentState);
                 return true;
             } else {
                 Log.w(TAG,
@@ -392,6 +399,84 @@ public class ExternalPlayerFragment extends Fragment {
         txtvTitleAnchored.setText(getString(R.string.no_media_playing_label));
         txtvPositionExpanded.setText("");
         txtvLengthExpanded.setText("");
-        txtvDescriptionExpanded.setText("");
+        webvDescription.clearView();
+    }
+
+    private void loadDescriptionWebview(final ShownotesProvider shownotesProvider) {
+        AsyncTask<Void, Void, Void> loadTask = new AsyncTask<Void, Void, Void>() {
+            String data;
+
+
+            private String applyWebviewStyle(String textColor, String data) {
+                final String WEBVIEW_STYLE = "<html><head><style type=\"text/css\"> * { color: %s; font-family: Helvetica; line-height: 1.3em; font-size: 11pt; } a { font-style: normal; text-decoration: none; font-weight: normal; color: #00A8DF; } img { display: block; margin: 10 auto; max-width: %s; height: auto; } body { margin: %dpx %dpx %dpx %dpx; }</style></head><body>%s</body></html>";
+                final int pageMargin = (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP, 8, getResources()
+                        .getDisplayMetrics());
+                return String.format(WEBVIEW_STYLE, textColor, "100%", pageMargin,
+                        pageMargin, pageMargin, pageMargin, data);
+            }
+
+
+            @Override
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
+                // /webvDescription.loadData(url, "text/html", "utf-8");
+                if (ExternalPlayerFragment.this.isAdded() && webvDescription != null) {
+                    webvDescription.loadDataWithBaseURL(null, data, "text/html",
+                            "utf-8", "about:blank");
+                    if (getActivity() != null) {
+                        ((ActionBarActivity) getActivity())
+                                .setSupportProgressBarIndeterminateVisibility(false);
+                    }
+                    if (AppConfig.DEBUG)
+                        Log.d(TAG, "Webview loaded");
+                }
+            }
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                if (getActivity() != null) {
+                    ((ActionBarActivity) getActivity())
+                            .setSupportProgressBarIndeterminateVisibility(false);
+                }
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                if (AppConfig.DEBUG)
+                    Log.d(TAG, "Loading Webview");
+                try {
+                    Callable<String> shownotesLoadTask = shownotesProvider.loadShownotes();
+                    final String shownotes = shownotesLoadTask.call();
+
+                    data = StringEscapeUtils.unescapeHtml4(shownotes);
+                    Activity activity = getActivity();
+                    if (activity != null) {
+                        TypedArray res = activity
+                                .getTheme()
+                                .obtainStyledAttributes(
+                                        new int[]{android.R.attr.textColorPrimary});
+                        int colorResource = res.getColor(0, 0);
+                        String colorString = String.format("#%06X",
+                                0xFFFFFF & colorResource);
+                        Log.i(TAG, "text color: " + colorString);
+                        res.recycle();
+                        data = applyWebviewStyle(colorString, data);
+                    } else {
+                        cancel(true);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+        };
+        if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.GINGERBREAD_MR1) {
+            loadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            loadTask.execute();
+        }
     }
 }
