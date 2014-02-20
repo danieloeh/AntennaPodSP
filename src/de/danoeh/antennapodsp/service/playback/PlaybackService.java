@@ -637,10 +637,14 @@ public class PlaybackService extends Service {
             @Override
             protected void onPostExecute(Void result) {
                 super.onPostExecute(result);
-                if (!isCancelled() && info.playerStatus == PlayerStatus.PLAYING
-                        && info.playable != null) {
-                    String contentText = info.playable.getFeedTitle();
-                    String contentTitle = info.playable.getEpisodeTitle();
+                if (mediaPlayer == null) {
+                    return;
+                }
+                PlaybackServiceMediaPlayer.PSMPInfo newInfo = mediaPlayer.getPSMPInfo();
+                if (!isCancelled() && newInfo.playerStatus == PlayerStatus.PLAYING
+                        && newInfo.playable != null) {
+                    String contentText = newInfo.playable.getFeedTitle();
+                    String contentTitle = newInfo.playable.getEpisodeTitle();
                     Notification notification = null;
                     if (android.os.Build.VERSION.SDK_INT >= 16) {
                         Intent pauseButtonIntent = new Intent(
@@ -673,7 +677,9 @@ public class PlaybackService extends Service {
                                 .setSmallIcon(R.drawable.ic_stat_antenna);
                         notification = notificationBuilder.getNotification();
                     }
-                    startForeground(NOTIFICATION_ID, notification);
+                    if (newInfo.playerStatus == PlayerStatus.PLAYING) {
+                        startForeground(NOTIFICATION_ID, notification);
+                    }
                     if (AppConfig.DEBUG)
                         Log.d(TAG, "Notification set up");
                 }
