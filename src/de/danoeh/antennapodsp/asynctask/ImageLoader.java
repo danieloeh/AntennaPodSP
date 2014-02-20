@@ -143,17 +143,20 @@ public class ImageLoader {
                                     ImageView target, int length) {
         final int defaultCoverResource = getDefaultCoverResource(target
                 .getContext());
-
-        if (source != null && source.getImageLoaderCacheKey() != null) {
-            target.setTag(R.id.imageloader_key, source.getImageLoaderCacheKey());
-            CachedBitmap cBitmap = getBitmapFromThumbnailCache(source.getImageLoaderCacheKey());
-            if (cBitmap != null && cBitmap.getLength() >= length) {
-                target.setImageBitmap(cBitmap.getBitmap());
-            } else {
-                target.setImageResource(defaultCoverResource);
-                BitmapDecodeWorkerTask worker = new BitmapDecodeWorkerTask(
-                        handler, target, source, length, IMAGE_TYPE_THUMBNAIL);
-                executor.submit(worker);
+        final String cacheKey;
+        if (source != null && (cacheKey = source.getImageLoaderCacheKey()) != null) {
+            final Object currentTag = target.getTag(R.id.imageloader_key);
+            if (currentTag == null || !cacheKey.equals(currentTag)) {
+                target.setTag(R.id.imageloader_key, cacheKey);
+                CachedBitmap cBitmap = getBitmapFromThumbnailCache(cacheKey);
+                if (cBitmap != null && cBitmap.getLength() >= length) {
+                    target.setImageBitmap(cBitmap.getBitmap());
+                } else {
+                    target.setImageResource(defaultCoverResource);
+                    BitmapDecodeWorkerTask worker = new BitmapDecodeWorkerTask(
+                            handler, target, source, length, IMAGE_TYPE_THUMBNAIL);
+                    executor.submit(worker);
+                }
             }
         } else {
             target.setImageResource(defaultCoverResource);
