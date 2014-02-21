@@ -16,5 +16,4 @@
     <item name="skip_episode_item" type="id"/>
     <item name="image_disk_cache_key" type="id"/>
     <item name="imageloader_key" type="id"/>
-
 </resources>

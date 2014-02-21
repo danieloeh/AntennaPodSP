@@ -1,5 +1,7 @@
 package de.danoeh.antennapodsp.activity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.webkit.WebView;
@@ -23,7 +25,13 @@ public class AboutActivity extends ActionBarActivity {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
+                if (url.startsWith("http")) {
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    startActivity(i);
+                } else {
+                    view.loadUrl(url);
+                }
                 return false;
             }
 

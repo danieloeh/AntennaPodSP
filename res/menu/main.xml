@@ -7,4 +7,8 @@
         android:icon="?attr/navigation_refresh"
         custom:showAsAction="ifRoom|collapseActionView">
     </item>
+    <item
+        android:id="@+id/about_item"
+        android:title="@string/about_label"
+        custom:showAsAction="collapseActionView"/>
 </menu>

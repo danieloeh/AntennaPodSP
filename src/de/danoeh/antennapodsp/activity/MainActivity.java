@@ -1,5 +1,6 @@
 package de.danoeh.antennapodsp.activity;
 
+import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -209,6 +210,9 @@ public class MainActivity extends ActionBarActivity {
         switch (item.getItemId()) {
             case R.id.all_feed_refresh:
                 DBTasks.refreshAllFeeds(this, null);
+                return true;
+            case R.id.about_item:
+                startActivity(new Intent(this, AboutActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

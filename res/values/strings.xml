@@ -9,6 +9,7 @@
     <string name="add_new_feed_label">Add podcast</string>
     <string name="downloads_label">Downloads</string>
     <string name="cancel_download_label">Cancel Download</string>
+    <string name="about_label">About</string>
 
     <!-- Webview actions -->
     <string name="open_in_browser_label">Open in browser</string>
