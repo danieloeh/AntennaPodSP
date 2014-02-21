@@ -161,11 +161,8 @@ public class PlaybackService extends Service {
      * running, the type of the last played media will be looked up.
      */
     public static Intent getPlayerActivityIntent(Context context) {
-        if (isRunning) {
-            return new Intent(context, MainActivity.class);
-        } else {
-            throw new UnsupportedOperationException("Video is not supported yet");
-        }
+        return new Intent(context.getApplicationContext(), MainActivity.class);
+
     }
 
     /**
@@ -604,7 +601,7 @@ public class PlaybackService extends Service {
     private void setupNotification(final PlaybackServiceMediaPlayer.PSMPInfo info) {
         final PendingIntent pIntent = PendingIntent.getActivity(this, 0,
                 PlaybackService.getPlayerActivityIntent(this),
-                PendingIntent.FLAG_UPDATE_CURRENT);
+                0);
 
         if (notificationSetupTask != null) {
             notificationSetupTask.cancel(true);
