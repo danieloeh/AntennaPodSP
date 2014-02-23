@@ -44,7 +44,7 @@ Since a single-purpose app are supposed to attract *new* podcast listeners, ther
 
 ## Who is using AntennaPod SP?
 
-So far, the app for listening to the [Einschlafen Podcast](http://einschlafen-podcast.de/) is based on AntennaPod SP. Its source code can be found [here]().
+So far, the app for listening to the [Einschlafen Podcast](http://einschlafen-podcast.de/) is based on AntennaPod SP. Its source code can be found [here](https://github.com/danieloeh/EinschlafenPodcastAndroidApp).
 
 
 ## How do i build an app for my podcasts that is based on AntennaPod SP?
