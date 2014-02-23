@@ -26,7 +26,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:19.0.+'
     compile 'org.apache.commons:commons-lang3:3.2.1'
     compile 'commons-io:commons-io:2.4'
-    compile project(':dependencies:AndroidSlidingUpPanel:library')
+    compile project(':dep:AndroidSlidingUpPanel:library')
     compile files('libs/presto_client-0.8.5.jar')
 }
 
@@ -93,4 +93,12 @@ android {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.10'
 }

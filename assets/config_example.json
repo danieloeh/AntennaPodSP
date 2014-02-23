@@ -1,0 +1,26 @@
+{
+    "version" : 0,
+
+    "feeds" : [
+        "http://feeds.feedburner.com/EinschlafenPodcastEnhanced?format=xml"
+        ],
+
+    "user_agent" : "EinschlafenPodcast/1.0",
+    
+    "config" : {
+        "pauseOnHeadsetDisconnect" : false,
+        "downloadMediaOnWifiOnly" : true,
+        "allowMobileUpdates" : true,
+        "enableAutomaticDownload" : true,
+        "episodeCacheSize" : 314572800,
+        "pauseForFocusLoss" : true,
+        "numberOfNewAutomaticallyDownloadedEpisodes" : 3
+    },
+
+    "podcatcher" : {
+        "market_url" : "market://search?q=pname:de.danoeh.antennapod",
+        "package_name" : "de.danoeh.antennapod",
+        "website_url" : "http://antennapod.com"
+    }
+
+}

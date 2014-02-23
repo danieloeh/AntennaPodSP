@@ -13,6 +13,7 @@ bin/
 gen/
 target/
 build/
+out.map
 
 # Local configuration file (sdk path, etc)
 local.properties
