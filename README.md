@@ -50,7 +50,7 @@ So far, the app for listening to the [Einschlafen Podcast](http://einschlafen-po
 ## How do i build an app for my podcasts that is based on AntennaPod SP?
 
 
-Basically, you need to fork this repository, install an Android SDK, modify two configuration files to enter your feeds and the name of your podcast, and add icons and assets for your app. A detailed guide on how to build your very own single-purpose app can be found in the Wiki (TODO).
+Basically, you need to fork this repository, install an Android SDK, modify two configuration files to enter your feeds and the name of your podcast, and add icons and assets for your app. A detailed guide on how to build your very own single-purpose app can be found in the [Wiki](https://github.com/danieloeh/AntennaPodSP/wiki/Building-AntennaPod-SP).
 
 
 ## License
