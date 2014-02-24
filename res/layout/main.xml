@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="bottom"
+    android:gravity="bottom"
     app:collapsedHeight="@dimen/external_player_height">
 
     <FrameLayout
