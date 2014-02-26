@@ -15,7 +15,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:layout_margin="16dp"
-            android:hint="@string/username_label"/>
+            />
 
         <EditText
             android:id="@+id/etxtPassword"
@@ -24,7 +24,7 @@
             android:layout_weight="1"
             android:layout_margin="16dp"
             android:inputType="textPassword"
-            android:hint="@string/password_label"/>
+            />
 
         <CheckBox
             android:id="@+id/chkSaveUsernamePassword"

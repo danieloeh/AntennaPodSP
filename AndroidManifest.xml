@@ -82,7 +82,7 @@
 
         <activity
             android:name=".activity.AboutActivity"
-            android:label="@string/about_pref">
+            android:label="@string/about_label">
         </activity>
 
         <receiver android:name=".receiver.ConnectivityActionReceiver">

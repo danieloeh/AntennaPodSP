@@ -139,8 +139,7 @@ public class UserPreferences implements
     }
 
     private int readEpisodeCacheSizeInternal(String valueFromPrefs) {
-        if (valueFromPrefs.equals(context
-                .getString(R.string.pref_episode_cache_unlimited))) {
+        if (valueFromPrefs.equals(Integer.toString(-1))) {
             return EPISODE_CACHE_SIZE_UNLIMITED;
         } else {
             return Integer.valueOf(valueFromPrefs);
