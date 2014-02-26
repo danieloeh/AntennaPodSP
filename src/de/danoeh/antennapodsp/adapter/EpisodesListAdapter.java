@@ -106,7 +106,7 @@ public class EpisodesListAdapter extends BaseAdapter {
 
             TypedArray drawables = context.obtainStyledAttributes(new int[]{
                     R.attr.navigation_accept, R.attr.navigation_refresh, R.attr.av_download});
-            final int[] labels = new int[]{R.string.status_downloaded_label, R.string.downloading_label, R.string.status_not_downloaded_label};
+            final int[] labels = new int[]{R.string.status_downloaded_label, R.string.status_downloading_label, R.string.status_not_downloaded_label};
             if (!media.isDownloaded()) {
                 if (isDownloadingMedia) {
                     // item is being downloaded
