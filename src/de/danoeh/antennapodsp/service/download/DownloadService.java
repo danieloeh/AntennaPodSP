@@ -250,7 +250,6 @@ public class DownloadService extends Service {
         if (AppConfig.DEBUG)
             Log.d(TAG, "Service shutting down");
         isRunning = false;
-        updateReport();
 
         stopForeground(true);
         NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -447,62 +446,6 @@ public class DownloadService extends Service {
 
     private void sendDownloadHandledIntent() {
         EventDistributor.getInstance().sendDownloadHandledBroadcast();
-    }
-
-    /**
-     * Creates a notification at the end of the service lifecycle to notify the
-     * user about the number of completed downloads. A report will only be
-     * created if the number of successfully downloaded feeds is bigger than 1
-     * or if there is at least one failed download which is not an image or if
-     * there is at least one downloaded media file.
-     */
-    private void updateReport() {
-        // check if report should be created
-        boolean createReport = false;
-        int successfulDownloads = 0;
-        int failedDownloads = 0;
-
-        // a download report is created if at least one download has failed
-        // (excluding failed image downloads)
-        for (DownloadStatus status : completedDownloads) {
-            if (status.isSuccessful()) {
-                successfulDownloads++;
-            } else if (!status.isCancelled()) {
-                if (status.getFeedfileType() != FeedImage.FEEDFILETYPE_FEEDIMAGE) {
-                    createReport = true;
-                }
-                failedDownloads++;
-            }
-        }
-
-        if (createReport) {
-            if (AppConfig.DEBUG)
-                Log.d(TAG, "Creating report");
-            // create notification object
-            Notification notification = new NotificationCompat.Builder(this)
-                    .setTicker(
-                            getString(de.danoeh.antennapodsp.R.string.download_report_title))
-                    .setContentTitle(
-                            getString(de.danoeh.antennapodsp.R.string.download_report_title))
-                    .setContentText(
-                            String.format(
-                                    getString(R.string.download_report_content),
-                                    successfulDownloads, failedDownloads))
-                    .setSmallIcon(R.drawable.stat_notify_sync)
-                    .setLargeIcon(
-                            BitmapFactory.decodeResource(getResources(),
-                                    R.drawable.stat_notify_sync))
-                    .setContentIntent(
-                            PendingIntent.getActivity(this, 0, new Intent(this,
-                                    MainActivity.class), 0))
-                    .setAutoCancel(true).getNotification();
-            NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            nm.notify(REPORT_ID, notification);
-        } else {
-            if (AppConfig.DEBUG)
-                Log.d(TAG, "No report is created");
-        }
-        completedDownloads.clear();
     }
 
     /**
