@@ -40,11 +40,8 @@ public class ExternalPlayerFragment extends Fragment {
     public static final int ARG_INIT_EPXANDED = 1;
     public static final int ARG_INIT_ANCHORED = 0;
 
-    private ViewGroup fragmentLayout;
 
     public static enum FragmentState {EXPANDED, ANCHORED}
-
-    ;
 
     // expanded layout components
     private LinearLayout topviewExpanded;
@@ -55,6 +52,7 @@ public class ExternalPlayerFragment extends Fragment {
     private ImageButton butPlayExpanded;
     private ImageButton butRevExpanded;
     private ImageButton butFFExpanded;
+    private Button butSleep;
     private TextView txtvPositionExpanded;
     private TextView txtvLengthExpanded;
     private WebView webvDescription;
@@ -117,7 +115,6 @@ public class ExternalPlayerFragment extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.external_player_fragment,
                 container, false);
-        fragmentLayout = (ViewGroup) root.findViewById(R.id.fragmentLayout);
         // Expanded components
         topviewExpanded = (LinearLayout) root.findViewById(R.id.topviewExpanded);
         imgvCoverExpanded = (ImageView) root.findViewById(R.id.imgvCoverExpanded);
@@ -126,6 +123,7 @@ public class ExternalPlayerFragment extends Fragment {
         butPlayExpanded = (ImageButton) root.findViewById(R.id.butPlayExpanded);
         butRevExpanded = (ImageButton) root.findViewById(R.id.butRevExpanded);
         butFFExpanded = (ImageButton) root.findViewById(R.id.butFFExpanded);
+        butSleep = (Button) root.findViewById(R.id.butSleep);
         txtvPositionExpanded = (TextView) root.findViewById(R.id.txtvPositionExpanded);
         txtvLengthExpanded = (TextView) root.findViewById(R.id.txtvLengthExpanded);
         sbPositionExanded = (SeekBar) root.findViewById(R.id.sbPositionExpanded);
@@ -185,6 +183,7 @@ public class ExternalPlayerFragment extends Fragment {
 
         butRevExpanded.setOnClickListener(controller.newOnRevButtonClickListener());
         butFFExpanded.setOnClickListener(controller.newOnFFButtonClickListener());
+        butSleep.setOnClickListener(controller.newOnSleepButtonClickListener());
 
         butActionExpanded.setOnClickListener(new OnClickListener() {
             @Override
@@ -200,6 +199,28 @@ public class ExternalPlayerFragment extends Fragment {
         setFragmentState(fragmentState);
     }
 
+    public void setButSleepText(String text) {
+        butSleep.setText(text);
+    }
+
+    private void updateTimeDisplay() {
+        int duration = controller.getDuration();
+        int position = controller.getPosition();
+        if (duration != PlaybackController.INVALID_TIME
+                && position != PlaybackController.INVALID_TIME) {
+            txtvPositionExpanded.setText(Converter.getDurationStringLong(position));
+            txtvLengthExpanded.setText(Converter.getDurationStringLong(duration));
+            setProgressBarProgress(position, duration);
+
+        }
+        if (controller.sleepTimerActive()) {
+            int sleepLeft = (int)controller.getSleepTimerTimeLeft();
+            butSleep.setText(Converter.getDurationStringLong(sleepLeft));
+        } else {
+            butSleep.setText("");
+        }
+    }
+
     private PlaybackController setupPlaybackController() {
         return new PlaybackController(getActivity(), true) {
 
@@ -209,16 +230,9 @@ public class ExternalPlayerFragment extends Fragment {
 
             @Override
             public void onPositionObserverUpdate() {
-                int duration = controller.getDuration();
-                int position = controller.getPosition();
-                if (duration != PlaybackController.INVALID_TIME
-                        && position != PlaybackController.INVALID_TIME) {
-                    txtvPositionExpanded.setText(Converter.getDurationStringLong(position));
-                    txtvLengthExpanded.setText(Converter.getDurationStringLong(duration));
-                    setProgressBarProgress(position, duration);
-
-                }
+                updateTimeDisplay();
             }
+
 
             @Override
             public void onReloadNotification(int code) {
@@ -350,6 +364,11 @@ public class ExternalPlayerFragment extends Fragment {
 
                 txtvPositionExpanded.setText(Converter.getDurationStringLong(media.getPosition()));
                 txtvLengthExpanded.setText(Converter.getDurationStringLong(media.getDuration()));
+                if (controller.sleepTimerActive()) {
+                    butSleep.setText(Converter.getDurationStringLong((int)controller.getSleepTimerTimeLeft()));
+                } else {
+                    butSleep.setText("");
+                }
                 loadDescriptionWebview(media);
 
                 if (media.getWebsiteLink() == null) {
@@ -399,6 +418,7 @@ public class ExternalPlayerFragment extends Fragment {
         txtvTitleAnchored.setText(getString(R.string.no_media_playing_label));
         txtvPositionExpanded.setText("");
         txtvLengthExpanded.setText("");
+        butSleep.setText("");
         webvDescription.clearView();
     }
 

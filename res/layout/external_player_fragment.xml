@@ -174,14 +174,17 @@
                 android:background="?attr/borderless_button"
                 android:src="?attr/av_fast_forward"/>
 
-            <ImageButton
+            <Button
                 android:id="@+id/butSleep"
                 android:contentDescription="@string/sleep_timer_label"
                 android:layout_width="80dp"
-                android:layout_height="match_parent"
+                android:layout_height="80dp"
                 android:layout_toRightOf="@id/butFFExpanded"
-                android:background="?attr/borderless_button"
-                android:src="?attr/av_sleep"/>
+                android:gravity="center_horizontal|bottom"
+                android:background="?attr/av_sleep"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="@dimen/text_size_micro"/>
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -204,6 +207,7 @@
                 android:textColor="?android:attr/textColorSecondary"
                 android:textSize="@dimen/text_size_micro"/>
 
+
             <TextView
                 android:id="@+id/txtvLengthExpanded"
                 android:layout_width="wrap_content"
@@ -217,6 +221,7 @@
                 android:textColor="?android:attr/textColorSecondary"
                 android:textSize="@dimen/text_size_micro"/>
 
+
             <SeekBar
                 android:id="@+id/sbPositionExpanded"
                 android:layout_width="0dp"
@@ -228,6 +233,7 @@
                 android:layout_toLeftOf="@id/txtvLengthExpanded"
                 android:layout_toRightOf="@id/txtvPositionExpanded"
                 android:max="500"/>
+
         </RelativeLayout>
 
         <LinearLayout

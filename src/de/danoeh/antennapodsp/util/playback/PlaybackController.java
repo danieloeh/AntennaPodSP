@@ -17,9 +17,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import de.danoeh.antennapodsp.AppConfig;
 import de.danoeh.antennapodsp.R;
+import de.danoeh.antennapodsp.dialog.TimeDialog;
 import de.danoeh.antennapodsp.feed.Chapter;
 import de.danoeh.antennapodsp.feed.FeedMedia;
 import de.danoeh.antennapodsp.feed.MediaType;
+import de.danoeh.antennapodsp.fragment.ExternalPlayerFragment;
 import de.danoeh.antennapodsp.preferences.PlaybackPreferences;
 import de.danoeh.antennapodsp.service.playback.PlaybackService;
 import de.danoeh.antennapodsp.service.playback.PlaybackServiceMediaPlayer;
@@ -610,6 +612,29 @@ public abstract class PlaybackController {
             public void onClick(View v) {
                 if (status == PlayerStatus.PLAYING) {
                     playbackService.seekDelta(DEFAULT_SEEK_DELTA);
+                }
+            }
+        };
+    }
+
+    public OnClickListener newOnSleepButtonClickListener() {
+        return new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (serviceAvailable()) {
+                    if (sleepTimerActive()) {
+                        disableSleepTimer();
+                    } else {
+                        TimeDialog td = new TimeDialog(activity,
+                                R.string.set_sleeptimer_label,
+                                R.string.set_sleeptimer_label) {
+                            @Override
+                            public void onTimeEntered(long millis) {
+                                setSleepTimer(millis);
+                            }
+                        };
+                        td.show();
+                    }
                 }
             }
         };
