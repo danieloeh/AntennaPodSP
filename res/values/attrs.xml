@@ -7,6 +7,7 @@
     <attr name="action_stream" format="reference"/>
     <attr name="av_download" format="reference"/>
     <attr name="av_fast_forward" format="reference"/>
+    <attr name="av_sleep" format="reference"/>
     <attr name="av_pause" format="reference"/>
     <attr name="av_play" format="reference"/>
     <attr name="av_rewind" format="reference"/>

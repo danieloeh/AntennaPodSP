@@ -173,6 +173,15 @@
                 android:layout_toRightOf="@id/butPlayExpanded"
                 android:background="?attr/borderless_button"
                 android:src="?attr/av_fast_forward"/>
+
+            <ImageButton
+                android:id="@+id/butSleep"
+                android:contentDescription="@string/sleep_timer_label"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@id/butFFExpanded"
+                android:background="?attr/borderless_button"
+                android:src="?attr/av_sleep"/>
         </RelativeLayout>
 
         <RelativeLayout

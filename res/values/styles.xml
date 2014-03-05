@@ -13,6 +13,7 @@
         <item name="attr/action_stream">@drawable/action_stream</item>
         <item name="attr/av_download">@drawable/av_download</item>
         <item name="attr/av_fast_forward">@drawable/av_fast_forward</item>
+        <item name="attr/av_sleep">@drawable/ic_sleep</item>
         <item name="attr/av_pause">@drawable/av_pause</item>
         <item name="attr/av_play">@drawable/av_play</item>
         <item name="attr/av_rewind">@drawable/av_rewind</item>
@@ -47,6 +48,7 @@
         <item name="attr/action_stream">@drawable/action_stream_dark</item>
         <item name="attr/av_download">@drawable/av_download_dark</item>
         <item name="attr/av_fast_forward">@drawable/av_fast_forward_dark</item>
+        <item name="attr/av_sleep">@drawable/ic_sleep</item>
         <item name="attr/av_pause">@drawable/av_pause_dark</item>
         <item name="attr/av_play">@drawable/av_play_dark</item>
         <item name="attr/av_rewind">@drawable/av_rewind_dark</item>
