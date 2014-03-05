@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="de.danoeh.antennapodsp"
-          android:versionCode="1"
+          android:versionCode="2"
           android:versionName="1.0.1">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -75,6 +75,7 @@
                 <action android:name="de.danoeh.antennapod.NOTIFY_BUTTON_RECEIVER"/>
             </intent-filter>
         </receiver>
+
         <receiver android:name=".receiver.FeedUpdateReceiver">
             <intent-filter>
                 <action android:name="de.danoeh.antennapod.feedupdatereceiver.refreshFeeds"/>
@@ -91,6 +92,7 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
         </receiver>
+
         <receiver android:name=".receiver.AlarmUpdateReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
@@ -101,9 +103,6 @@
                 <data
                     android:path="de.danoeh.antennapodsp"
                     android:scheme="package"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
             </intent-filter>
         </receiver>
 
