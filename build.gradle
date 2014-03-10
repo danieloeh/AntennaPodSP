@@ -26,7 +26,7 @@ android {
     defaultConfig {
         minSdkVersion 10
         targetSdkVersion 19
-        packageName "de.danoeh.antennapodsp.einschlafenpodcast"
+        packageName "de.danoeh.antennapodsp.custom"
         testPackageName "de.test.antennapod"
         testInstrumentationRunner "instrumentationTest.de.test.antennapod.AntennaPodTestRunner"
     }
