@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.8.+'
+        classpath 'com.android.tools.build:gradle:0.9.+'
     }
 }
 apply plugin: 'android'
@@ -21,7 +21,7 @@ dependencies {
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.1"
+    buildToolsVersion "19.0.3"
 
     defaultConfig {
         minSdkVersion 10
@@ -66,6 +66,7 @@ android {
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
         }
+        androidTest.setRoot('src/instrumentationTest')
     }
 
     buildTypes {
@@ -90,5 +91,5 @@ android {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.10'
+    gradleVersion = '1.11'
 }
