@@ -181,7 +181,7 @@
                 android:layout_height="80dp"
                 android:layout_toRightOf="@id/butFFExpanded"
                 android:gravity="center_horizontal|bottom"
-                android:background="?attr/av_sleep"
+                android:background="?attr/sleeptimer_drawable"
                 android:textColor="?android:attr/textColorSecondary"
                 android:textSize="@dimen/text_size_micro"/>
 
