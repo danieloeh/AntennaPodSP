@@ -39,10 +39,10 @@ public class NSITunes extends Namespace {
             String[] parts = state.getContentBuf().toString().split(":");
             try {
                 int duration = 0;
-                if (parts.length == 1) {
+                if (parts.length == 2) {
                     duration += TimeUnit.MINUTES.toMillis(Long.valueOf(parts[0])) +
                             TimeUnit.SECONDS.toMillis(Long.valueOf(parts[1]));
-                } else if (parts.length >= 2) {
+                } else if (parts.length >= 3) {
                     duration += TimeUnit.HOURS.toMillis(Long.valueOf(parts[0])) +
                             TimeUnit.MINUTES.toMillis(Long.valueOf(parts[1])) +
                             TimeUnit.SECONDS.toMillis(Long.valueOf(parts[2]));
