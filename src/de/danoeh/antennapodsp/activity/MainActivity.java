@@ -87,7 +87,7 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        SPAUtil.askForPodcatcherInstallation(getApplicationContext());
+        SPAUtil.askForPodcatcherInstallation(this);
     }
 
     @Override

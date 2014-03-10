@@ -31,13 +31,14 @@ public class SPAUtil {
      * @return true if the user has been asked, false otherwise
      * */
     public static boolean askForPodcatcherInstallation(final Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        final Context appContext = context.getApplicationContext();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(appContext);
         if (prefs.getBoolean(PREF_USER_ASKED_FOR_INSTALLATION, false)) {
             if (AppConfig.DEBUG) Log.d(TAG, "User has already been asked for an installation");
             return false;
         }
 
-        if (!hasPodcatcherInstalled(context) && hasOtherSPAppsInstalled(context)) {
+        if (!hasPodcatcherInstalled(appContext) && hasOtherSPAppsInstalled(appContext)) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(context);
             dialog.setTitle(R.string.spa_ask_installation_dialog_title)
                     .setMessage(R.string.spa_ask_installation_dialog_msg)
