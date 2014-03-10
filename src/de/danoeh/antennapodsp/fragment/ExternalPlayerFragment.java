@@ -8,25 +8,27 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.*;
 import de.danoeh.antennapodsp.AppConfig;
 import de.danoeh.antennapodsp.R;
 import de.danoeh.antennapodsp.activity.MainActivity;
 import de.danoeh.antennapodsp.asynctask.ImageLoader;
+import de.danoeh.antennapodsp.feed.Chapter;
 import de.danoeh.antennapodsp.service.playback.PlaybackService;
+import de.danoeh.antennapodsp.util.ChapterUtils;
 import de.danoeh.antennapodsp.util.Converter;
 import de.danoeh.antennapodsp.util.ShownotesProvider;
 import de.danoeh.antennapodsp.util.playback.Playable;
 import de.danoeh.antennapodsp.util.playback.PlaybackController;
 import org.apache.commons.lang3.StringEscapeUtils;
 
+import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
@@ -52,11 +54,14 @@ public class ExternalPlayerFragment extends Fragment {
     private ImageButton butPlayExpanded;
     private ImageButton butRevExpanded;
     private ImageButton butFFExpanded;
+    private ImageButton butShowChapters;
     private Button butSleep;
     private TextView txtvPositionExpanded;
     private TextView txtvLengthExpanded;
     private WebView webvDescription;
     private SeekBar sbPositionExanded;
+
+    private PopupMenu chaptersMenu;
 
 
     // anchored layout components
@@ -123,12 +128,15 @@ public class ExternalPlayerFragment extends Fragment {
         butPlayExpanded = (ImageButton) root.findViewById(R.id.butPlayExpanded);
         butRevExpanded = (ImageButton) root.findViewById(R.id.butRevExpanded);
         butFFExpanded = (ImageButton) root.findViewById(R.id.butFFExpanded);
+        butShowChapters = (ImageButton) root.findViewById(R.id.butShowChapters);
         butSleep = (Button) root.findViewById(R.id.butSleep);
         txtvPositionExpanded = (TextView) root.findViewById(R.id.txtvPositionExpanded);
         txtvLengthExpanded = (TextView) root.findViewById(R.id.txtvLengthExpanded);
         sbPositionExanded = (SeekBar) root.findViewById(R.id.sbPositionExpanded);
         webvDescription = (WebView) root.findViewById(R.id.webvDescription);
         layoutInfoExpanded = (RelativeLayout) root.findViewById(R.id.layoutInfo_expanded);
+
+        chaptersMenu = new PopupMenu(container.getContext(), butShowChapters);
 
         // Anchored components
         topViewAnchored = (LinearLayout) root.findViewById(R.id.topviewAnchored);
@@ -150,6 +158,38 @@ public class ExternalPlayerFragment extends Fragment {
                 }
             }
         });
+
+
+        butShowChapters.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setupChaptersMenu();
+                chaptersMenu.show();
+            }
+        });
+        chaptersMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                if (controller == null) {
+                    return true;
+                }
+                Playable p = controller.getMedia();
+                if (p == null) {
+                    return true;
+                }
+                List<Chapter> chs = p.getChapters();
+                if (chs == null) {
+                    return true;
+                }
+                final int id = menuItem.getItemId();
+                if (id >= 0 && id < chs.size()) {
+                    controller.seekToChapter(chs.get(id));
+                }
+
+                return true;
+            }
+        });
+
         ((MainActivity) getActivity()).onPlayerFragmentCreated(this, fragmentState);
         return root;
     }
@@ -214,7 +254,7 @@ public class ExternalPlayerFragment extends Fragment {
 
         }
         if (controller.sleepTimerActive()) {
-            int sleepLeft = (int)controller.getSleepTimerTimeLeft();
+            int sleepLeft = (int) controller.getSleepTimerTimeLeft();
             butSleep.setText(Converter.getDurationStringLong(sleepLeft));
         } else {
             butSleep.setText("");
@@ -355,17 +395,19 @@ public class ExternalPlayerFragment extends Fragment {
                         media,
                         imgvCoverExpanded,
                         (int) getActivity().getResources().getDimension(
-                                R.dimen.external_player_height));
+                                R.dimen.external_player_height)
+                );
                 ImageLoader.getInstance().loadThumbnailBitmap(
                         media,
                         imgvCoverAnchored,
                         (int) getActivity().getResources().getDimension(
-                                R.dimen.external_player_height));
+                                R.dimen.external_player_height)
+                );
 
                 txtvPositionExpanded.setText(Converter.getDurationStringLong(media.getPosition()));
                 txtvLengthExpanded.setText(Converter.getDurationStringLong(media.getDuration()));
                 if (controller.sleepTimerActive()) {
-                    butSleep.setText(Converter.getDurationStringLong((int)controller.getSleepTimerTimeLeft()));
+                    butSleep.setText(Converter.getDurationStringLong((int) controller.getSleepTimerTimeLeft()));
                 } else {
                     butSleep.setText("");
                 }
@@ -377,6 +419,13 @@ public class ExternalPlayerFragment extends Fragment {
                     butActionExpanded.setVisibility(View.VISIBLE);
                 }
                 setProgressBarProgress(media.getPosition(), media.getDuration());
+
+                if (media.getChapters() != null) {
+                    butShowChapters.setVisibility(View.VISIBLE);
+                    setupChaptersMenu();
+                } else {
+                    butShowChapters.setVisibility(View.INVISIBLE);
+                }
                 /*
                 if (controller.isPlayingVideo()) {
                     butPlay.setVisibility(View.GONE);
@@ -422,6 +471,34 @@ public class ExternalPlayerFragment extends Fragment {
         webvDescription.clearView();
     }
 
+    /**
+     * Creates the content of the chapter menu.
+     *
+     * @return true if a menu was created, false otherwise
+     */
+    private boolean setupChaptersMenu() {
+        if (chaptersMenu == null || controller == null) {
+            Log.e(TAG, "setupChaptersMenu was called while chaptersMenu or controller was null");
+            return false;
+        }
+        chaptersMenu.getMenu().clear();
+        Playable p = controller.getMedia();
+
+        if (p == null || p.getChapters() == null) {
+            return false;
+        }
+
+        Menu menu = chaptersMenu.getMenu();
+        final String currentChapterPrefix = "\u25B6 ";
+        final Chapter currentChapter = ChapterUtils.getCurrentChapter(p);
+        for (int i = 0; i < p.getChapters().size(); i++) {
+            Chapter ch = p.getChapters().get(i);
+            String menuText = ((ch == currentChapter) ? currentChapterPrefix : "") + ch.getTitle();
+            menu.add(Menu.NONE, i, Menu.NONE, menuText);
+        }
+        return true;
+    }
+
     private void loadDescriptionWebview(final ShownotesProvider shownotesProvider) {
         AsyncTask<Void, Void, Void> loadTask = new AsyncTask<Void, Void, Void>() {
             String data;
@@ -431,7 +508,8 @@ public class ExternalPlayerFragment extends Fragment {
                 final String WEBVIEW_STYLE = "<html><head><style type=\"text/css\"> * { color: %s; font-family: Helvetica; line-height: 1.3em; font-size: 11pt; } a { font-style: normal; text-decoration: none; font-weight: normal; color: #00A8DF; } img { display: block; margin: 10 auto; max-width: %s; height: auto; } body { margin: %dpx %dpx %dpx %dpx; }</style></head><body>%s</body></html>";
                 final int pageMargin = (int) TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP, 8, getResources()
-                        .getDisplayMetrics());
+                                .getDisplayMetrics()
+                );
                 return String.format(WEBVIEW_STYLE, textColor, "100%", pageMargin,
                         pageMargin, pageMargin, pageMargin, data);
             }

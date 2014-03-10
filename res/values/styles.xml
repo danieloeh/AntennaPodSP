@@ -31,7 +31,6 @@
         <item name="attr/navigation_shownotes">@drawable/navigation_shownotes</item>
         <item name="attr/navigation_chapters">@drawable/navigation_chapters</item>
         <item name="attr/social_share">@drawable/social_share</item>
-        <item name="attr/stat_playlist">@drawable/stat_playlist</item>
         <item name="attr/type_audio">@drawable/type_audio</item>
         <item name="attr/type_video">@drawable/type_video</item>
         <item name="attr/non_transparent_background">@color/white</item>
@@ -68,7 +67,6 @@
         <item name="attr/navigation_shownotes">@drawable/navigation_shownotes_dark</item>
         <item name="attr/navigation_chapters">@drawable/navigation_chapters_dark</item>
         <item name="attr/social_share">@drawable/social_share_dark</item>
-        <item name="attr/stat_playlist">@drawable/stat_playlist_dark</item>
         <item name="attr/type_audio">@drawable/type_audio_dark</item>
         <item name="attr/type_video">@drawable/type_video_dark</item>
         <item name="attr/non_transparent_background">@color/black</item>

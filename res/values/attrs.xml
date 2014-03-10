@@ -25,7 +25,6 @@
     <attr name="navigation_shownotes" format="reference"/>
     <attr name="navigation_chapters" format="reference"/>
     <attr name="social_share" format="reference"/>
-    <attr name="stat_playlist" format="reference"/>
     <attr name="type_audio" format="reference"/>
     <attr name="type_video" format="reference"/>
     <attr name="borderless_button" format="reference"/>

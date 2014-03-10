@@ -166,6 +166,15 @@
                 android:src="?attr/av_rewind"/>
 
             <ImageButton
+                android:id="@+id/butShowChapters"
+                android:contentDescription="@string/show_chapters_label"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@id/butRevExpanded"
+                android:background="?attr/borderless_button"
+                android:src="?attr/navigation_chapters"/>
+
+            <ImageButton
                 android:id="@+id/butFFExpanded"
                 android:contentDescription="@string/fast_forward_label"
                 android:layout_width="80dp"
