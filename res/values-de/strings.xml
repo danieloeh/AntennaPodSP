@@ -143,9 +143,9 @@
 
 
     <!-- SPA-Util strings -->
-    <string name="spa_ask_installation_dialog_title">Podcather installieren?</string>
-    <string name="spa_ask_installation_dialog_msg">Scheinbar hast du meherere Apps installiert, um mehr als einen Podcast anzuhören. Statt mehrere Apps zu installieren, um Podcasts anzuhören, könntest du auch einen universellen Podcatcher installieren, um alle Podcast-Abos in einer App zu verwalten. Würdest du gerne einen Podcatcher installieren?.</string>
-    <string name="spa_ask_installation_dialog_accept">Podcatcher installieren</string>
-    <string name="spa_ask_installation_dialog_deny">Podcatcher nicht installieren</string>
+    <string name="spa_ask_installation_dialog_title">Du magst Podcasts?</string>
+    <string name="spa_ask_installation_dialog_msg">Du hast mehrere Apps installiert, um Podcasts anzuhören. Du kannst auch alle diese Podcasts in einer universellen App kostenlos abonnieren und hören, damit Du nicht so viele verschiedene Apps hast. Diese Apps heißen Podcatcher, wir empfehlen AntennaPod.</string>
+    <string name="spa_ask_installation_dialog_accept">AntennaPod anzeigen</string>
+    <string name="spa_ask_installation_dialog_deny">Nein danke, lass mal.</string>
 
 </resources>
