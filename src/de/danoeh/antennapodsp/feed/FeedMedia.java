@@ -368,11 +368,16 @@ public class FeedMedia extends FeedFile implements Playable {
 
     @Override
     public InputStream openImageInputStream() {
-        InputStream out = new Playable.DefaultPlayableImageLoader(this)
-                .openImageInputStream();
-        if (out == null) {
-            if (item.getFeed().getImage() != null) {
-                return item.getFeed().getImage().openImageInputStream();
+        InputStream out;
+        if (item.isItemImage()) {
+            out = item.getImage().openImageInputStream();
+        } else {
+            out = new Playable.DefaultPlayableImageLoader(this)
+                    .openImageInputStream();
+            if (out == null) {
+                if (item.getFeed().getImage() != null) {
+                    return item.getFeed().getImage().openImageInputStream();
+                }
             }
         }
         return out;
@@ -380,20 +385,23 @@ public class FeedMedia extends FeedFile implements Playable {
 
     @Override
     public String getImageLoaderCacheKey() {
-        String out = new Playable.DefaultPlayableImageLoader(this)
-                .getImageLoaderCacheKey();
-        if (out == null) {
-            if (item.getImage() != null) {
-                return item.getImage().getImageLoaderCacheKey();
-            }
+        String result;
+        if (item.isItemImage()) {
+            result = item.getImage().getImageLoaderCacheKey();
+        } else  {
+            result = new Playable.DefaultPlayableImageLoader(this)
+                    .getImageLoaderCacheKey();
         }
-        return out;
+        if (result == null) {
+            result = item.getFeed().getImage().getImageLoaderCacheKey();
+        }
+        return result;
     }
 
     @Override
     public InputStream reopenImageInputStream(InputStream input) {
         if (input instanceof FileInputStream) {
-            return item.getFeed().getImage().reopenImageInputStream(input);
+            return item.getImage().reopenImageInputStream(input);
         } else {
             return new Playable.DefaultPlayableImageLoader(this)
                     .reopenImageInputStream(input);
