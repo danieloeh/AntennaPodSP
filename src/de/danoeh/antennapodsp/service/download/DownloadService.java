@@ -571,6 +571,27 @@ public class DownloadService extends Service {
                                         false, e.getMessage()));
                     }
                 }
+                for (FeedItem item: feed.getItems()) {
+                    if (item.isItemImage() && (!item.getImage().isDownloaded())) {
+                        if (AppConfig.DEBUG)
+                            Log.d(TAG, "Item has image; Downloading....");
+                        try {
+                            requester.downloadImage(DownloadService.this,
+                                    item.getImage());
+                        } catch (DownloadRequestException e) {
+                            e.printStackTrace();
+                            DBWriter.addDownloadStatus(
+                                    DownloadService.this,
+                                    new DownloadStatus(
+                                            item.getImage(),
+                                            item
+                                                    .getImage()
+                                                    .getHumanReadableIdentifier(),
+                                            DownloadError.ERROR_REQUEST_ERROR,
+                                            false, e.getMessage()));
+                        }
+                    }
+                }
 
             } catch (SAXException e) {
                 successful = false;

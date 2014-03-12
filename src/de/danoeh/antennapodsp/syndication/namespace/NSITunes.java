@@ -21,11 +21,23 @@ public class NSITunes extends Namespace {
     @Override
     public SyndElement handleElementStart(String localName, HandlerState state,
                                           Attributes attributes) {
-        if (localName.equals(IMAGE) && state.getFeed().getImage() == null) {
+        if (localName.equals(IMAGE)) {
             FeedImage image = new FeedImage();
             image.setTitle(IMAGE_TITLE);
             image.setDownload_url(attributes.getValue(IMAGE_HREF));
-            state.getFeed().setImage(image);
+
+            if (state.getCurrentItem() != null) {
+                // this is an items image
+                image.setTitle(state.getCurrentItem().getTitle()+IMAGE_TITLE);
+                state.getCurrentItem().setImage(image);
+
+            } else  {
+                // this is the feed image
+                if (state.getFeed().getImage() == null) {
+                    state.getFeed().setImage(image);
+                }
+            }
+
         }
 
         return new SyndElement(localName, this);

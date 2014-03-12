@@ -42,6 +42,7 @@ public class FeedItem extends FeedComponent implements
     private boolean read;
     private String paymentLink;
     private List<Chapter> chapters;
+    private FeedImage image;
 
     public FeedItem() {
         this.read = true;
@@ -91,6 +92,9 @@ public class FeedItem extends FeedComponent implements
             if (chapters == null) {
                 chapters = other.chapters;
             }
+        }
+        if (other.image != null) {
+            image = other.image;
         }
     }
 
@@ -218,6 +222,24 @@ public class FeedItem extends FeedComponent implements
         this.itemIdentifier = itemIdentifier;
     }
 
+    public FeedImage getImage() {
+        if (image == null) {
+            return feed != null ? feed.getImage() : null;
+        } else  {
+            return image;
+        }
+    }
+
+    /**
+     * Is the image of this item an own image, or is it the feed image?
+     * @return true, if it is an own image
+     */
+    public boolean isItemImage()  {
+        return image != null;
+    }
+
+    public void setImage(FeedImage image) { this.image = image; }
+
     public boolean hasMedia() {
         return media != null;
     }
@@ -263,10 +285,11 @@ public class FeedItem extends FeedComponent implements
     @Override
     public InputStream openImageInputStream() {
         InputStream out = null;
-        if (hasMedia()) {
+        if (isItemImage()) {
+            out = image.openImageInputStream();
+        } else if (hasMedia()) {
             out = media.openImageInputStream();
-        }
-        if (out == null && feed.getImage() != null) {
+        } else if (feed.getImage() != null) {
             out = feed.getImage().openImageInputStream();
         }
         return out;
@@ -275,10 +298,11 @@ public class FeedItem extends FeedComponent implements
     @Override
     public InputStream reopenImageInputStream(InputStream input) {
         InputStream out = null;
-        if (hasMedia()) {
+        if (isItemImage()) {
+            out = image.reopenImageInputStream(input);
+        } else if (hasMedia()) {
             out = media.reopenImageInputStream(input);
-        }
-        if (out == null && feed.getImage() != null) {
+        } else if (feed.getImage() != null) {
             out = feed.getImage().reopenImageInputStream(input);
         }
         return out;
@@ -287,10 +311,11 @@ public class FeedItem extends FeedComponent implements
     @Override
     public String getImageLoaderCacheKey() {
         String out = null;
-        if (hasMedia()) {
+        if (isItemImage()) {
+            out = image.getImageLoaderCacheKey();
+        } else if (hasMedia()) {
             out = media.getImageLoaderCacheKey();
-        }
-        if (out == null && feed.getImage() != null) {
+        } else if (feed.getImage() != null) {
             out = feed.getImage().getImageLoaderCacheKey();
         }
         return out;

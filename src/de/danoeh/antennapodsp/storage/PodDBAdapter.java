@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class PodDBAdapter {
     private static final String TAG = "PodDBAdapter";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "Antennapod.db";
 
     /**
@@ -155,7 +155,8 @@ public class PodDBAdapter {
             + " INTEGER," + KEY_READ + " INTEGER," + KEY_LINK + " TEXT,"
             + KEY_DESCRIPTION + " TEXT," + KEY_PAYMENT_LINK + " TEXT,"
             + KEY_MEDIA + " INTEGER," + KEY_FEED + " INTEGER,"
-            + KEY_HAS_CHAPTERS + " INTEGER," + KEY_ITEM_IDENTIFIER + " TEXT)";
+            + KEY_HAS_CHAPTERS + " INTEGER," + KEY_ITEM_IDENTIFIER + " TEXT,"
+            + KEY_IMAGE + " INTEGER)";
 
     private static final String CREATE_TABLE_FEED_IMAGES = "CREATE TABLE "
             + TABLE_NAME_FEED_IMAGES + " (" + TABLE_PRIMARY_KEY + KEY_TITLE
@@ -242,7 +243,8 @@ public class PodDBAdapter {
             TABLE_NAME_FEED_ITEMS + "." + KEY_PAYMENT_LINK, KEY_MEDIA,
             TABLE_NAME_FEED_ITEMS + "." + KEY_FEED,
             TABLE_NAME_FEED_ITEMS + "." + KEY_HAS_CHAPTERS,
-            TABLE_NAME_FEED_ITEMS + "." + KEY_ITEM_IDENTIFIER};
+            TABLE_NAME_FEED_ITEMS + "." + KEY_ITEM_IDENTIFIER,
+            TABLE_NAME_FEED_ITEMS + "." + KEY_IMAGE};
 
     /**
      * Contains FEEDITEM_SEL_FI_SMALL as comma-separated list. Useful for raw queries.
@@ -266,6 +268,7 @@ public class PodDBAdapter {
     public static final int IDX_FI_SMALL_FEED = 7;
     public static final int IDX_FI_SMALL_HAS_CHAPTERS = 8;
     public static final int IDX_FI_SMALL_ITEM_IDENTIFIER = 9;
+    public static final int IDX_FI_SMALL_IMAGE = 10;
 
     /**
      * Select id, description and content-encoded column from feeditems.
@@ -523,6 +526,13 @@ public class PodDBAdapter {
         values.put(KEY_READ, item.isRead());
         values.put(KEY_HAS_CHAPTERS, item.getChapters() != null);
         values.put(KEY_ITEM_IDENTIFIER, item.getItemIdentifier());
+        if (item.isItemImage()) {
+            if (item.getImage().getId() == 0) {
+                setImage(item.getImage());
+            }
+            values.put(KEY_IMAGE, item.getImage().getId());
+        }
+
         if (item.getId() == 0) {
             item.setId(db.insert(TABLE_NAME_FEED_ITEMS, null, values));
         } else {
@@ -535,6 +545,7 @@ public class PodDBAdapter {
         if (item.getChapters() != null) {
             setChapters(item);
         }
+
         return item.getId();
     }
 
@@ -1143,6 +1154,13 @@ public class PodDBAdapter {
                               final int newVersion) {
             Log.w("DBAdapter", "Upgrading from version " + oldVersion + " to "
                     + newVersion + ".");
+            if (oldVersion == 1 && newVersion == 2) upgrade1to2(db);
+        }
+
+        private void upgrade1to2(final SQLiteDatabase db) {
+            db.execSQL("ALTER TABLE "+TABLE_NAME_FEED_ITEMS
+            + " ADD " + KEY_IMAGE + " INTEGER;");
+
         }
     }
 }

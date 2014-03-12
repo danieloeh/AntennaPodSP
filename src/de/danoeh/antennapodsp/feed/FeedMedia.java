@@ -192,10 +192,7 @@ public class FeedMedia extends FeedFile implements Playable {
     }
 
     public FeedImage getImage() {
-        if (item != null && item.getFeed() != null) {
-            return item.getFeed().getImage();
-        }
-        return null;
+        return item != null ? item.getImage() : null;
     }
 
     @Override
@@ -386,8 +383,8 @@ public class FeedMedia extends FeedFile implements Playable {
         String out = new Playable.DefaultPlayableImageLoader(this)
                 .getImageLoaderCacheKey();
         if (out == null) {
-            if (item.getFeed().getImage() != null) {
-                return item.getFeed().getImage().getImageLoaderCacheKey();
+            if (item.getImage() != null) {
+                return item.getImage().getImageLoaderCacheKey();
             }
         }
         return out;

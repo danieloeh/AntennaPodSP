@@ -213,6 +213,12 @@ public final class DBReader {
                 item.setItemIdentifier(itemlistCursor
                         .getString(PodDBAdapter.IDX_FI_SMALL_ITEM_IDENTIFIER));
 
+
+                final FeedImage image;
+                long imageIndex = itemlistCursor.getLong(PodDBAdapter.IDX_FI_SMALL_IMAGE);
+                if (imageIndex != 0) {
+                    item.setImage(getFeedImage(adapter, imageIndex));
+                }
                 // extract chapters
                 boolean hasSimpleChapters = itemlistCursor
                         .getInt(PodDBAdapter.IDX_FI_SMALL_HAS_CHAPTERS) > 0;
