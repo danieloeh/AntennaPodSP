@@ -6,13 +6,20 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 /**
- * Subscriptions and preferences of AntennaPodSP. In order to update one of these values for an installed app, the version number has to be increased.
+ * Subscriptions and preferences of AntennaPodSP.
  */
 public class AppPreferences {
 
-    int versionNumber = 0;
+
     /**
-     * List of feeds.
+     * Version number for feedUrls. Please read the documentation of feedUrls for more information.
+     */
+    int feedUrlsVersionNumber = 0;
+
+    /**
+     * List of feeds. If this list is changed, feedUrlsVersionNumber has to be increased so that existing installations
+     * update their subscriptions list. Note that changing this list removes all old feeds on existing installations, which
+     * means that all downloaded episodes will be deleted, too.
      */
     public static final String[] feedUrls = {"http://feeds.feedburner.com/EinschlafenPodcastEnhanced?format=xml"};
 

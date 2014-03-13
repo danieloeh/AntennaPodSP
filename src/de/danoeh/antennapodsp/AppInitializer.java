@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import de.danoeh.antennapodsp.feed.Feed;
-import de.danoeh.antennapodsp.preferences.UserPreferences;
 import de.danoeh.antennapodsp.service.download.DownloadRequest;
 import de.danoeh.antennapodsp.service.download.DownloadStatus;
 import de.danoeh.antennapodsp.service.download.HttpDownloader;
@@ -38,6 +37,8 @@ public class AppInitializer {
         context = context.getApplicationContext();
         if (context == null) throw new IllegalStateException("Could not get application context");
 
+        writeUserPreferences(context);
+
         final AppPreferences appPreferences = new AppPreferences();
         // check if this is the first launch of the app
         SharedPreferences initPrefs = context.getSharedPreferences(PREFS_APP_INITIALIZER, Context.MODE_PRIVATE);
@@ -46,12 +47,12 @@ public class AppInitializer {
         if (AppConfig.DEBUG)
             Log.d(TAG, String.format("First start: %s, Version number: %d", String.valueOf(isFirstLaunch), currentVersionNumber));
 
-        if (!isFirstLaunch && currentVersionNumber >= appPreferences.versionNumber) {
+        if (!isFirstLaunch && currentVersionNumber >= appPreferences.feedUrlsVersionNumber) {
             if (AppConfig.DEBUG) Log.d(TAG, "AppPreferences are up-to-date");
             return;
         }
         if (!isFirstLaunch)
-            Log.i(TAG, String.format("Upgrading from version %d to version %d", currentVersionNumber, appPreferences.versionNumber));
+            Log.i(TAG, String.format("Upgrading from version %d to version %d", currentVersionNumber, appPreferences.feedUrlsVersionNumber));
 
         // refresh feeds
         List<Feed> savedFeeds = DBReader.getFeedList(context);
@@ -71,30 +72,14 @@ public class AppInitializer {
             downloadFeed(context, url, destFile.toString());
         }
 
-
-        // write user preferences
-        if (AppConfig.DEBUG) Log.d(TAG, "Writing user preferences");
-        SharedPreferences userPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor upe = userPrefs.edit();
-        upe.putBoolean(PREF_PAUSE_ON_HEADSET_DISCONNECT, appPreferences.pauseOnHeadsetDisconnect);
-        upe.putBoolean(PREF_DOWNLOAD_MEDIA_ON_WIFI_ONLY, appPreferences.downloadMediaOnWifiOnly);
-        upe.putBoolean(PREF_MOBILE_UPDATE, appPreferences.allowMobileUpdates);
-        upe.putBoolean(PREF_ENABLE_AUTODL, appPreferences.enableAutodownload);
-
-        upe.putString(PREF_EPISODE_CACHE_SIZE, String.valueOf(appPreferences.episodeCacheSize));
-        upe.putBoolean(PREF_PAUSE_PLAYBACK_FOR_FOCUS_LOSS, appPreferences.pauseForFocusLoss);
-
-        upe.commit();
-
         if (isFirstLaunch) {
             appPreferences.setUpdateAlarm();
         }
 
         // update init preferences
-
         SharedPreferences.Editor initPrefsEditor = initPrefs.edit();
         initPrefsEditor.putBoolean(PREF_IS_FIRST_LAUNCH, false);
-        initPrefsEditor.putInt(PREF_PREF_VERSION_NUMBER, appPreferences.versionNumber);
+        initPrefsEditor.putInt(PREF_PREF_VERSION_NUMBER, appPreferences.feedUrlsVersionNumber);
         initPrefsEditor.commit();
     }
 
@@ -134,6 +119,23 @@ public class AppInitializer {
                 }
             }
         }
+    }
+
+    /** Read preference values from AppPreferences and write them into the UserPreferences file. */
+    private static void writeUserPreferences(Context context) {
+        if (AppConfig.DEBUG) Log.d(TAG, "Writing user preferences");
+        AppPreferences appPreferences = new AppPreferences();
+        SharedPreferences userPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor upe = userPrefs.edit();
+        upe.putBoolean(PREF_PAUSE_ON_HEADSET_DISCONNECT, appPreferences.pauseOnHeadsetDisconnect);
+        upe.putBoolean(PREF_DOWNLOAD_MEDIA_ON_WIFI_ONLY, appPreferences.downloadMediaOnWifiOnly);
+        upe.putBoolean(PREF_MOBILE_UPDATE, appPreferences.allowMobileUpdates);
+        upe.putBoolean(PREF_ENABLE_AUTODL, appPreferences.enableAutodownload);
+
+        upe.putString(PREF_EPISODE_CACHE_SIZE, String.valueOf(appPreferences.episodeCacheSize));
+        upe.putBoolean(PREF_PAUSE_PLAYBACK_FOR_FOCUS_LOSS, appPreferences.pauseForFocusLoss);
+
+        upe.commit();
     }
 
 
