@@ -93,7 +93,7 @@ public class FeedItem extends FeedComponent implements
                 chapters = other.chapters;
             }
         }
-        if (other.image != null) {
+        if (image == null && other.image != null) {
             image = other.image;
         }
     }
@@ -225,20 +225,24 @@ public class FeedItem extends FeedComponent implements
     public FeedImage getImage() {
         if (image == null) {
             return feed != null ? feed.getImage() : null;
-        } else  {
+        } else {
             return image;
         }
     }
 
     /**
      * Is the image of this item an own image, or is it the feed image?
+     *
      * @return true, if it is an own image
      */
-    public boolean isItemImage()  {
+    public boolean isItemImage() {
         return image != null;
     }
 
-    public void setImage(FeedImage image) { this.image = image; }
+    public void setImage(FeedImage image) {
+        this.image = image;
+        image.setOwner(this);
+    }
 
     public boolean hasMedia() {
         return media != null;
@@ -329,4 +333,8 @@ public class FeedItem extends FeedComponent implements
         this.feedId = feedId;
     }
 
+    @Override
+    public String getHumanReadableIdentifier() {
+        return null;
+    }
 }

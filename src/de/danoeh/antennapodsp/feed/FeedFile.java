@@ -22,12 +22,6 @@ public abstract class FeedFile extends FeedComponent {
         this(null, null, false);
     }
 
-    /**
-     * Should return a non-null, human-readable String so that the item can be
-     * identified by the user. Can be title, download-url, etc.
-     */
-    public abstract String getHumanReadableIdentifier();
-
     public abstract int getTypeAsInt();
 
     /**

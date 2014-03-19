@@ -95,7 +95,7 @@ public class DBWriterTest extends InstrumentationTestCase {
         File imgFile = new File(destFolder, "image");
         assertTrue(imgFile.createNewFile());
         FeedImage image = new FeedImage(0, "image", imgFile.getAbsolutePath(), "url", true);
-        image.setFeed(feed);
+        image.setOwner(feed);
         feed.setImage(image);
 
         List<File> itemFiles = new ArrayList<File>();
@@ -217,7 +217,7 @@ public class DBWriterTest extends InstrumentationTestCase {
         File imgFile = new File(destFolder, "image");
         assertTrue(imgFile.createNewFile());
         FeedImage image = new FeedImage(0, "image", imgFile.getAbsolutePath(), "url", true);
-        image.setFeed(feed);
+        image.setOwner(feed);
         feed.setImage(image);
 
         PodDBAdapter adapter = new PodDBAdapter(getInstrumentation().getContext());
@@ -254,7 +254,7 @@ public class DBWriterTest extends InstrumentationTestCase {
         File imgFile = new File(destFolder, "image");
         assertTrue(imgFile.createNewFile());
         FeedImage image = new FeedImage(0, "image", imgFile.getAbsolutePath(), "url", true);
-        image.setFeed(feed);
+        image.setOwner(feed);
         feed.setImage(image);
 
         // create items
@@ -305,7 +305,7 @@ public class DBWriterTest extends InstrumentationTestCase {
         // create Feed image
         File imgFile = new File(destFolder, "image");
         FeedImage image = new FeedImage(0, "image", imgFile.getAbsolutePath(), "url", true);
-        image.setFeed(feed);
+        image.setOwner(feed);
         feed.setImage(image);
 
         List<File> itemFiles = new ArrayList<File>();
@@ -377,7 +377,7 @@ public class DBWriterTest extends InstrumentationTestCase {
         // create Feed image
         File imgFile = new File(destFolder, "image");
         FeedImage image = new FeedImage(0, "image", imgFile.getAbsolutePath(), "url", true);
-        image.setFeed(feed);
+        image.setOwner(feed);
         feed.setImage(image);
 
         List<File> itemFiles = new ArrayList<File>();

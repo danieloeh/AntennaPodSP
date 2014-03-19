@@ -340,7 +340,7 @@ public final class DBReader {
                 cursor.getInt(PodDBAdapter.IDX_FEED_SEL_STD_DOWNLOADED) > 0);
 
         if (image != null) {
-            image.setFeed(feed);
+            image.setOwner(feed);
         }
 
         FeedPreferences preferences = new FeedPreferences(cursor.getLong(PodDBAdapter.IDX_FEED_SEL_STD_ID),

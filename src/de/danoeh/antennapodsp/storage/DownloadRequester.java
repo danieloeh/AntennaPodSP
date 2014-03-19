@@ -261,8 +261,8 @@ public class DownloadRequester {
 
     public String getImagefileName(FeedImage image) {
         String filename = image.getDownload_url();
-        if (image.getFeed() != null && image.getFeed().getTitle() != null) {
-            filename = image.getFeed().getTitle();
+        if (image.getOwner() != null && image.getOwner().getHumanReadableIdentifier() != null) {
+            filename = image.getOwner().getHumanReadableIdentifier();
         }
         return "image-" + FileNameGenerator.generateFileName(filename);
     }

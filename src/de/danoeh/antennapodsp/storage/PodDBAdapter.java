@@ -391,10 +391,12 @@ public class PodDBAdapter {
             db.update(TABLE_NAME_FEED_IMAGES, values, KEY_ID + "=?",
                     new String[]{String.valueOf(image.getId())});
         }
-        if (image.getFeed() != null && image.getFeed().getId() != 0) {
+        if (image.getOwner() != null && image.getOwner().getId() != 0) {
             values.clear();
             values.put(KEY_IMAGE, image.getId());
-            db.update(TABLE_NAME_FEEDS, values, KEY_ID + "=?", new String[]{String.valueOf(image.getFeed().getId())});
+            if (image.getOwner() instanceof Feed) {
+                db.update(TABLE_NAME_FEEDS, values, KEY_ID + "=?", new String[]{String.valueOf(image.getOwner().getId())});
+            }
         }
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -681,6 +683,9 @@ public class PodDBAdapter {
         }
         if (item.getChapters() != null) {
             removeChaptersOfItem(item);
+        }
+        if (item.isItemImage()) {
+            removeFeedImage(item.getImage());
         }
         db.delete(TABLE_NAME_FEED_ITEMS, KEY_ID + "=?",
                 new String[]{String.valueOf(item.getId())});
