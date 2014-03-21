@@ -46,10 +46,10 @@ public class AppPreferences {
     public boolean pauseOnHeadsetDisconnect = false;
     public boolean downloadMediaOnWifiOnly = true;
     public boolean allowMobileUpdates = false;
-    public boolean enableAutodownload = true;
+    public boolean enableAutodownload = false;
     public long episodeCacheSize = 300 * 1024 * 1024;
     public boolean pauseForFocusLoss = true;
-    public int numberOfNewAutomaticallyDownloadedEpisodes = 1;
+    public int numberOfNewAutomaticallyDownloadedEpisodes = 0;
 
 
     /**

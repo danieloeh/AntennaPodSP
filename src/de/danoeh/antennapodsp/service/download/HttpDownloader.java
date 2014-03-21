@@ -1,10 +1,13 @@
 package de.danoeh.antennapodsp.service.download;
 
+import android.content.Context;
+import android.content.Intent;
 import android.net.http.AndroidHttpClient;
 import android.util.Log;
 import de.danoeh.antennapodsp.AppConfig;
 import de.danoeh.antennapodsp.PodcastApp;
 import de.danoeh.antennapodsp.R;
+import de.danoeh.antennapodsp.feed.FeedMedia;
 import de.danoeh.antennapodsp.util.DownloadError;
 import de.danoeh.antennapodsp.util.StorageUtils;
 import org.apache.commons.io.IOUtils;
@@ -16,14 +19,21 @@ import org.apache.http.client.methods.HttpGet;
 
 import java.io.*;
 import java.net.*;
+import java.nio.ByteBuffer;
 
 public class HttpDownloader extends Downloader {
     private static final String TAG = "HttpDownloader";
 
     private static final int BUFFER_SIZE = 8 * 1024;
+    private PodcastHTTPD httpd;
 
     public HttpDownloader(DownloadRequest request) {
         super(request);
+    }
+
+    public HttpDownloader(DownloadRequest request, PodcastHTTPD httpd) {
+        super(request);
+        this.httpd = httpd;
     }
 
     private URI getURIFromRequestUrl(String source) {
@@ -41,6 +51,20 @@ public class HttpDownloader extends Downloader {
     protected void download() {
         HttpClient httpClient = AntennapodHttpClient.getHttpClient();
         BufferedOutputStream out = null;
+
+        boolean isServing = false;
+        byte [] servingArray = null;
+        ByteArrayInputStream pipeIn = null;
+        ByteBuffer servingOutputBuffer = null;
+        if (httpd != null && request.isShouldStream()) {
+            isServing = true;
+            servingArray = new byte[(int)request.getStreamSize()];
+            servingOutputBuffer = ByteBuffer.wrap(servingArray);
+            pipeIn = new ByteArrayInputStream(servingArray);
+            httpd.setStream(pipeIn);
+            httpd.setMimeType(request.getMimeType());
+        }
+
         InputStream connection = null;
         try {
             HttpGet httpGet = new HttpGet(getURIFromRequestUrl(request.getSource()));
@@ -77,6 +101,7 @@ public class HttpDownloader extends Downloader {
                     .getUngzippedContent(httpEntity));
             out = new BufferedOutputStream(new FileOutputStream(
                     destination));
+
             byte[] buffer = new byte[BUFFER_SIZE];
             int count = 0;
             request.setStatusMsg(R.string.download_running);
@@ -104,6 +129,9 @@ public class HttpDownloader extends Downloader {
             while (!cancelled
                     && (count = connection.read(buffer)) != -1) {
                 out.write(buffer, 0, count);
+                if (isServing) {
+                    servingOutputBuffer.put(buffer, 0, count);
+                }
                 request.setSoFar(request.getSoFar() + count);
                 request.setProgressPercent((int) (((double) request
                         .getSoFar() / (double) request
@@ -137,6 +165,7 @@ public class HttpDownloader extends Downloader {
             e.printStackTrace();
             onFail(DownloadError.ERROR_UNKNOWN_HOST, e.getMessage());
         } catch (IOException e) {
+            httpd.stop();
             e.printStackTrace();
             onFail(DownloadError.ERROR_IO_ERROR, e.getMessage());
         } catch (NullPointerException e) {

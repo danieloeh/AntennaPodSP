@@ -2,6 +2,7 @@ package de.danoeh.antennapodsp.service.download;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.SparseBooleanArray;
 
 public class DownloadRequest implements Parcelable {
 
@@ -10,6 +11,9 @@ public class DownloadRequest implements Parcelable {
     private final String title;
     private final long feedfileId;
     private final int feedfileType;
+    private boolean shouldStream;
+    private int streamSize;
+    private String mimeType;
 
     protected int progressPercent;
     protected long soFar;
@@ -33,6 +37,9 @@ public class DownloadRequest implements Parcelable {
         this.title = title;
         this.feedfileId = feedfileId;
         this.feedfileType = feedfileType;
+        this.shouldStream = false;
+        this.streamSize = 0;
+        this.mimeType = "";
     }
 
     private DownloadRequest(Parcel in) {
@@ -41,6 +48,9 @@ public class DownloadRequest implements Parcelable {
         title = in.readString();
         feedfileId = in.readLong();
         feedfileType = in.readInt();
+        shouldStream = in.readByte() != 0;
+        streamSize = in.readInt();
+        mimeType = in.readString();
     }
 
     @Override
@@ -55,6 +65,9 @@ public class DownloadRequest implements Parcelable {
         dest.writeString(title);
         dest.writeLong(feedfileId);
         dest.writeInt(feedfileType);
+        dest.writeByte((byte) (shouldStream ? 1 : 0));
+        dest.writeInt(streamSize);
+        dest.writeString(mimeType);
     }
 
     public static final Parcelable.Creator<DownloadRequest> CREATOR = new Parcelable.Creator<DownloadRequest>() {
@@ -75,6 +88,10 @@ public class DownloadRequest implements Parcelable {
                 + ((destination == null) ? 0 : destination.hashCode());
         result = prime * result + (int) (feedfileId ^ (feedfileId >>> 32));
         result = prime * result + feedfileType;
+        result = prime * result + (shouldStream ? 0 : 1);
+        result = prime * result + (int) (streamSize ^ (streamSize >>> 32));
+        result = prime * result
+                + ((mimeType == null) ? 0 : mimeType.hashCode());
         result = prime * result + progressPercent;
         result = prime * result + (int) (size ^ (size >>> 32));
         result = prime * result + (int) (soFar ^ (soFar >>> 32));
@@ -101,6 +118,15 @@ public class DownloadRequest implements Parcelable {
         if (feedfileId != other.feedfileId)
             return false;
         if (feedfileType != other.feedfileType)
+            return false;
+        if (shouldStream &! other.shouldStream)
+            return false;
+        if (streamSize != other.streamSize)
+            return false;
+        if (mimeType == null) {
+            if (other.mimeType!= null)
+                return false;
+        } else if (!mimeType.equals(other.mimeType))
             return false;
         if (progressPercent != other.progressPercent)
             return false;
@@ -141,6 +167,30 @@ public class DownloadRequest implements Parcelable {
 
     public int getFeedfileType() {
         return feedfileType;
+    }
+
+    public boolean isShouldStream() {
+        return shouldStream;
+    }
+
+    public void setShouldStream(boolean shouldStream) {
+        this.shouldStream = shouldStream;
+    }
+
+    public int getStreamSize() {
+        return streamSize;
+    }
+
+    public void setStreamSize(int streamSize) {
+        this.streamSize = streamSize;
+    }
+
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
     }
 
     public int getProgressPercent() {

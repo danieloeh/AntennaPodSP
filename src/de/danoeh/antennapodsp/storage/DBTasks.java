@@ -86,8 +86,7 @@ public final class DBTasks {
      *
      * @param context           Used for sending starting Services and Activities.
      * @param media             The FeedMedia object.
-     * @param showPlayer        If true, starts the appropriate player activity ({@link de.danoeh.antennapodsp.activity.AudioplayerActivity}
-     *                          or {@link de.danoeh.antennapodsp.activity.VideoplayerActivity}
+     * @param showPlayer        If true, starts the appropriate player activity
      * @param startWhenPrepared Parameter for the {@link PlaybackService} start intent. If true, playback will start as
      *                          soon as the PlaybackService has finished loading the FeedMedia object's file.
      * @param shouldStream      Parameter for the {@link PlaybackService} start intent. If true, the FeedMedia object's file
@@ -276,7 +275,7 @@ public final class DBTasks {
                 List<FeedItem> queue = DBReader.getQueue(context);
                 if (!queue.isEmpty()) {
                     try {
-                        downloadFeedItems(context,
+                        downloadFeedItems(context, false,
                                 queue.toArray(new FeedItem[queue.size()]));
                     } catch (DownloadRequestException e) {
                         e.printStackTrace();
@@ -292,12 +291,12 @@ public final class DBTasks {
      * @param context Used for requesting the download and accessing the DB.
      * @param items   The FeedItem objects.
      */
-    public static void downloadFeedItems(final Context context,
+    public static void downloadFeedItems(final Context context, boolean shouldStream,
                                          FeedItem... items) throws DownloadRequestException {
-        downloadFeedItems(true, context, items);
+        downloadFeedItems(true, shouldStream, context, items);
     }
 
-    private static void downloadFeedItems(boolean performAutoCleanup,
+    private static void downloadFeedItems(boolean performAutoCleanup, boolean shouldStream,
                                           final Context context, final FeedItem... items)
             throws DownloadRequestException {
         final DownloadRequester requester = DownloadRequester.getInstance();
@@ -319,7 +318,7 @@ public final class DBTasks {
                     && !item.getMedia().isDownloaded()) {
                 if (items.length > 1) {
                     try {
-                        requester.downloadMedia(context, item.getMedia());
+                        requester.downloadMedia(context, item.getMedia(), shouldStream);
                     } catch (DownloadRequestException e) {
                         e.printStackTrace();
                         DBWriter.addDownloadStatus(context,
@@ -330,7 +329,7 @@ public final class DBTasks {
                                         false, e.getMessage()));
                     }
                 } else {
-                    requester.downloadMedia(context, item.getMedia());
+                    requester.downloadMedia(context, item.getMedia(), shouldStream);
                 }
             }
         }
@@ -366,7 +365,7 @@ public final class DBTasks {
 
                     if (!itemsToDownload.isEmpty()) {
                         try {
-                            downloadFeedItems(false, context,
+                            downloadFeedItems(false, false, context,
                                     itemsToDownload.toArray(new FeedItem[itemsToDownload
                                             .size()]));
                         } catch (DownloadRequestException e) {

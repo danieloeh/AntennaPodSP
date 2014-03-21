@@ -21,6 +21,7 @@ import de.danoeh.antennapodsp.feed.Feed;
 import de.danoeh.antennapodsp.feed.FeedItem;
 import de.danoeh.antennapodsp.feed.FeedMedia;
 import de.danoeh.antennapodsp.service.download.Downloader;
+import de.danoeh.antennapodsp.service.download.PodcastHTTPD;
 import de.danoeh.antennapodsp.service.playback.PlaybackService;
 import de.danoeh.antennapodsp.service.playback.PlayerStatus;
 import de.danoeh.antennapodsp.storage.DBReader;
@@ -48,6 +49,7 @@ public class EpisodesFragment extends ListFragment {
 
     private boolean feedsLoaded = false;
     private boolean listviewSetup = false;
+    private boolean currentlyPlaying = false;
 
     public static EpisodesFragment newInstance(long feedID) {
         EpisodesFragment f = new EpisodesFragment();
@@ -207,7 +209,20 @@ public class EpisodesFragment extends ListFragment {
                     } else {
                         // episode not downloaded
                         try {
-                            DBTasks.downloadFeedItems(getActivity(), item);
+                            // find out if player is active, otherwise start streaming locally
+                            boolean shouldStream = !currentlyPlaying;
+                            DBTasks.downloadFeedItems(getActivity(), shouldStream, item);
+                            if (shouldStream) {
+                                item.getMedia().setDownload_url("http://127.0.0.1:" + PodcastHTTPD.PORT
+                                        + "/" + item.getMedia().getIdentifier());
+                                Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    public void run() {
+                                        DBTasks.playMedia(getActivity(), item.getMedia(), false, true, true);
+                                    }
+                                }, 2000);
+                            }
+
                         } catch (DownloadRequestException e) {
                             e.printStackTrace();
                             DownloadRequestErrorDialogCreator.newRequestErrorDialog(getActivity(), e.getMessage());
@@ -295,6 +310,11 @@ public class EpisodesFragment extends ListFragment {
                         if (episodesListAdapter != null) {
                             episodesListAdapter.notifyDataSetChanged();
                         }
+                    } else if (PlayerStatus.fromOrdinal(statusOrdinal) == PlayerStatus.PLAYING) {
+                        currentlyPlaying = true;
+                    } else if ((PlayerStatus.fromOrdinal(statusOrdinal) == PlayerStatus.STOPPED) ||
+                            (PlayerStatus.fromOrdinal(statusOrdinal) == PlayerStatus.PAUSED)) {
+                        currentlyPlaying = false;
                     }
                 }
             }

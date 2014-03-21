@@ -42,6 +42,11 @@ public class DownloadRequester {
 
     private void download(Context context, FeedFile item, File dest,
                           boolean overwriteIfExists) {
+        download(context, item, dest, overwriteIfExists, false);
+    }
+
+    private void download(Context context, FeedFile item, File dest,
+                          boolean overwriteIfExists, boolean shouldStream) {
         if (!isDownloadingFile(item)) {
             if (!isFilenameAvailable(dest.toString()) || dest.exists()) {
                 if (AppConfig.DEBUG)
@@ -84,6 +89,11 @@ public class DownloadRequester {
             DownloadRequest request = new DownloadRequest(dest.toString(),
                     item.getDownload_url(), item.getHumanReadableIdentifier(),
                     item.getId(), item.getTypeAsInt());
+            if (item instanceof FeedMedia && shouldStream) {
+                request.setStreamSize((int)((FeedMedia)item).getSize());
+                request.setShouldStream(shouldStream);
+                request.setMimeType(((FeedMedia)item).getMime_type());
+            }
 
             downloads.put(request.getSource(), request);
 
@@ -132,12 +142,18 @@ public class DownloadRequester {
         }
     }
 
+
     public void downloadMedia(Context context, FeedMedia feedmedia)
+            throws DownloadRequestException {
+        downloadMedia(context, feedmedia, false);
+    }
+
+    public void downloadMedia(Context context, FeedMedia feedmedia, boolean shouldStream)
             throws DownloadRequestException {
         if (feedFileValid(feedmedia)) {
             download(context, feedmedia,
                     new File(getMediafilePath(context, feedmedia),
-                            getMediafilename(feedmedia)), false);
+                            getMediafilename(feedmedia)), false, shouldStream);
         }
     }
 
