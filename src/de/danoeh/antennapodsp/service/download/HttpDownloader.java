@@ -56,13 +56,22 @@ public class HttpDownloader extends Downloader {
         byte [] servingArray = null;
         ByteArrayInputStream pipeIn = null;
         ByteBuffer servingOutputBuffer = null;
-        if (httpd != null && request.isShouldStream()) {
+        if (request.isShouldStream()) {
+            Log.d(TAG, "Setting up internal stream.");
+            httpd = new PodcastHTTPD();
             isServing = true;
             servingArray = new byte[(int)request.getStreamSize()];
             servingOutputBuffer = ByteBuffer.wrap(servingArray);
             pipeIn = new ByteArrayInputStream(servingArray);
+            if (AppConfig.DEBUG) Log.d(TAG, "input stream available is " + pipeIn.available());
             httpd.setStream(pipeIn);
             httpd.setMimeType(request.getMimeType());
+            try {
+                httpd.start();
+            } catch (IOException e) {
+                Log.e(TAG, "Could not start httpd in downloader", e);
+            }
+
         }
 
         InputStream connection = null;
@@ -153,6 +162,12 @@ public class HttpDownloader extends Downloader {
                     return;
                 }
                 onSuccess();
+            }
+
+            // switch player from stream to file if necessary and stop httpd
+            if (request.isShouldStream()) {
+                // ...
+                httpd.stop();
             }
 
         } catch (IllegalArgumentException e) {

@@ -5,7 +5,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * Created by toby on 20.03.14.
+ * Simple HTTPD, serving the file that is currently being downloaded only as a stream, delivered by
+ * {@link de.danoeh.antennapodsp.service.download.HttpDownloader}
  */
 public class PodcastHTTPD extends NanoHTTPD {
     public static final int PORT = 8123;

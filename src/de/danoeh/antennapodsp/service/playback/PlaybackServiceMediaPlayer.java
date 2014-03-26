@@ -170,8 +170,10 @@ public class PlaybackServiceMediaPlayer {
         try {
             media.loadMetadata();
             if (stream) {
+                Log.d(TAG, "Streaming media from " + media.getStreamUrl());
                 mediaPlayer.setDataSource(media.getStreamUrl());
             } else {
+                Log.d(TAG, "Playing local media from " + media.getLocalMediaUrl());
                 mediaPlayer.setDataSource(media.getLocalMediaUrl());
             }
             setPlayerStatus(PlayerStatus.INITIALIZED, media);
@@ -223,6 +225,17 @@ public class PlaybackServiceMediaPlayer {
                     audioFocusChangeListener, AudioManager.STREAM_MUSIC,
                     AudioManager.AUDIOFOCUS_GAIN);
             if (focusGained == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+
+                // check whether previous play was streamed
+                if (media.getStreamUrl().startsWith("http://127.0.0.1") && media.localFileAvailable()) {
+                    try {
+                        if(AppConfig.DEBUG) Log.d(TAG, "Switching local stream to local file.");
+                        mediaPlayer.setDataSource(media.getLocalMediaUrl());
+                        mediaPlayer.prepare();
+                    } catch (IOException e) {
+                        Log.e(TAG, "Could not switch from streaming locally to playing local file",e);
+                    }
+                }
 
                 setSpeed(Float.parseFloat(UserPreferences.getPlaybackSpeed()));
                 mediaPlayer.start();

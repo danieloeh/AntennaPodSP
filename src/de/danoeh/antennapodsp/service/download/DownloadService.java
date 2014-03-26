@@ -120,7 +120,7 @@ public class DownloadService extends Service {
     private static final int SCHED_EX_POOL_SIZE = 1;
     private ScheduledThreadPoolExecutor schedExecutor;
 
-    private PodcastHTTPD httpd;
+    // private PodcastHTTPD httpd = new PodcastHTTPD();
 
     private final IBinder mBinder = new LocalBinder();
 
@@ -244,13 +244,12 @@ public class DownloadService extends Service {
         setupNotificationBuilders();
         requester = DownloadRequester.getInstance();
 
-        httpd = new PodcastHTTPD();
-        try {
-            if(AppConfig.DEBUG) Log.d(TAG, "Starting NanoHTTPD");
-            httpd.start();
-        } catch (IOException e) {
-            Log.e(TAG, "Could not start NanoHTTPD!", e);
-        }
+//        try {
+//            if(AppConfig.DEBUG) Log.d(TAG, "Starting NanoHTTPD");
+//            httpd.start();
+//        } catch (IOException e) {
+//            Log.e(TAG, "Could not start NanoHTTPD!", e);
+//        }
     }
 
     @Override
@@ -273,8 +272,8 @@ public class DownloadService extends Service {
         schedExecutor.shutdown();
         cancelNotificationUpdater();
         unregisterReceiver(cancelDownloadReceiver);
-        if(AppConfig.DEBUG) Log.d(TAG, "Stopping NanoHTTPD");
-        httpd.stop();
+        // if(AppConfig.DEBUG) Log.d(TAG, "Stopping NanoHTTPD");
+        // if (httpd.isAlive()) httpd.stop();
     }
 
     @SuppressLint("NewApi")
@@ -422,7 +421,7 @@ public class DownloadService extends Service {
     private Downloader getDownloader(DownloadRequest request) {
         if (URLUtil.isHttpUrl(request.getSource())
                 || URLUtil.isHttpsUrl(request.getSource())) {
-            return new HttpDownloader(request, httpd);
+            return new HttpDownloader(request, null);
         }
         Log.e(TAG,
                 "Could not find appropriate downloader for "
