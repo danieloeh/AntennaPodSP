@@ -1,13 +1,17 @@
 package de.danoeh.antennapodsp.service.download;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.http.AndroidHttpClient;
+import android.os.IBinder;
 import android.util.Log;
 import de.danoeh.antennapodsp.AppConfig;
 import de.danoeh.antennapodsp.PodcastApp;
 import de.danoeh.antennapodsp.R;
 import de.danoeh.antennapodsp.feed.FeedMedia;
+import de.danoeh.antennapodsp.service.stream.StreamService;
 import de.danoeh.antennapodsp.util.DownloadError;
 import de.danoeh.antennapodsp.util.StorageUtils;
 import org.apache.commons.io.IOUtils;
@@ -25,15 +29,15 @@ public class HttpDownloader extends Downloader {
     private static final String TAG = "HttpDownloader";
 
     private static final int BUFFER_SIZE = 8 * 1024;
-    private PodcastHTTPD httpd;
+    private Context context;
+
+    public HttpDownloader(DownloadRequest request, Context context) {
+        super(request);
+        this.context = context;
+    }
 
     public HttpDownloader(DownloadRequest request) {
         super(request);
-    }
-
-    public HttpDownloader(DownloadRequest request, PodcastHTTPD httpd) {
-        super(request);
-        this.httpd = httpd;
     }
 
     private URI getURIFromRequestUrl(String source) {
@@ -51,30 +55,7 @@ public class HttpDownloader extends Downloader {
     protected void download() {
         HttpClient httpClient = AntennapodHttpClient.getHttpClient();
         BufferedOutputStream out = null;
-
-        boolean isServing = false;
-        byte [] servingArray = null;
-        ByteArrayInputStream pipeIn = null;
-        ByteBuffer servingOutputBuffer = null;
-        if (request.isShouldStream()) {
-            Log.d(TAG, "Setting up internal stream.");
-            httpd = new PodcastHTTPD();
-            isServing = true;
-            servingArray = new byte[(int)request.getStreamSize()];
-            servingOutputBuffer = ByteBuffer.wrap(servingArray);
-            pipeIn = new ByteArrayInputStream(servingArray);
-            if (AppConfig.DEBUG) Log.d(TAG, "input stream available is " + pipeIn.available());
-            httpd.setStream(pipeIn);
-            httpd.setMimeType(request.getMimeType());
-            try {
-                httpd.start();
-            } catch (IOException e) {
-                Log.e(TAG, "Could not start httpd in downloader", e);
-            }
-
-        }
-
-        InputStream connection = null;
+        InputStream connection;
         try {
             HttpGet httpGet = new HttpGet(getURIFromRequestUrl(request.getSource()));
             HttpResponse response = httpClient.execute(httpGet);
@@ -127,19 +108,58 @@ public class HttpDownloader extends Downloader {
             if (AppConfig.DEBUG)
                 Log.d(TAG, "Free space is " + freeSpace);
 
+            long neededSpace = request.isShouldStream() ? request.getSize() * 2 : request.getSize();
             if (request.getSize() != DownloadStatus.SIZE_UNKNOWN
-                    && request.getSize() > freeSpace) {
+                    && neededSpace > freeSpace) {
                 onFail(DownloadError.ERROR_NOT_ENOUGH_SPACE, null);
                 return;
             }
 
             if (AppConfig.DEBUG)
                 Log.d(TAG, "Starting download");
+
+            FileOutputStream tempOutStream = null;
+            int tempOutCount = 0; // number of temporary files
+            int tempOutSize = 0; // current size of temporary file
+            String currentFilename = null;
+            ServiceConnection streamServiceConnection;
+
+            if (request.isShouldStream()) {
+                currentFilename = "temp" + request.getTitle() + "_" +tempOutCount;
+                tempOutStream = context.openFileOutput(currentFilename, Context.MODE_PRIVATE);
+                context.startService(new Intent(context, StreamService.class));
+                streamServiceConnection = new ServiceConnection() {
+                    @Override
+                    public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+
+                    }
+
+                    @Override
+                    public void onServiceDisconnected(ComponentName componentName) {
+
+                    }
+                };
+                context.bindService(new Intent(context, StreamService.class),
+                        streamServiceConnection, Context.BIND_AUTO_CREATE);
+            }
+
             while (!cancelled
                     && (count = connection.read(buffer)) != -1) {
                 out.write(buffer, 0, count);
-                if (isServing) {
-                    servingOutputBuffer.put(buffer, 0, count);
+                if (request.isShouldStream()) {
+                    if (tempOutStream != null) {
+                        tempOutStream.write(buffer,0, count);
+                        tempOutSize += count;
+                        if (tempOutSize >= StreamService.TEMP_FILE_SIZE) {
+                            tempOutStream.flush();
+                            tempOutStream.close();
+                            handleTempFileFinished(request, currentFilename);
+                            tempOutCount++;
+                            currentFilename =  "temp" + request.getTitle() + "_" +tempOutCount;
+                            tempOutStream = context.openFileOutput(currentFilename, Context.MODE_PRIVATE);
+                            tempOutSize = 0;
+                        }
+                    }
                 }
                 request.setSoFar(request.getSoFar() + count);
                 request.setProgressPercent((int) (((double) request
@@ -161,13 +181,12 @@ public class HttpDownloader extends Downloader {
                                     request.getSize());
                     return;
                 }
+                if (request.isShouldStream() && tempOutStream != null) {
+                    tempOutStream.flush();
+                    tempOutStream.close();
+                    handleTempFileFinished(request, currentFilename);
+                }
                 onSuccess();
-            }
-
-            // switch player from stream to file if necessary and stop httpd
-            if (request.isShouldStream()) {
-                // ...
-                httpd.stop();
             }
 
         } catch (IllegalArgumentException e) {
@@ -180,7 +199,6 @@ public class HttpDownloader extends Downloader {
             e.printStackTrace();
             onFail(DownloadError.ERROR_UNKNOWN_HOST, e.getMessage());
         } catch (IOException e) {
-            httpd.stop();
             e.printStackTrace();
             onFail(DownloadError.ERROR_IO_ERROR, e.getMessage());
         } catch (NullPointerException e) {
@@ -191,6 +209,15 @@ public class HttpDownloader extends Downloader {
             IOUtils.closeQuietly(out);
             AntennapodHttpClient.cleanup();
         }
+    }
+
+    private void handleTempFileFinished(DownloadRequest request, String currentFilename) {
+        Intent intent = new Intent(context, StreamService.class);
+        intent.putExtra(StreamService.EXTRA_FILENAME, currentFilename);
+        intent.putExtra(StreamService.EXTRA_REQUEST, request);
+        intent.putExtra(StreamService.EXTRA_TYPE, StreamService.EXTRA_TYPE_NEW_TEMP_FILE);
+        context.startService(intent);
+        // if (AppConfig.DEBUG) Log.d(TAG,"Temp File " + currentFilename + " announced");
     }
 
     private void onSuccess() {

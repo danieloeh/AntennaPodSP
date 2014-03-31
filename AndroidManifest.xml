@@ -64,6 +64,9 @@
             android:enabled="true"
             android:exported="true">
         </service>
+        <service
+            android:name=".service.stream.StreamService"
+            android:enabled="true"/>
 
         <receiver
             android:name=".receiver.MediaButtonReceiver"

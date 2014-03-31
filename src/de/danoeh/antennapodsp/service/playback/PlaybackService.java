@@ -32,6 +32,7 @@ import de.danoeh.antennapodsp.feed.MediaType;
 import de.danoeh.antennapodsp.preferences.PlaybackPreferences;
 import de.danoeh.antennapodsp.preferences.UserPreferences;
 import de.danoeh.antennapodsp.receiver.MediaButtonReceiver;
+import de.danoeh.antennapodsp.service.stream.StreamService;
 import de.danoeh.antennapodsp.storage.DBTasks;
 import de.danoeh.antennapodsp.storage.DBWriter;
 import de.danoeh.antennapodsp.util.BitmapDecoder;
@@ -251,6 +252,11 @@ public class PlaybackService extends Service {
                 started = true;
                 boolean stream = intent.getBooleanExtra(EXTRA_SHOULD_STREAM,
                         true);
+                if (stream) {
+                    Intent intent1 = new Intent(getApplicationContext(), StreamService.class);
+                    startService(intent1);
+                    bindService(intent1, mConnection, Context.BIND_AUTO_CREATE);
+                }
                 boolean startWhenPrepared = intent.getBooleanExtra(EXTRA_START_WHEN_PREPARED, false);
                 boolean prepareImmediately = intent.getBooleanExtra(EXTRA_PREPARE_IMMEDIATELY, false);
                 sendNotificationBroadcast(NOTIFICATION_TYPE_RELOAD, 0);
@@ -261,6 +267,19 @@ public class PlaybackService extends Service {
         return Service.START_REDELIVER_INTENT;
     }
 
+    ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            if (AppConfig.DEBUG) Log.d(TAG, "PlaybackService bound to StreamService.");
+            // StreamService streamService = ((StreamService.LocalBinder)iBinder).getService();
+            // streamService.setPlaybackService(playbackService);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+
+        }
+    };
     /**
      * Handles media button events
      */

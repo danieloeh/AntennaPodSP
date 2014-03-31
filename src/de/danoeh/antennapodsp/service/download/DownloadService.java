@@ -120,8 +120,6 @@ public class DownloadService extends Service {
     private static final int SCHED_EX_POOL_SIZE = 1;
     private ScheduledThreadPoolExecutor schedExecutor;
 
-    // private PodcastHTTPD httpd = new PodcastHTTPD();
-
     private final IBinder mBinder = new LocalBinder();
 
     public class LocalBinder extends Binder {
@@ -421,7 +419,7 @@ public class DownloadService extends Service {
     private Downloader getDownloader(DownloadRequest request) {
         if (URLUtil.isHttpUrl(request.getSource())
                 || URLUtil.isHttpsUrl(request.getSource())) {
-            return new HttpDownloader(request, null);
+            return new HttpDownloader(request, getApplicationContext());
         }
         Log.e(TAG,
                 "Could not find appropriate downloader for "

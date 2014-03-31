@@ -220,7 +220,7 @@ public class EpisodesFragment extends ListFragment {
                                     public void run() {
                                         DBTasks.playMedia(getActivity(), item.getMedia(), false, true, true);
                                     }
-                                }, 2000);
+                                }, 4000);
                             }
 
                         } catch (DownloadRequestException e) {
