@@ -3,17 +3,17 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.9.+'
+        classpath 'com.android.tools.build:gradle:0.12.+'
     }
 }
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 repositories {
     mavenCentral()
 }
 dependencies {
-    compile 'com.android.support:appcompat-v7:19.0.+'
-    compile 'org.apache.commons:commons-lang3:3.2.1'
+    compile 'com.android.support:appcompat-v7:19.1.+'
+    compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'commons-io:commons-io:2.4'
     compile project(':dep:AndroidSlidingUpPanel:library')
     compile files('libs/presto_client-0.8.5.jar')
@@ -21,13 +21,13 @@ dependencies {
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.3"
+    buildToolsVersion "20.0"
 
     defaultConfig {
         minSdkVersion 10
         targetSdkVersion 19
-        packageName "de.danoeh.antennapodsp.custom"
-        testPackageName "de.test.antennapod"
+        applicationId "de.danoeh.antennapodsp.custom"
+        testApplicationId "de.test.antennapod"
         testInstrumentationRunner "instrumentationTest.de.test.antennapod.AntennaPodTestRunner"
     }
 
@@ -71,7 +71,7 @@ android {
 
     buildTypes {
         debug {
-            packageNameSuffix ".debug"
+            applicationIdSuffix ".debug"
         }
         release {
             runProguard true
@@ -91,5 +91,5 @@ android {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.11'
+    gradleVersion = '1.12'
 }
