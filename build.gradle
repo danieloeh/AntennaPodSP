@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.+'
+        classpath 'com.android.tools.build:gradle:0.13.3'
     }
 }
 apply plugin: 'com.android.application'
@@ -12,7 +12,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    compile 'com.android.support:appcompat-v7:19.1.+'
+    compile 'com.android.support:appcompat-v7:20.0.0'
     compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'commons-io:commons-io:2.4'
     compile project(':dep:AndroidSlidingUpPanel:library')
@@ -20,12 +20,12 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 19
+    compileSdkVersion 20
     buildToolsVersion "20.0"
 
     defaultConfig {
         minSdkVersion 10
-        targetSdkVersion 19
+        targetSdkVersion 20
         applicationId "de.danoeh.antennapodsp.custom"
         testApplicationId "de.test.antennapod"
         testInstrumentationRunner "instrumentationTest.de.test.antennapod.AntennaPodTestRunner"
@@ -91,5 +91,5 @@ android {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.12'
+    gradleVersion = '2.1'
 }
