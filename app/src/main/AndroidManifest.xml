@@ -57,16 +57,16 @@
 
 
         <service
-            android:name=".service.download.DownloadService"
+            android:name=".core.service.download.DownloadService"
             android:enabled="true"/>
         <service
-            android:name=".service.playback.PlaybackService"
+            android:name=".core.service.playback.PlaybackService"
             android:enabled="true"
             android:exported="true">
         </service>
 
         <receiver
-            android:name=".receiver.MediaButtonReceiver"
+            android:name=".core.receiver.MediaButtonReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON"/>
@@ -76,7 +76,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".receiver.FeedUpdateReceiver">
+        <receiver android:name=".core.receiver.FeedUpdateReceiver">
             <intent-filter>
                 <action android:name="de.danoeh.antennapod.feedupdatereceiver.refreshFeeds"/>
             </intent-filter>
@@ -87,13 +87,13 @@
             android:label="@string/about_label">
         </activity>
 
-        <receiver android:name=".receiver.ConnectivityActionReceiver">
+        <receiver android:name=".core.receiver.ConnectivityActionReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".receiver.AlarmUpdateReceiver">
+        <receiver android:name=".core.receiver.AlarmUpdateReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>

@@ -11,11 +11,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import de.danoeh.antennapodsp.R;
-import de.danoeh.antennapodsp.asynctask.ImageLoader;
-import de.danoeh.antennapodsp.feed.FeedItem;
-import de.danoeh.antennapodsp.feed.FeedMedia;
-import de.danoeh.antennapodsp.storage.DownloadRequester;
-import de.danoeh.antennapodsp.util.Converter;
+import de.danoeh.antennapodsp.core.asynctask.ImageLoader;
+import de.danoeh.antennapodsp.core.feed.FeedItem;
+import de.danoeh.antennapodsp.core.feed.FeedMedia;
+import de.danoeh.antennapodsp.core.storage.DownloadRequester;
+import de.danoeh.antennapodsp.core.util.Converter;
 
 public class EpisodesListAdapter extends BaseAdapter {
 

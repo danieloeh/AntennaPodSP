@@ -3,11 +3,11 @@ package de.danoeh.antennapodsp;
 import android.app.Application;
 import android.content.res.Configuration;
 import android.util.Log;
-import de.danoeh.antennapodsp.asynctask.ImageLoader;
-import de.danoeh.antennapodsp.feed.EventDistributor;
-import de.danoeh.antennapodsp.preferences.PlaybackPreferences;
-import de.danoeh.antennapodsp.preferences.UserPreferences;
-import de.danoeh.antennapodsp.storage.DBTasks;
+import de.danoeh.antennapodsp.core.asynctask.ImageLoader;
+import de.danoeh.antennapodsp.core.feed.EventDistributor;
+import de.danoeh.antennapodsp.core.preferences.PlaybackPreferences;
+import de.danoeh.antennapodsp.core.preferences.UserPreferences;
+import de.danoeh.antennapodsp.core.storage.DBTasks;
 
 /**
  * Main application class.

@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import de.danoeh.antennapodsp.feed.Feed;
-import de.danoeh.antennapodsp.service.download.DownloadRequest;
-import de.danoeh.antennapodsp.service.download.DownloadStatus;
-import de.danoeh.antennapodsp.service.download.HttpDownloader;
-import de.danoeh.antennapodsp.storage.*;
-import de.danoeh.antennapodsp.syndication.handler.FeedHandler;
-import de.danoeh.antennapodsp.syndication.handler.UnsupportedFeedtypeException;
+import de.danoeh.antennapodsp.core.feed.Feed;
+import de.danoeh.antennapodsp.core.service.download.DownloadRequest;
+import de.danoeh.antennapodsp.core.service.download.DownloadStatus;
+import de.danoeh.antennapodsp.core.service.download.HttpDownloader;
+import de.danoeh.antennapodsp.core.storage.*;
+import de.danoeh.antennapodsp.core.syndication.handler.FeedHandler;
+import de.danoeh.antennapodsp.core.syndication.handler.UnsupportedFeedtypeException;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import static de.danoeh.antennapodsp.preferences.UserPreferences.*;
+import static de.danoeh.antennapodsp.core.preferences.UserPreferences.*;
 
 /**
  * The AppInitializer processes the preferences that were specified in AppPreferences.
