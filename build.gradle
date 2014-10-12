@@ -1,92 +1,20 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:0.13.3'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
     }
 }
-apply plugin: 'com.android.application'
 
-repositories {
-    mavenCentral()
-}
-dependencies {
-    compile 'com.android.support:appcompat-v7:20.0.0'
-    compile 'org.apache.commons:commons-lang3:3.3.2'
-    compile 'commons-io:commons-io:2.4'
-    compile 'com.sothree.slidinguppanel:library:2.0.1'
-    compile files('libs/presto_client-0.8.5.jar')
-}
-
-android {
-    compileSdkVersion 20
-    buildToolsVersion "20.0"
-
-    defaultConfig {
-        minSdkVersion 10
-        targetSdkVersion 20
-        applicationId "de.danoeh.antennapodsp.custom"
-        testApplicationId "de.test.antennapod"
-        testInstrumentationRunner "instrumentationTest.de.test.antennapod.AntennaPodTestRunner"
-    }
-
-    signingConfigs {
-        releaseConfig {
-            if (project.hasProperty('releaseStoreFile')) {
-                storeFile file(releaseStoreFile)
-            } else {
-                storeFile file('keystore')
-            }
-            if (project.hasProperty('releaseStorePassword')) {
-                storePassword releaseStorePassword
-            } else {
-                storePassword "password"
-            }
-            if (project.hasProperty('releaseKeyAlias')) {
-                keyAlias releaseKeyAlias
-            } else {
-                keyAlias "alias"
-            }
-            if (project.hasProperty('releaseKeyPassword')) {
-                keyPassword releaseKeyPassword
-            } else {
-                keyPassword "password"
-            }
-        }
-    }
-
-    sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
-            resources.srcDirs = ['src']
-            aidl.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
-            res.srcDirs = ['res']
-            assets.srcDirs = ['assets']
-        }
-        androidTest.setRoot('src/instrumentationTest')
-    }
-
-    buildTypes {
-        debug {
-            applicationIdSuffix ".debug"
-        }
-        release {
-            runProguard true
-            proguardFile 'proguard.cfg'
-            signingConfig signingConfigs.releaseConfig
-        }
-    }
-
-    packagingOptions {
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE.txt'
-    }
-
-    lintOptions {
-        abortOnError false
+allprojects {
+    repositories {
+        jcenter()
     }
 }
 
