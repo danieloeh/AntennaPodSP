@@ -57,14 +57,12 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.main);
         slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         slidingUpPanelLayout.setPanelSlideListener(panelSlideListener);
-        slidingUpPanelLayout.setShadowDrawable(getResources().getDrawable(com.sothree.slidinguppanel.library.R.drawable.above_shadow));
-
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         int playerInitialState = ExternalPlayerFragment.ARG_INIT_ANCHORED;
         if (savedInstanceState != null && savedInstanceState.getBoolean(SAVED_STATE_ACTION_BAR_HIDDEN)) {
             getSupportActionBar().hide();
-            slidingUpPanelLayout.expandPane();
+            slidingUpPanelLayout.expandPanel();
             playerInitialState = ExternalPlayerFragment.ARG_INIT_EPXANDED;
         }
 
@@ -83,7 +81,7 @@ public class MainActivity extends ActionBarActivity {
         slidingUpPanelLayout.post(new Runnable() {
             @Override
             public void run() {
-                slidingUpPanelLayout.hidePane();
+                slidingUpPanelLayout.hidePanel();
             }
         });
 
@@ -165,12 +163,17 @@ public class MainActivity extends ActionBarActivity {
         public void onPanelAnchored(View panel) {
 
         }
+
+        @Override
+        public void onPanelHidden(View view) {
+
+        }
     };
 
     @Override
     public void onBackPressed() {
-        if (slidingUpPanelLayout.isExpanded()) {
-            slidingUpPanelLayout.collapsePane();
+        if (slidingUpPanelLayout.isPanelExpanded()) {
+            slidingUpPanelLayout.collapsePanel();
         } else {
             super.onBackPressed();
         }
@@ -223,22 +226,22 @@ public class MainActivity extends ActionBarActivity {
         slidingUpPanelLayout.post(new Runnable() {
             @Override
             public void run() {
-                slidingUpPanelLayout.collapsePane();
-                slidingUpPanelLayout.hidePane();
+                slidingUpPanelLayout.collapsePanel();
+                slidingUpPanelLayout.hidePanel();
 
             }
         });
     }
 
     public void openPlayer(final ExternalPlayerFragment.FragmentState state) {
-        slidingUpPanelLayout.showPane();
+        slidingUpPanelLayout.showPanel();
         slidingUpPanelLayout.post(new Runnable() {
             @Override
             public void run() {
                 if (state == ExternalPlayerFragment.FragmentState.ANCHORED) {
-                    slidingUpPanelLayout.collapsePane();
+                    slidingUpPanelLayout.collapsePanel();
                 } else if (state == ExternalPlayerFragment.FragmentState.EXPANDED) {
-                    slidingUpPanelLayout.expandPane();
+                    slidingUpPanelLayout.expandPanel();
                 }
             }
         });

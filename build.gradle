@@ -15,7 +15,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:20.0.0'
     compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'commons-io:commons-io:2.4'
-    compile project(':dep:AndroidSlidingUpPanel:library')
+    compile 'com.sothree.slidinguppanel:library:2.0.1'
     compile files('libs/presto_client-0.8.5.jar')
 }
 

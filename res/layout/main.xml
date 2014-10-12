@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.sothree.slidinguppanel.SlidingUpPanelLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
     android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="bottom"
     android:gravity="bottom"
-    app:collapsedHeight="@dimen/external_player_height">
+    sothree:panelHeight="@dimen/external_player_height"
+    sothree:shadowHeight="4dp">
 
     <FrameLayout
         android:id="@+id/main_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <FrameLayout
         android:id="@+id/player_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="match_parent" />
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>
