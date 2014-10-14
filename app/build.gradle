@@ -9,6 +9,7 @@ dependencies {
     compile 'commons-io:commons-io:2.4'
     compile 'com.sothree.slidinguppanel:library:2.0.1'
     compile files('libs/presto_client-0.8.5.jar')
+    compile project(':core:core')
 }
 
 android {
