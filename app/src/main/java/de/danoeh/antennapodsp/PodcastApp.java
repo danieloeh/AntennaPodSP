@@ -14,6 +14,16 @@ import de.danoeh.antennapodsp.core.storage.DBTasks;
  */
 public class PodcastApp extends Application {
 
+    // make sure that ClientConfigurator executes its static code
+    static {
+        try {
+            Class.forName("de.danoeh.antennapodsp.config.ClientConfigurator");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("ClientConfigurator not found");
+        }
+    }
+
+
     private static final String TAG = "PodcastApp";
     public static final String EXPORT_DIR = "export/";
 
