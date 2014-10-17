@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.AppPreferences;
 import de.danoeh.antennapodsp.core.feed.*;
 import de.danoeh.antennapodsp.core.service.download.DownloadStatus;
@@ -299,7 +299,7 @@ public class PodDBAdapter {
 
     public PodDBAdapter open() {
         if (db == null || !db.isOpen() || db.isReadOnly()) {
-            if (AppConfig.DEBUG)
+            if (BuildConfig.DEBUG)
                 Log.d(TAG, "Opening DB");
             try {
                 db = helper.getWritableDatabase();
@@ -312,7 +312,7 @@ public class PodDBAdapter {
     }
 
     public void close() {
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG, "Closing DB");
         //db.close();
     }
@@ -352,11 +352,11 @@ public class PodDBAdapter {
         values.put(KEY_FEED_IDENTIFIER, feed.getFeedIdentifier());
         if (feed.getId() == 0) {
             // Create new entry
-            if (AppConfig.DEBUG)
+            if (BuildConfig.DEBUG)
                 Log.d(this.toString(), "Inserting new Feed into db");
             feed.setId(db.insert(TABLE_NAME_FEEDS, null, values));
         } else {
-            if (AppConfig.DEBUG)
+            if (BuildConfig.DEBUG)
                 Log.d(this.toString(), "Updating existing Feed in db");
             db.update(TABLE_NAME_FEEDS, values, KEY_ID + "=?",
                     new String[]{String.valueOf(feed.getId())});

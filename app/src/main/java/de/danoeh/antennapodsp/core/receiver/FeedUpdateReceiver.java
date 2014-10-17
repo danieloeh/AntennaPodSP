@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.core.preferences.UserPreferences;
 import de.danoeh.antennapodsp.core.storage.DBTasks;
 
@@ -20,13 +20,13 @@ public class FeedUpdateReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(ACTION_REFRESH_FEEDS)) {
-            if (AppConfig.DEBUG)
+            if (BuildConfig.DEBUG)
                 Log.d(TAG, "Received intent");
             boolean mobileUpdate = UserPreferences.isAllowMobileUpdate();
             if (mobileUpdate || connectedToWifi(context)) {
                 DBTasks.refreshAllFeeds(context, null);
             } else {
-                if (AppConfig.DEBUG)
+                if (BuildConfig.DEBUG)
                     Log.d(TAG,
                             "Blocking automatic update: no wifi available / no mobile updates allowed");
             }

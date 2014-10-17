@@ -44,11 +44,11 @@ public class AppInitializer {
         SharedPreferences initPrefs = context.getSharedPreferences(PREFS_APP_INITIALIZER, Context.MODE_PRIVATE);
         final boolean isFirstLaunch = initPrefs.getBoolean(PREF_IS_FIRST_LAUNCH, true);
         final int currentVersionNumber = initPrefs.getInt(PREF_PREF_VERSION_NUMBER, 0);
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG, String.format("First start: %s, Version number: %d", String.valueOf(isFirstLaunch), currentVersionNumber));
 
         if (!isFirstLaunch && currentVersionNumber >= appPreferences.feedUrlsVersionNumber) {
-            if (AppConfig.DEBUG) Log.d(TAG, "AppPreferences are up-to-date");
+            if (BuildConfig.DEBUG) Log.d(TAG, "AppPreferences are up-to-date");
             return;
         }
         if (!isFirstLaunch)
@@ -64,7 +64,7 @@ public class AppInitializer {
         if (destDir == null) throw new InitializerException(context.getString(R.string.storage_access_failed));
         for (int i = 0; i < appPreferences.feedUrls.length; i++) {
             String url = appPreferences.feedUrls[i];
-            if (AppConfig.DEBUG) Log.d(TAG, "Downloading feed: " + url);
+            if (BuildConfig.DEBUG) Log.d(TAG, "Downloading feed: " + url);
 
             File destFile = new File(destDir, "feed " + i);
             destFile.delete();
@@ -123,7 +123,7 @@ public class AppInitializer {
 
     /** Read preference values from AppPreferences and write them into the UserPreferences file. */
     private static void writeUserPreferences(Context context) {
-        if (AppConfig.DEBUG) Log.d(TAG, "Writing user preferences");
+        if (BuildConfig.DEBUG) Log.d(TAG, "Writing user preferences");
         AppPreferences appPreferences = new AppPreferences();
         SharedPreferences userPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor upe = userPrefs.edit();

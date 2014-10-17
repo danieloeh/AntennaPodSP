@@ -12,7 +12,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.*;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.R;
 import de.danoeh.antennapodsp.SPAUtil;
 import de.danoeh.antennapodsp.core.feed.EventDistributor;
@@ -114,7 +114,7 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void update(EventDistributor eventDistributor, Integer arg) {
             if ((EVENTS & arg) != 0) {
-                if (AppConfig.DEBUG)
+                if (BuildConfig.DEBUG)
                     Log.d(TAG, "Received contentUpdate Intent.");
                 updateProgressBarVisibility();
             }

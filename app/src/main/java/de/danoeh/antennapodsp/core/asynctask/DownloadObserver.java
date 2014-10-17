@@ -5,7 +5,7 @@ import android.content.*;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.core.service.download.DownloadService;
 import de.danoeh.antennapodsp.core.service.download.Downloader;
 
@@ -55,13 +55,13 @@ public class DownloadObserver {
     }
 
     public void onResume() {
-        if (AppConfig.DEBUG) Log.d(TAG, "DownloadObserver resumed");
+        if (BuildConfig.DEBUG) Log.d(TAG, "DownloadObserver resumed");
         activity.registerReceiver(contentChangedReceiver, new IntentFilter(DownloadService.ACTION_DOWNLOADS_CONTENT_CHANGED));
         connectToDownloadService();
     }
 
     public void onPause() {
-        if (AppConfig.DEBUG) Log.d(TAG, "DownloadObserver paused");
+        if (BuildConfig.DEBUG) Log.d(TAG, "DownloadObserver paused");
         try {
             activity.unregisterReceiver(contentChangedReceiver);
         } catch (IllegalArgumentException e) {
@@ -105,7 +105,7 @@ public class DownloadObserver {
             downloadService = ((DownloadService.LocalBinder) service)
                     .getService();
             mIsBound.set(true);
-            if (AppConfig.DEBUG)
+            if (BuildConfig.DEBUG)
                 Log.d(TAG, "Connection to service established");
             List<Downloader> downloaderList = downloadService.getDownloads();
             if (downloaderList != null && !downloaderList.isEmpty()) {

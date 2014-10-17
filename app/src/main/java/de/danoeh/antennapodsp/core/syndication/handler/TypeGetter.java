@@ -1,7 +1,7 @@
 package de.danoeh.antennapodsp.core.syndication.handler;
 
 import android.util.Log;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.core.feed.Feed;
 import org.apache.commons.io.input.XmlStreamReader;
 import org.xmlpull.v1.XmlPullParser;
@@ -41,7 +41,7 @@ public class TypeGetter {
                         String tag = xpp.getName();
                         if (tag.equals(ATOM_ROOT)) {
                             feed.setType(Feed.TYPE_ATOM1);
-                            if (AppConfig.DEBUG)
+                            if (BuildConfig.DEBUG)
                                 Log.d(TAG, "Recognized type Atom");
                             return Type.ATOM;
                         } else if (tag.equals(RSS_ROOT)) {
@@ -51,12 +51,12 @@ public class TypeGetter {
 
                                 if (strVersion.equals("2.0")) {
                                     feed.setType(Feed.TYPE_RSS2);
-                                    if (AppConfig.DEBUG)
+                                    if (BuildConfig.DEBUG)
                                         Log.d(TAG, "Recognized type RSS 2.0");
                                     return Type.RSS20;
                                 } else if (strVersion.equals("0.91")
                                         || strVersion.equals("0.92")) {
-                                    if (AppConfig.DEBUG)
+                                    if (BuildConfig.DEBUG)
                                         Log.d(TAG,
                                                 "Recognized type RSS 0.91/0.92");
                                     return Type.RSS091;
@@ -64,7 +64,7 @@ public class TypeGetter {
                             }
                             throw new UnsupportedFeedtypeException(Type.INVALID);
                         } else {
-                            if (AppConfig.DEBUG)
+                            if (BuildConfig.DEBUG)
                                 Log.d(TAG, "Type is invalid");
                             throw new UnsupportedFeedtypeException(Type.INVALID);
                         }
@@ -79,7 +79,7 @@ public class TypeGetter {
                 e.printStackTrace();
             }
         }
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG, "Type is invalid");
         throw new UnsupportedFeedtypeException(Type.INVALID);
     }

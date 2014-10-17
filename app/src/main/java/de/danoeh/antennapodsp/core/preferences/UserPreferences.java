@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.AppPreferences;
 import de.danoeh.antennapodsp.R;
 import de.danoeh.antennapodsp.core.receiver.FeedUpdateReceiver;
@@ -81,7 +81,7 @@ public class UserPreferences implements
      * @throws IllegalArgumentException if context is null
      */
     public static void createInstance(Context context) {
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG, "Creating new instance of UserPreferences");
         if (context == null)
             throw new IllegalArgumentException("Context must not be null");
@@ -270,7 +270,7 @@ public class UserPreferences implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sp, String key) {
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG, "Registered change of user preferences. Key: " + key);
 
         if (key.equals(PREF_DOWNLOAD_MEDIA_ON_WIFI_ONLY)) {
@@ -372,7 +372,7 @@ public class UserPreferences implements
                 .getDefaultSharedPreferences(context.getApplicationContext());
         String strDir = prefs.getString(PREF_DATA_FOLDER, null);
         if (strDir == null) {
-            if (AppConfig.DEBUG)
+            if (BuildConfig.DEBUG)
                 Log.d(TAG, "Using default data folder");
             return context.getExternalFilesDir(type);
         } else {
@@ -417,7 +417,7 @@ public class UserPreferences implements
     }
 
     public static void setDataFolder(String dir) {
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG, "Result from DirectoryChooser: " + dir);
         instanceAvailable();
         SharedPreferences prefs = PreferenceManager
@@ -440,7 +440,7 @@ public class UserPreferences implements
                 Log.e(TAG, "Could not create .nomedia file");
                 e.printStackTrace();
             }
-            if (AppConfig.DEBUG)
+            if (BuildConfig.DEBUG)
                 Log.d(TAG, ".nomedia file created");
         }
     }
@@ -450,7 +450,7 @@ public class UserPreferences implements
      */
     public static void restartUpdateAlarm(long triggerAtMillis, long intervalMillis) {
         instanceAvailable();
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG, "Restarting update alarm.");
         AlarmManager alarmManager = (AlarmManager) instance.context
                 .getSystemService(Context.ALARM_SERVICE);
@@ -461,10 +461,10 @@ public class UserPreferences implements
         if (intervalMillis != 0) {
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerAtMillis, intervalMillis,
                     updateIntent);
-            if (AppConfig.DEBUG)
+            if (BuildConfig.DEBUG)
                 Log.d(TAG, "Changed alarm to new interval");
         } else {
-            if (AppConfig.DEBUG)
+            if (BuildConfig.DEBUG)
                 Log.d(TAG, "Automatic update was deactivated");
         }
     }

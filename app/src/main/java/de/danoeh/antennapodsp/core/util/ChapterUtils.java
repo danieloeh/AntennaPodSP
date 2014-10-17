@@ -1,7 +1,7 @@
 package de.danoeh.antennapodsp.core.util;
 
 import android.util.Log;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.core.feed.Chapter;
 import de.danoeh.antennapodsp.core.util.comparator.ChapterStartTimeComparator;
 import de.danoeh.antennapodsp.core.util.id3reader.ChapterReader;
@@ -32,7 +32,7 @@ public class ChapterUtils {
      */
     public static void readID3ChaptersFromPlayableStreamUrl(Playable p) {
         if (p != null && p.getStreamUrl() != null) {
-            if (AppConfig.DEBUG)
+            if (BuildConfig.DEBUG)
                 Log.d(TAG, "Reading id3 chapters from item " + p.getEpisodeTitle());
             InputStream in = null;
             try {
@@ -83,7 +83,7 @@ public class ChapterUtils {
      */
     public static void readID3ChaptersFromPlayableFileUrl(Playable p) {
         if (p != null && p.localFileAvailable() && p.getLocalMediaUrl() != null) {
-            if (AppConfig.DEBUG)
+            if (BuildConfig.DEBUG)
                 Log.d(TAG, "Reading id3 chapters from item " + p.getEpisodeTitle());
             File source = new File(p.getLocalMediaUrl());
             if (source.exists()) {
@@ -166,7 +166,7 @@ public class ChapterUtils {
 
     private static void readOggChaptersFromInputStream(Playable p,
                                                        InputStream input) {
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG,
                     "Trying to read chapters from item with title "
                             + p.getEpisodeTitle());
@@ -243,14 +243,14 @@ public class ChapterUtils {
     }
 
     public static void loadChaptersFromStreamUrl(Playable media) {
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG, "Starting chapterLoader thread");
         ChapterUtils.readID3ChaptersFromPlayableStreamUrl(media);
         if (media.getChapters() == null) {
             ChapterUtils.readOggChaptersFromPlayableStreamUrl(media);
         }
 
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG, "ChapterLoaderThread has finished");
     }
 

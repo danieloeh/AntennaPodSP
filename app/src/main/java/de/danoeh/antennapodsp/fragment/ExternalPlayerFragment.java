@@ -15,7 +15,7 @@ import android.view.*;
 import android.view.View.OnClickListener;
 import android.webkit.WebView;
 import android.widget.*;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.R;
 import de.danoeh.antennapodsp.activity.MainActivity;
 import de.danoeh.antennapodsp.core.asynctask.ImageLoader;
@@ -149,7 +149,7 @@ public class ExternalPlayerFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                if (AppConfig.DEBUG)
+                if (BuildConfig.DEBUG)
                     Log.d(TAG, "layoutInfo was clicked");
 
                 if (controller.getMedia() != null) {
@@ -368,7 +368,7 @@ public class ExternalPlayerFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG, "Fragment is about to be destroyed");
         if (controller != null) {
             controller.release();
@@ -384,7 +384,7 @@ public class ExternalPlayerFragment extends Fragment {
     }
 
     private boolean loadMediaInfo() {
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG, "Loading media info");
         if (controller.serviceAvailable()) {
             Playable media = controller.getMedia();
@@ -526,7 +526,7 @@ public class ExternalPlayerFragment extends Fragment {
                         ((ActionBarActivity) getActivity())
                                 .setSupportProgressBarIndeterminateVisibility(false);
                     }
-                    if (AppConfig.DEBUG)
+                    if (BuildConfig.DEBUG)
                         Log.d(TAG, "Webview loaded");
                 }
             }
@@ -542,7 +542,7 @@ public class ExternalPlayerFragment extends Fragment {
 
             @Override
             protected Void doInBackground(Void... params) {
-                if (AppConfig.DEBUG)
+                if (BuildConfig.DEBUG)
                     Log.d(TAG, "Loading Webview");
                 try {
                     Callable<String> shownotesLoadTask = shownotesProvider.loadShownotes();

@@ -15,7 +15,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.R;
 import de.danoeh.antennapodsp.dialog.TimeDialog;
 import de.danoeh.antennapodsp.core.feed.Chapter;
@@ -115,7 +115,7 @@ public abstract class PlaybackController {
      * example in the activity's onStop() method.
      */
     public void release() {
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG, "Releasing PlaybackController");
 
         try {
@@ -161,7 +161,7 @@ public abstract class PlaybackController {
      * as the arguments of the launch intent.
      */
     private void bindToService() {
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG, "Trying to connect to service");
         AsyncTask<Void, Void, Intent> intentLoader = new AsyncTask<Void, Void, Intent>() {
             @Override
@@ -174,7 +174,7 @@ public abstract class PlaybackController {
                 boolean bound = false;
                 if (!PlaybackService.started) {
                     if (serviceIntent != null) {
-                        if (AppConfig.DEBUG) Log.d(TAG, "Calling start service");
+                        if (BuildConfig.DEBUG) Log.d(TAG, "Calling start service");
                         activity.startService(serviceIntent);
                         bound = activity.bindService(serviceIntent, mConnection, 0);
                     } else {
@@ -183,13 +183,13 @@ public abstract class PlaybackController {
                         handleStatus();
                     }
                 } else {
-                    if (AppConfig.DEBUG)
+                    if (BuildConfig.DEBUG)
                         Log.d(TAG,
                                 "PlaybackService is running, trying to connect without start command.");
                     bound = activity.bindService(new Intent(activity,
                             PlaybackService.class), mConnection, 0);
                 }
-                if (AppConfig.DEBUG)
+                if (BuildConfig.DEBUG)
                     Log.d(TAG, "Result for service binding: " + bound);
             }
         };
@@ -201,7 +201,7 @@ public abstract class PlaybackController {
      * played media or null if no last played media could be found.
      */
     private Intent getPlayLastPlayedMediaIntent() {
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG, "Trying to restore last played media");
         SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(activity.getApplicationContext());
@@ -230,7 +230,7 @@ public abstract class PlaybackController {
                 return serviceIntent;
             }
         }
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG, "No last played media found");
         return null;
     }
@@ -243,7 +243,7 @@ public abstract class PlaybackController {
                 || (positionObserverFuture != null && positionObserverFuture
                 .isDone()) || positionObserverFuture == null) {
 
-            if (AppConfig.DEBUG)
+            if (BuildConfig.DEBUG)
                 Log.d(TAG, "Setting up position observer");
             positionObserver = new MediaPositionObserver();
             positionObserverFuture = schedExecutor.scheduleWithFixedDelay(
@@ -256,7 +256,7 @@ public abstract class PlaybackController {
     private void cancelPositionObserver() {
         if (positionObserverFuture != null) {
             boolean result = positionObserverFuture.cancel(true);
-            if (AppConfig.DEBUG)
+            if (BuildConfig.DEBUG)
                 Log.d(TAG, "PositionObserver cancelled. Result: " + result);
         }
     }
@@ -269,7 +269,7 @@ public abstract class PlaybackController {
                     .getService();
             if (!released) {
                 queryService();
-                if (AppConfig.DEBUG)
+                if (BuildConfig.DEBUG)
                     Log.d(TAG, "Connection to Service established");
             } else {
                 Log.i(TAG, "Connection to playback service has been established, but controller has already been released");
@@ -279,7 +279,7 @@ public abstract class PlaybackController {
         @Override
         public void onServiceDisconnected(ComponentName name) {
             playbackService = null;
-            if (AppConfig.DEBUG)
+            if (BuildConfig.DEBUG)
                 Log.d(TAG, "Disconnected from Service");
 
         }
@@ -288,7 +288,7 @@ public abstract class PlaybackController {
     protected BroadcastReceiver statusUpdate = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (AppConfig.DEBUG)
+            if (BuildConfig.DEBUG)
                 Log.d(TAG, "Received statusUpdate Intent.");
             if (isConnectedToPlaybackService()) {
                 PlaybackServiceMediaPlayer.PSMPInfo info = playbackService.getPSMPInfo();
@@ -348,7 +348,7 @@ public abstract class PlaybackController {
                     }
 
                 } else {
-                    if (AppConfig.DEBUG)
+                    if (BuildConfig.DEBUG)
                         Log.d(TAG, "Bad arguments. Won't handle intent");
                 }
             } else {
@@ -495,7 +495,7 @@ public abstract class PlaybackController {
      * information has to be refreshed
      */
     void queryService() {
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG, "Querying service info");
         if (playbackService != null) {
             status = playbackService.getStatus();

@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.util.Log;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.core.asynctask.ImageLoader;
 import org.apache.commons.io.IOUtils;
 
@@ -32,7 +32,7 @@ public class BitmapDecoder {
             int srcHeight = options.outHeight;
             int length = Math.max(srcWidth, srcHeight);
             int sampleSize = calculateSampleSize(preferredLength, length);
-            if (AppConfig.DEBUG)
+            if (BuildConfig.DEBUG)
                 Log.d(TAG, "Using samplesize " + sampleSize);
             options.inJustDecodeBounds = false;
             options.inSampleSize = sampleSize;

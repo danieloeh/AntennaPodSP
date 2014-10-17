@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.StatFs;
 import android.util.Log;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.PodcastApp;
 import de.danoeh.antennapodsp.core.preferences.UserPreferences;
 
@@ -23,7 +23,7 @@ public class StorageUtils {
         if (dir != null) {
             return dir.exists() && dir.canRead() && dir.canWrite();
         } else {
-            if (AppConfig.DEBUG)
+            if (BuildConfig.DEBUG)
                 Log.d(TAG, "Storage not available: data folder is null");
             return false;
         }

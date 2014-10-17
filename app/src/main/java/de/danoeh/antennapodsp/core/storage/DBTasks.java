@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.util.Log;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.core.feed.*;
 import de.danoeh.antennapodsp.core.preferences.UserPreferences;
 import de.danoeh.antennapodsp.core.service.download.DownloadStatus;
@@ -154,7 +154,7 @@ public final class DBTasks {
                 }
             }.start();
         } else {
-            if (AppConfig.DEBUG)
+            if (BuildConfig.DEBUG)
                 Log.d(TAG,
                         "Ignoring request to refresh all feeds: Refresh lock is locked");
         }
@@ -192,7 +192,7 @@ public final class DBTasks {
      * @param context Used for DB access.
      */
     public static void refreshExpiredFeeds(final Context context) {
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG, "Refreshing expired feeds");
 
         new Thread() {
@@ -348,7 +348,7 @@ public final class DBTasks {
         return autodownloadExec.submit(new Runnable() {
             @Override
             public void run() {
-                if (AppConfig.DEBUG)
+                if (BuildConfig.DEBUG)
                     Log.d(TAG, "Performing auto-dl of undownloaded episodes");
                 if (NetworkUtils.autodownloadNetworkAvailable(context)
                         && UserPreferences.isEnableAutodownload()) {
@@ -360,7 +360,7 @@ public final class DBTasks {
                         }
                     }
 
-                    if (AppConfig.DEBUG)
+                    if (BuildConfig.DEBUG)
                         Log.d(TAG, "Enqueueing " + itemsToDownload.size()
                                 + " items for automatic download");
 
@@ -476,7 +476,7 @@ public final class DBTasks {
      */
     private static long performAutoCleanup(final Context context,
                                            final long episodeSize) {
-        if (AppConfig.DEBUG) Log.d(TAG, String.format("performAutoCleanup(%d)", episodeSize));
+        if (BuildConfig.DEBUG) Log.d(TAG, String.format("performAutoCleanup(%d)", episodeSize));
 
         if (episodeSize <= 0) {
             return 0;
@@ -531,7 +531,7 @@ public final class DBTasks {
             }
         }
 
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG, String.format("performAutoCleanup(%d) deleted %d episodes and free'd %d bytes of memory",
                     episodeSize, deleteList.size(), deletedEpisodesSize));
 
@@ -628,7 +628,7 @@ public final class DBTasks {
         final Feed savedFeed = searchFeedByIdentifyingValue(context,
                 newFeed.getIdentifyingValue());
         if (savedFeed == null) {
-            if (AppConfig.DEBUG)
+            if (BuildConfig.DEBUG)
                 Log.d(TAG,
                         "Found no existing Feed with title "
                                 + newFeed.getTitle() + ". Adding as new one.");
@@ -642,14 +642,14 @@ public final class DBTasks {
             }
             return newFeed;
         } else {
-            if (AppConfig.DEBUG)
+            if (BuildConfig.DEBUG)
                 Log.d(TAG, "Feed with title " + newFeed.getTitle()
                         + " already exists. Syncing new with existing one.");
 
             Collections.sort(newFeed.getItems(), new FeedItemPubdateComparator());
             savedFeed.setItems(DBReader.getFeedItemList(context, savedFeed));
             if (savedFeed.compareWithOther(newFeed)) {
-                if (AppConfig.DEBUG)
+                if (BuildConfig.DEBUG)
                     Log.d(TAG,
                             "Feed has updated attribute values. Updating old feed's attributes");
                 savedFeed.updateFromOther(newFeed);

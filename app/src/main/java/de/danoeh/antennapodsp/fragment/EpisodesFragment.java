@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.R;
 import de.danoeh.antennapodsp.adapter.EpisodesListAdapter;
 import de.danoeh.antennapodsp.core.asynctask.DownloadObserver;
@@ -167,7 +167,7 @@ public class EpisodesFragment extends ListFragment {
         try {
             getActivity().unregisterReceiver(playerStatusReceiver);
         } catch (IllegalArgumentException e) {
-            if (AppConfig.DEBUG) e.printStackTrace();
+            if (BuildConfig.DEBUG) e.printStackTrace();
         }
         listviewSetup = false;
         episodesListAdapter = null;

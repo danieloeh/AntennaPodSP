@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 
 /**
  * Provides access to preferences set by the playback service. A private
@@ -69,7 +69,7 @@ public class PlaybackPreferences implements
      * @throws IllegalArgumentException if context is null
      */
     public static void createInstance(Context context) {
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG, "Creating new instance of UserPreferences");
         if (context == null)
             throw new IllegalArgumentException("Context must not be null");

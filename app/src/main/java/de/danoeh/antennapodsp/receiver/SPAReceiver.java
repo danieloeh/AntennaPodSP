@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.AppPreferences;
 import de.danoeh.antennapodsp.SPAUtil;
 
@@ -36,17 +36,17 @@ public class SPAReceiver extends BroadcastReceiver{
             return;
 
         if (action.equals(ACTION_SP_APPS_USER_ASKED_FOR_INSTALLATION)) {
-            if (AppConfig.DEBUG) Log.d(TAG, "Received USER_DENIED_INSTALLATION intent");
+            if (BuildConfig.DEBUG) Log.d(TAG, "Received USER_DENIED_INSTALLATION intent");
             SPAUtil.setPrefUserAskedForInstallation(context.getApplicationContext(), true);
         } else if (action.equals(ACTION_SP_APPS_QUERY_FEEDS)) {
-            if (AppConfig.DEBUG) Log.d(TAG, "Received QUERY_FEEDS intent");
+            if (BuildConfig.DEBUG) Log.d(TAG, "Received QUERY_FEEDS intent");
             Intent re = new Intent(ACTION_SP_APPS_QUERY_FEEDS_REPSONSE);
             re.putExtra(ACTION_SP_APPS_QUERY_FEEDS_REPSONSE_FEEDS_EXTRA, new AppPreferences().feedUrls);
             context.sendBroadcast(re);
         } else if (action.equals(Intent.ACTION_PACKAGE_ADDED)) {
             String pkgName = intent.getDataString();
             if (pkgName != null && pkgName.contains(SPAUtil.SPA_PACKAGE_PREFIX)) {
-                if (AppConfig.DEBUG) Log.d(TAG, "Another single purpose app was installed on the device.");
+                if (BuildConfig.DEBUG) Log.d(TAG, "Another single purpose app was installed on the device.");
                 SPAUtil.setPrefUserAskedForInstallation(context.getApplicationContext(), false);
             }
         }

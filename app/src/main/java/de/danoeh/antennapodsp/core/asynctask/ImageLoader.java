@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.widget.ImageView;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.PodcastApp;
 import de.danoeh.antennapodsp.R;
 
@@ -165,7 +165,7 @@ public class ImageLoader {
 
     public void clearExecutorQueue() {
         executor.shutdownNow();
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG, "Executor was shut down.");
         executor = createExecutor();
 

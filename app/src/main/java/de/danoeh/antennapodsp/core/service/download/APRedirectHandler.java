@@ -1,7 +1,7 @@
 package de.danoeh.antennapodsp.core.service.download;
 
 import android.util.Log;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.impl.client.DefaultRedirectHandler;
@@ -37,12 +37,12 @@ public class APRedirectHandler extends DefaultRedirectHandler {
 
             // If anything had to be fixed, then replace the header
             if (!s.equals(h[0].getValue())) {
-                if (AppConfig.DEBUG)
+                if (BuildConfig.DEBUG)
                     Log.d(TAG, "Original URL: " + h[0].getValue());
 
                 response.setHeader(LOC, s);
 
-                if (AppConfig.DEBUG)
+                if (BuildConfig.DEBUG)
                     Log.d(TAG, "Fixed URL:    " + s);
             }
         }

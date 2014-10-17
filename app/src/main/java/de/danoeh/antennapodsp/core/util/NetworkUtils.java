@@ -6,7 +6,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.core.preferences.UserPreferences;
 
 import java.util.Arrays;
@@ -31,11 +31,11 @@ public class NetworkUtils {
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();
         if (networkInfo != null) {
             if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
-                if (AppConfig.DEBUG)
+                if (BuildConfig.DEBUG)
                     Log.d(TAG, "Device is connected to Wi-Fi");
                 if (networkInfo.isConnected()) {
                     if (!UserPreferences.isEnableAutodownloadWifiFilter()) {
-                        if (AppConfig.DEBUG)
+                        if (BuildConfig.DEBUG)
                             Log.d(TAG, "Auto-dl filter is disabled");
                         return true;
                     } else {
@@ -47,7 +47,7 @@ public class NetworkUtils {
                                         .getAutodownloadSelectedNetworks());
                         if (selectedNetworks.contains(Integer.toString(wifiInfo
                                 .getNetworkId()))) {
-                            if (AppConfig.DEBUG)
+                            if (BuildConfig.DEBUG)
                                 Log.d(TAG,
                                         "Current network is on the selected networks list");
                             return true;
@@ -56,7 +56,7 @@ public class NetworkUtils {
                 }
             }
         }
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG, "Network for auto-dl is not available");
         return false;
     }

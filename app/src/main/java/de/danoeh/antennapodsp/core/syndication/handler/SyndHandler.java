@@ -1,7 +1,7 @@
 package de.danoeh.antennapodsp.core.syndication.handler;
 
 import android.util.Log;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.core.feed.Feed;
 import de.danoeh.antennapodsp.core.syndication.namespace.*;
 import de.danoeh.antennapodsp.core.syndication.namespace.atom.NSAtom;
@@ -79,28 +79,28 @@ public class SyndHandler extends DefaultHandler {
                     state.defaultNamespaces.push(new NSAtom());
                 } else if (prefix.equals(NSAtom.NSTAG)) {
                     state.namespaces.put(uri, new NSAtom());
-                    if (AppConfig.DEBUG)
+                    if (BuildConfig.DEBUG)
                         Log.d(TAG, "Recognized Atom namespace");
                 }
             } else if (uri.equals(NSContent.NSURI)
                     && prefix.equals(NSContent.NSTAG)) {
                 state.namespaces.put(uri, new NSContent());
-                if (AppConfig.DEBUG)
+                if (BuildConfig.DEBUG)
                     Log.d(TAG, "Recognized Content namespace");
             } else if (uri.equals(NSITunes.NSURI)
                     && prefix.equals(NSITunes.NSTAG)) {
                 state.namespaces.put(uri, new NSITunes());
-                if (AppConfig.DEBUG)
+                if (BuildConfig.DEBUG)
                     Log.d(TAG, "Recognized ITunes namespace");
             } else if (uri.equals(NSSimpleChapters.NSURI)
                     && prefix.matches(NSSimpleChapters.NSTAG)) {
                 state.namespaces.put(uri, new NSSimpleChapters());
-                if (AppConfig.DEBUG)
+                if (BuildConfig.DEBUG)
                     Log.d(TAG, "Recognized SimpleChapters namespace");
             } else if (uri.equals(NSMedia.NSURI)
                     && prefix.equals(NSMedia.NSTAG)) {
                 state.namespaces.put(uri, new NSMedia());
-                if (AppConfig.DEBUG)
+                if (BuildConfig.DEBUG)
                     Log.d(TAG, "Recognized media namespace");
             }
         }

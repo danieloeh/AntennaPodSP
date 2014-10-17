@@ -1,7 +1,7 @@
 package de.danoeh.antennapodsp.core.syndication.namespace;
 
 import android.util.Log;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.core.feed.FeedImage;
 import de.danoeh.antennapodsp.core.feed.FeedItem;
 import de.danoeh.antennapodsp.core.feed.FeedMedia;
@@ -55,7 +55,7 @@ public class NSRSS20 extends Namespace {
                 try {
                     size = Long.parseLong(attributes.getValue(ENC_LEN));
                 } catch (NumberFormatException e) {
-                    if (AppConfig.DEBUG)
+                    if (BuildConfig.DEBUG)
                         Log.d(TAG, "Length attribute could not be parsed.");
                 }
                 state.getCurrentItem().setMedia(

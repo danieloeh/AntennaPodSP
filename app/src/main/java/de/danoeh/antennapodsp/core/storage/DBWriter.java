@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.core.feed.*;
 import de.danoeh.antennapodsp.core.preferences.PlaybackPreferences;
 import de.danoeh.antennapodsp.core.service.download.DownloadStatus;
@@ -102,7 +102,7 @@ public class DBWriter {
                             }
                         }
                     }
-                    if (AppConfig.DEBUG)
+                    if (BuildConfig.DEBUG)
                         Log.d(TAG, "Deleting File. Result: " + result);
                     EventDistributor.getInstance().sendQueueUpdateBroadcast();
                     EventDistributor.getInstance().sendUnreadItemsUpdateBroadcast();
@@ -226,7 +226,7 @@ public class DBWriter {
         return dbExec.submit(new Runnable() {
             @Override
             public void run() {
-                if (AppConfig.DEBUG)
+                if (BuildConfig.DEBUG)
                     Log.d(TAG, "Adding new item to playback history");
                 media.setPlaybackCompletionDate(new Date());
                 PodDBAdapter adapter = new PodDBAdapter(context);
@@ -242,7 +242,7 @@ public class DBWriter {
     private static void cleanupDownloadLog(final PodDBAdapter adapter) {
         final long logSize = adapter.getDownloadLogSize();
         if (logSize > DBReader.DOWNLOAD_LOG_SIZE) {
-            if (AppConfig.DEBUG)
+            if (BuildConfig.DEBUG)
                 Log.d(TAG, "Cleaning up download log");
             adapter.removeDownloadLogItems(logSize - DBReader.DOWNLOAD_LOG_SIZE);
         }
@@ -794,7 +794,7 @@ public class DBWriter {
                 PodDBAdapter adapter = new PodDBAdapter(context);
                 adapter.open();
                 for (String key : urls.keySet()) {
-                    if (AppConfig.DEBUG) Log.d(TAG, "Replacing URL " + key + " with url " + urls.get(key));
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Replacing URL " + key + " with url " + urls.get(key));
 
                     adapter.setFeedDownloadUrl(key, urls.get(key));
                 }

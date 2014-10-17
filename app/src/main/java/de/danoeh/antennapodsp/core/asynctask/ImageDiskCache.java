@@ -4,7 +4,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.util.Pair;
 import android.widget.ImageView;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.PodcastApp;
 import de.danoeh.antennapodsp.R;
 import de.danoeh.antennapodsp.core.service.download.DownloadRequest;
@@ -89,7 +89,7 @@ public class ImageDiskCache {
 
     private synchronized void initCacheFolder() {
         if (diskCache == null) {
-            if (AppConfig.DEBUG) Log.d(TAG, "Initializing cache folder");
+            if (BuildConfig.DEBUG) Log.d(TAG, "Initializing cache folder");
             File cacheFile = new File(cacheFolder, CACHE_FILE_NAME);
             if (cacheFile.exists()) {
                 try {
@@ -242,7 +242,7 @@ public class ImageDiskCache {
         if (diskCache == null) {
             initCacheFolder();
         }
-        if (AppConfig.DEBUG) Log.d(TAG, "Adding new image to disk cache: " + url);
+        if (BuildConfig.DEBUG) Log.d(TAG, "Adding new image to disk cache: " + url);
         diskCache.put(url, obj);
         cacheSize += obj.size;
         if (cacheSize > maxCacheSize) {
@@ -313,7 +313,7 @@ public class ImageDiskCache {
 
                 dco = new DiskCacheObject(newFile.getAbsolutePath(), size);
                 addToDiskCache(downloadUrl, dco);
-                if (AppConfig.DEBUG) Log.d(TAG, "Image was downloaded");
+                if (BuildConfig.DEBUG) Log.d(TAG, "Image was downloaded");
             } else {
                 Log.w(TAG, "Download of url " + downloadUrl + " failed. Reason: " + result.getResult().getReasonDetailed() + "(" + result.getResult().getReason() + ")");
             }

@@ -1,7 +1,7 @@
 package de.danoeh.antennapodsp.core.util.vorbiscommentreader;
 
 import android.util.Log;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.core.feed.Chapter;
 import de.danoeh.antennapodsp.core.feed.VorbisCommentChapter;
 
@@ -39,7 +39,7 @@ public class VorbisCommentChapterReader extends VorbisCommentReader {
     @Override
     public void onContentVectorValue(String key, String value)
             throws VorbisCommentReaderException {
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG, "Key: " + key + ", value: " + value);
         String attribute = VorbisCommentChapter.getAttributeTypeFromKey(key);
         int id = VorbisCommentChapter.getIDFromKey(key);

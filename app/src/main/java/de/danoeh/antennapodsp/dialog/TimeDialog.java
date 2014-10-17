@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.*;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.R;
 
 import java.util.concurrent.TimeUnit;
@@ -104,11 +104,11 @@ public abstract class TimeDialog extends Dialog {
 
     private void checkInputLength(int length) {
         if (length > 0) {
-            if (AppConfig.DEBUG)
+            if (BuildConfig.DEBUG)
                 Log.d(TAG, "Length is larger than 0, enabling confirm button");
             butConfirm.setEnabled(true);
         } else {
-            if (AppConfig.DEBUG)
+            if (BuildConfig.DEBUG)
                 Log.d(TAG, "Length is smaller than 0, disabling confirm button");
             butConfirm.setEnabled(false);
         }

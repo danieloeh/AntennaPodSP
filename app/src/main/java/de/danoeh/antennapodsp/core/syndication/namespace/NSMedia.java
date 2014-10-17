@@ -1,7 +1,7 @@
 package de.danoeh.antennapodsp.core.syndication.namespace;
 
 import android.util.Log;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.core.feed.FeedMedia;
 import de.danoeh.antennapodsp.core.syndication.handler.HandlerState;
 import de.danoeh.antennapodsp.core.syndication.util.SyndTypeUtils;
@@ -39,7 +39,7 @@ public class NSMedia extends Namespace {
                 try {
                     size = Long.parseLong(attributes.getValue(SIZE));
                 } catch (NumberFormatException e) {
-                    if (AppConfig.DEBUG)
+                    if (BuildConfig.DEBUG)
                         Log.d(TAG, "Length attribute could not be parsed.");
                 }
 
@@ -51,7 +51,7 @@ public class NSMedia extends Namespace {
                                 Long.parseLong(durationStr), TimeUnit.SECONDS);
                     }
                 } catch (NumberFormatException e) {
-                    if (AppConfig.DEBUG)
+                    if (BuildConfig.DEBUG)
                         Log.d(TAG, "Duration attribute could not be parsed");
                 }
 

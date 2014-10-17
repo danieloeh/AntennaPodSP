@@ -14,7 +14,7 @@ import de.danoeh.antennapod.core.storage.DBWriter;
 import de.danoeh.antennapod.core.storage.DownloadRequestException;
 import de.danoeh.antennapod.core.storage.DownloadRequester;
 import de.danoeh.antennapod.core.util.DownloadError;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.activity.MainActivity;
 
 
@@ -44,7 +44,7 @@ public class DownloadServiceCallbacksImpl implements DownloadServiceCallbacks {
     public void onFeedParsed(Context context, Feed feed) {
         for (FeedItem item : feed.getItems()) {
             if (item.hasItemImage() && (!item.getImage().isDownloaded())) {
-                if (AppConfig.DEBUG)
+                if (BuildConfig.DEBUG)
                     Log.d(TAG, "Item has image; Downloading....");
                 try {
                     DownloadRequester.getInstance().downloadImage(context,

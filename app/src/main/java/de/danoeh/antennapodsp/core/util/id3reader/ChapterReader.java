@@ -1,7 +1,7 @@
 package de.danoeh.antennapodsp.core.util.id3reader;
 
 import android.util.Log;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.core.feed.Chapter;
 import de.danoeh.antennapodsp.core.feed.ID3Chapter;
 import de.danoeh.antennapodsp.core.util.id3reader.model.FrameHeader;
@@ -38,7 +38,7 @@ public class ChapterReader extends ID3Reader {
             if (currentChapter != null) {
                 if (!hasId3Chapter(currentChapter)) {
                     chapters.add(currentChapter);
-                    if (AppConfig.DEBUG) Log.d(TAG, "Found chapter: " + currentChapter);
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Found chapter: " + currentChapter);
                     currentChapter = null;
                 }
             }
@@ -57,7 +57,7 @@ public class ChapterReader extends ID3Reader {
                 readString(title, input, header.getSize());
                 currentChapter
                         .setTitle(title.toString());
-                if (AppConfig.DEBUG) Log.d(TAG, "Found title: " + currentChapter.getTitle());
+                if (BuildConfig.DEBUG) Log.d(TAG, "Found title: " + currentChapter.getTitle());
 
                 return ID3Reader.ACTION_DONT_SKIP;
             }
@@ -71,7 +71,7 @@ public class ChapterReader extends ID3Reader {
 
                 currentChapter.setLink(decodedLink);
 
-                if (AppConfig.DEBUG) Log.d(TAG, "Found link: " + currentChapter.getLink());
+                if (BuildConfig.DEBUG) Log.d(TAG, "Found link: " + currentChapter.getLink());
                 return ID3Reader.ACTION_DONT_SKIP;
             }
         } else if (header.getId().equals("APIC")) {

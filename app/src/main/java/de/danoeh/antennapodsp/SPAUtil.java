@@ -34,7 +34,7 @@ public class SPAUtil {
         final Context appContext = context.getApplicationContext();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(appContext);
         if (prefs.getBoolean(PREF_USER_ASKED_FOR_INSTALLATION, false)) {
-            if (AppConfig.DEBUG) Log.d(TAG, "User has already been asked for an installation");
+            if (BuildConfig.DEBUG) Log.d(TAG, "User has already been asked for an installation");
             return false;
         }
 

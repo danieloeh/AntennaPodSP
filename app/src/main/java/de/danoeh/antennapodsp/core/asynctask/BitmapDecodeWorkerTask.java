@@ -7,7 +7,7 @@ import android.graphics.drawable.TransitionDrawable;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageView;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.PodcastApp;
 import de.danoeh.antennapodsp.R;
 import de.danoeh.antennapodsp.core.asynctask.ImageLoader.ImageWorkerTaskResource;
@@ -64,7 +64,7 @@ public class BitmapDecodeWorkerTask extends Thread {
             target.setImageDrawable(transitionDrawable);
             transitionDrawable.startTransition(FADE_DURATION);
         } else {
-            if (AppConfig.DEBUG)
+            if (BuildConfig.DEBUG)
                 Log.d(TAG, "Not displaying image");
         }
     }
@@ -81,7 +81,7 @@ public class BitmapDecodeWorkerTask extends Thread {
                     target.getResources(), defaultCoverResource),
                     PREFERRED_LENGTH);
         }
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG, "Finished loading bitmaps");
 
         endBackgroundTask();

@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.AppInitializer;
 import de.danoeh.antennapodsp.R;
 import de.danoeh.antennapodsp.core.feed.Feed;
@@ -36,7 +36,7 @@ public class InitActivity extends Activity {
     }
 
     private void startInitTask() {
-        if (AppConfig.DEBUG) Log.d(TAG, "Starting init task");
+        if (BuildConfig.DEBUG) Log.d(TAG, "Starting init task");
 
         InitTask task = new InitTask();
         if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.GINGERBREAD_MR1) {

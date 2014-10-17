@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.webkit.URLUtil;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.core.feed.*;
 import de.danoeh.antennapodsp.core.preferences.UserPreferences;
 import de.danoeh.antennapodsp.core.service.download.DownloadRequest;
@@ -44,11 +44,11 @@ public class DownloadRequester {
                           boolean overwriteIfExists) {
         if (!isDownloadingFile(item)) {
             if (!isFilenameAvailable(dest.toString()) || dest.exists()) {
-                if (AppConfig.DEBUG)
+                if (BuildConfig.DEBUG)
                     Log.d(TAG, "Filename already used.");
                 if (isFilenameAvailable(dest.toString()) && overwriteIfExists) {
                     boolean result = dest.delete();
-                    if (AppConfig.DEBUG)
+                    if (BuildConfig.DEBUG)
                         Log.d(TAG, "Deleting file. Result: " + result);
                 } else {
                     // find different name
@@ -60,12 +60,12 @@ public class DownloadRequester {
                                 + i
                                 + FilenameUtils.EXTENSION_SEPARATOR
                                 + FilenameUtils.getExtension(dest.getName());
-                        if (AppConfig.DEBUG)
+                        if (BuildConfig.DEBUG)
                             Log.d(TAG, "Testing filename " + newName);
                         newDest = new File(dest.getParent(), newName);
                         if (!newDest.exists()
                                 && isFilenameAvailable(newDest.toString())) {
-                            if (AppConfig.DEBUG)
+                            if (BuildConfig.DEBUG)
                                 Log.d(TAG, "File doesn't exist yet. Using "
                                         + newName);
                             break;
@@ -76,7 +76,7 @@ public class DownloadRequester {
                     }
                 }
             }
-            if (AppConfig.DEBUG)
+            if (BuildConfig.DEBUG)
                 Log.d(TAG,
                         "Requesting download of url " + item.getDownload_url());
             item.setDownload_url(URLChecker.prepareURL(item.getDownload_url()));
@@ -105,13 +105,13 @@ public class DownloadRequester {
         for (String key : downloads.keySet()) {
             DownloadRequest r = downloads.get(key);
             if (StringUtils.equals(r.getDestination(), path)) {
-                if (AppConfig.DEBUG)
+                if (BuildConfig.DEBUG)
                     Log.d(TAG, path
                             + " is already used by another requested download");
                 return false;
             }
         }
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG, path + " is available as a download destination");
         return true;
     }
@@ -168,7 +168,7 @@ public class DownloadRequester {
      * Cancels a running download.
      */
     public void cancelDownload(final Context context, final String downloadUrl) {
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG, "Cancelling download with url " + downloadUrl);
         Intent cancelIntent = new Intent(DownloadService.ACTION_CANCEL_DOWNLOAD);
         cancelIntent.putExtra(DownloadService.EXTRA_DOWNLOAD_URL, downloadUrl);
@@ -179,7 +179,7 @@ public class DownloadRequester {
      * Cancels all running downloads
      */
     public void cancelAllDownloads(Context context) {
-        if (AppConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             Log.d(TAG, "Cancelling all running downloads");
         context.sendBroadcast(new Intent(
                 DownloadService.ACTION_CANCEL_ALL_DOWNLOADS));

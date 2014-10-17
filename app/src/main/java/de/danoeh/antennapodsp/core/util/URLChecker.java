@@ -1,7 +1,7 @@
 package de.danoeh.antennapodsp.core.util;
 
 import android.util.Log;
-import de.danoeh.antennapodsp.AppConfig;
+import de.danoeh.antennapodsp.BuildConfig;
 
 /**
  * Provides methods for checking and editing a URL.
@@ -28,10 +28,10 @@ public final class URLChecker {
     public static String prepareURL(String url) {
         StringBuilder builder = new StringBuilder();
         if (url.startsWith("feed://")) {
-            if (AppConfig.DEBUG) Log.d(TAG, "Replacing feed:// with http://");
+            if (BuildConfig.DEBUG) Log.d(TAG, "Replacing feed:// with http://");
             url = url.replace("feed://", "http://");
         } else if (!(url.startsWith("http://") || url.startsWith("https://"))) {
-            if (AppConfig.DEBUG) Log.d(TAG, "Adding http:// at the beginning of the URL");
+            if (BuildConfig.DEBUG) Log.d(TAG, "Adding http:// at the beginning of the URL");
             builder.append("http://");
         }
         builder.append(url);
