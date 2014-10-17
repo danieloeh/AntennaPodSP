@@ -1,6 +1,6 @@
 package de.danoeh.antennapodsp;
 
-import de.danoeh.antennapodsp.core.preferences.UserPreferences;
+import de.danoeh.antennapod.core.preferences.UserPreferences;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;

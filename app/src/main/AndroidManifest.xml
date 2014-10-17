@@ -55,43 +55,10 @@
             android:label="@string/app_name">
         </activity>
 
-
-        <service
-            android:name=".core.service.download.DownloadService"
-            android:enabled="true"/>
-        <service
-            android:name=".core.service.playback.PlaybackService"
-            android:enabled="true"
-            android:exported="true">
-        </service>
-
-        <receiver
-            android:name=".core.receiver.MediaButtonReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="de.danoeh.antennapod.NOTIFY_BUTTON_RECEIVER"/>
-            </intent-filter>
-        </receiver>
-
-        <receiver android:name=".core.receiver.FeedUpdateReceiver">
-            <intent-filter>
-                <action android:name="de.danoeh.antennapod.feedupdatereceiver.refreshFeeds"/>
-            </intent-filter>
-        </receiver>
-
         <activity
             android:name=".activity.AboutActivity"
             android:label="@string/about_label">
         </activity>
-
-        <receiver android:name=".core.receiver.ConnectivityActionReceiver">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-            </intent-filter>
-        </receiver>
 
         <receiver android:name=".core.receiver.AlarmUpdateReceiver">
             <intent-filter>
@@ -103,6 +70,12 @@
                 <data
                     android:path="de.danoeh.antennapodsp"
                     android:scheme="package"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".receiver.ConnectivityActionReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
         </receiver>
 

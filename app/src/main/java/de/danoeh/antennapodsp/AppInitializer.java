@@ -4,23 +4,35 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import de.danoeh.antennapodsp.core.feed.Feed;
-import de.danoeh.antennapodsp.core.service.download.DownloadRequest;
-import de.danoeh.antennapodsp.core.service.download.DownloadStatus;
-import de.danoeh.antennapodsp.core.service.download.HttpDownloader;
-import de.danoeh.antennapodsp.core.storage.*;
-import de.danoeh.antennapodsp.core.syndication.handler.FeedHandler;
-import de.danoeh.antennapodsp.core.syndication.handler.UnsupportedFeedtypeException;
+
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import static de.danoeh.antennapodsp.core.preferences.UserPreferences.*;
+import javax.xml.parsers.ParserConfigurationException;
+
+import de.danoeh.antennapod.core.feed.Feed;
+import de.danoeh.antennapod.core.service.download.DownloadRequest;
+import de.danoeh.antennapod.core.service.download.DownloadStatus;
+import de.danoeh.antennapod.core.service.download.HttpDownloader;
+import de.danoeh.antennapod.core.storage.DBReader;
+import de.danoeh.antennapod.core.storage.DBTasks;
+import de.danoeh.antennapod.core.storage.DBWriter;
+import de.danoeh.antennapod.core.storage.DownloadRequestException;
+import de.danoeh.antennapod.core.storage.DownloadRequester;
+import de.danoeh.antennapod.core.syndication.handler.FeedHandler;
+import de.danoeh.antennapod.core.syndication.handler.UnsupportedFeedtypeException;
+
+import static de.danoeh.antennapod.core.preferences.UserPreferences.PREF_DOWNLOAD_MEDIA_ON_WIFI_ONLY;
+import static de.danoeh.antennapod.core.preferences.UserPreferences.PREF_ENABLE_AUTODL;
+import static de.danoeh.antennapod.core.preferences.UserPreferences.PREF_EPISODE_CACHE_SIZE;
+import static de.danoeh.antennapod.core.preferences.UserPreferences.PREF_MOBILE_UPDATE;
+import static de.danoeh.antennapod.core.preferences.UserPreferences.PREF_PAUSE_ON_HEADSET_DISCONNECT;
+import static de.danoeh.antennapod.core.preferences.UserPreferences.PREF_PAUSE_PLAYBACK_FOR_FOCUS_LOSS;
 
 /**
  * The AppInitializer processes the preferences that were specified in AppPreferences.
@@ -61,7 +73,8 @@ public class AppInitializer {
         }
 
         File destDir = context.getExternalFilesDir(DownloadRequester.FEED_DOWNLOADPATH);
-        if (destDir == null) throw new InitializerException(context.getString(R.string.storage_access_failed));
+        if (destDir == null)
+            throw new InitializerException(context.getString(R.string.storage_access_failed));
         for (int i = 0; i < appPreferences.feedUrls.length; i++) {
             String url = appPreferences.feedUrls[i];
             if (BuildConfig.DEBUG) Log.d(TAG, "Downloading feed: " + url);
@@ -121,7 +134,9 @@ public class AppInitializer {
         }
     }
 
-    /** Read preference values from AppPreferences and write them into the UserPreferences file. */
+    /**
+     * Read preference values from AppPreferences and write them into the UserPreferences file.
+     */
     private static void writeUserPreferences(Context context) {
         if (BuildConfig.DEBUG) Log.d(TAG, "Writing user preferences");
         AppPreferences appPreferences = new AppPreferences();

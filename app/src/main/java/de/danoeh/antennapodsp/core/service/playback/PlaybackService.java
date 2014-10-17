@@ -625,7 +625,7 @@ public class PlaybackService extends Service {
                 }
                 if (icon == null) {
                     icon = BitmapFactory.decodeResource(getResources(),
-                            R.drawable.ic_stat_antenna);
+                            R.drawable.ic_stat_antenna_default);
                 }
 
                 return null;
@@ -660,7 +660,7 @@ public class PlaybackService extends Service {
                                 .setOngoing(true)
                                 .setContentIntent(pIntent)
                                 .setLargeIcon(icon)
-                                .setSmallIcon(R.drawable.ic_stat_antenna)
+                                .setSmallIcon(R.drawable.ic_stat_antenna_default)
                                 .addAction(android.R.drawable.ic_media_pause,
                                         getString(R.string.pause_label),
                                         pauseButtonPendingIntent);
@@ -671,7 +671,7 @@ public class PlaybackService extends Service {
                                 .setContentTitle(contentTitle)
                                 .setContentText(contentText).setOngoing(true)
                                 .setContentIntent(pIntent).setLargeIcon(icon)
-                                .setSmallIcon(R.drawable.ic_stat_antenna);
+                                .setSmallIcon(R.drawable.ic_stat_antenna_default);
                         notification = notificationBuilder.getNotification();
                     }
                     if (newInfo.playerStatus == PlayerStatus.PLAYING) {

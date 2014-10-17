@@ -9,8 +9,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.R;
-import de.danoeh.antennapodsp.core.preferences.UserPreferences;
-import de.danoeh.antennapodsp.core.util.StorageUtils;
+import de.danoeh.antennapod.core.preferences.UserPreferences;
+import de.danoeh.antennapod.core.util.StorageUtils;
 
 
 /**

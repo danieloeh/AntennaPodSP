@@ -11,25 +11,38 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.*;
-import de.danoeh.antennapodsp.BuildConfig;
-import de.danoeh.antennapodsp.R;
-import de.danoeh.antennapodsp.activity.MainActivity;
-import de.danoeh.antennapodsp.core.asynctask.ImageLoader;
-import de.danoeh.antennapodsp.core.feed.Chapter;
-import de.danoeh.antennapodsp.core.service.playback.PlaybackService;
-import de.danoeh.antennapodsp.core.util.ChapterUtils;
-import de.danoeh.antennapodsp.core.util.Converter;
-import de.danoeh.antennapodsp.core.util.ShownotesProvider;
-import de.danoeh.antennapodsp.core.util.playback.Playable;
-import de.danoeh.antennapodsp.core.util.playback.PlaybackController;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.util.List;
 import java.util.concurrent.Callable;
+
+import de.danoeh.antennapod.core.asynctask.PicassoProvider;
+import de.danoeh.antennapod.core.feed.Chapter;
+import de.danoeh.antennapod.core.service.playback.PlaybackService;
+import de.danoeh.antennapod.core.util.ChapterUtils;
+import de.danoeh.antennapod.core.util.Converter;
+import de.danoeh.antennapod.core.util.ShownotesProvider;
+import de.danoeh.antennapod.core.util.playback.Playable;
+import de.danoeh.antennapod.core.util.playback.PlaybackController;
+import de.danoeh.antennapodsp.BuildConfig;
+import de.danoeh.antennapodsp.R;
+import de.danoeh.antennapodsp.activity.MainActivity;
+import de.danoeh.antennapodsp.dialog.TimeDialog;
 
 /**
  * Fragment which is supposed to be displayed outside of the MediaplayerActivity
@@ -223,7 +236,25 @@ public class ExternalPlayerFragment extends Fragment {
 
         butRevExpanded.setOnClickListener(controller.newOnRevButtonClickListener());
         butFFExpanded.setOnClickListener(controller.newOnFFButtonClickListener());
-        butSleep.setOnClickListener(controller.newOnSleepButtonClickListener());
+        butSleep.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (controller.sleepTimerActive()) {
+                    controller.disableSleepTimer();
+                } else {
+                    TimeDialog td = new TimeDialog(getActivity(),
+                            R.string.set_sleeptimer_label,
+                            R.string.set_sleeptimer_label) {
+                        @Override
+                        public void onTimeEntered(long millis) {
+                            controller.setSleepTimer(millis);
+                        }
+                    };
+                    td.show();
+                }
+            }
+        });
 
         butActionExpanded.setOnClickListener(new OnClickListener() {
             @Override
@@ -391,19 +422,14 @@ public class ExternalPlayerFragment extends Fragment {
             if (media != null) {
                 txtvTitleExpanded.setText(media.getEpisodeTitle());
                 txtvTitleAnchored.setText(media.getEpisodeTitle());
-                ImageLoader.getInstance().loadThumbnailBitmap(
-                        media,
-                        imgvCoverExpanded,
-                        (int) getActivity().getResources().getDimension(
-                                R.dimen.external_player_height)
-                );
-                ImageLoader.getInstance().loadThumbnailBitmap(
-                        media,
-                        imgvCoverAnchored,
-                        (int) getActivity().getResources().getDimension(
-                                R.dimen.external_player_height)
-                );
-
+                PicassoProvider.getMediaMetadataPicassoInstance(getActivity())
+                        .load(media.getImageUri())
+                        .fit()
+                        .into(imgvCoverExpanded);
+                PicassoProvider.getMediaMetadataPicassoInstance(getActivity())
+                        .load(media.getImageUri())
+                        .fit()
+                        .into(imgvCoverAnchored);
                 txtvPositionExpanded.setText(Converter.getDurationStringLong(media.getPosition()));
                 txtvLengthExpanded.setText(Converter.getDurationStringLong(media.getDuration()));
                 if (controller.sleepTimerActive()) {

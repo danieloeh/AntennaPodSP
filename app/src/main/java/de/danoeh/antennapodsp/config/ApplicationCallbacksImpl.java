@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import de.danoeh.antennapod.core.ApplicationCallbacks;
+import de.danoeh.antennapodsp.AppPreferences;
 import de.danoeh.antennapodsp.PodcastApp;
 import de.danoeh.antennapodsp.activity.StorageErrorActivity;
 
@@ -19,5 +20,10 @@ public class ApplicationCallbacksImpl implements ApplicationCallbacks{
     @Override
     public Intent getStorageErrorActivity(Context context) {
         return new Intent(context, StorageErrorActivity.class);
+    }
+
+    @Override
+    public void setUpateInterval(long upateInterval) {
+        new AppPreferences().setUpdateAlarm();
     }
 }

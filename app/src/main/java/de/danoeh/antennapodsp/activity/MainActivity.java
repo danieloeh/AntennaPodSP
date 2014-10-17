@@ -15,14 +15,14 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.R;
 import de.danoeh.antennapodsp.SPAUtil;
-import de.danoeh.antennapodsp.core.feed.EventDistributor;
+import de.danoeh.antennapod.core.feed.EventDistributor;
 import de.danoeh.antennapodsp.fragment.EpisodesFragment;
 import de.danoeh.antennapodsp.fragment.ExternalPlayerFragment;
-import de.danoeh.antennapodsp.core.preferences.UserPreferences;
-import de.danoeh.antennapodsp.core.service.download.DownloadService;
-import de.danoeh.antennapodsp.core.storage.DBTasks;
-import de.danoeh.antennapodsp.core.storage.DownloadRequester;
-import de.danoeh.antennapodsp.core.util.StorageUtils;
+import de.danoeh.antennapod.core.preferences.UserPreferences;
+import de.danoeh.antennapod.core.service.download.DownloadService;
+import de.danoeh.antennapod.core.storage.DBTasks;
+import de.danoeh.antennapod.core.storage.DownloadRequester;
+import de.danoeh.antennapod.core.util.StorageUtils;
 
 /**
  * The activity that is shown when the user launches the app.

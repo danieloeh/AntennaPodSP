@@ -10,12 +10,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import de.danoeh.antennapod.core.asynctask.PicassoProvider;
+import de.danoeh.antennapod.core.feed.FeedItem;
+import de.danoeh.antennapod.core.feed.FeedMedia;
+import de.danoeh.antennapod.core.storage.DownloadRequester;
+import de.danoeh.antennapod.core.util.Converter;
 import de.danoeh.antennapodsp.R;
-import de.danoeh.antennapodsp.core.asynctask.ImageLoader;
-import de.danoeh.antennapodsp.core.feed.FeedItem;
-import de.danoeh.antennapodsp.core.feed.FeedMedia;
-import de.danoeh.antennapodsp.core.storage.DownloadRequester;
-import de.danoeh.antennapodsp.core.util.Converter;
 
 public class EpisodesListAdapter extends BaseAdapter {
 
@@ -133,11 +134,10 @@ public class EpisodesListAdapter extends BaseAdapter {
             holder.downloadStatus.setVisibility(View.INVISIBLE);
         }
 
-        ImageLoader.getInstance().loadThumbnailBitmap(
-                item,
-                holder.imageView,
-                (int) convertView.getResources().getDimension(
-                        R.dimen.thumbnail_length));
+        PicassoProvider.getMediaMetadataPicassoInstance(context)
+                .load(item.getImageUri())
+                .fit()
+                .into(holder.imageView);
         return convertView;
 
     }

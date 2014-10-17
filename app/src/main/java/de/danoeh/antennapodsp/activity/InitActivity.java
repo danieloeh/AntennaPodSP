@@ -13,8 +13,8 @@ import android.widget.ProgressBar;
 import de.danoeh.antennapodsp.BuildConfig;
 import de.danoeh.antennapodsp.AppInitializer;
 import de.danoeh.antennapodsp.R;
-import de.danoeh.antennapodsp.core.feed.Feed;
-import de.danoeh.antennapodsp.core.storage.DBReader;
+import de.danoeh.antennapod.core.feed.Feed;
+import de.danoeh.antennapod.core.storage.DBReader;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
