@@ -10,19 +10,25 @@ import android.support.v4.view.WindowCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.*;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-import de.danoeh.antennapodsp.BuildConfig;
-import de.danoeh.antennapodsp.R;
-import de.danoeh.antennapodsp.SPAUtil;
+
 import de.danoeh.antennapod.core.feed.EventDistributor;
-import de.danoeh.antennapodsp.fragment.EpisodesFragment;
-import de.danoeh.antennapodsp.fragment.ExternalPlayerFragment;
 import de.danoeh.antennapod.core.preferences.UserPreferences;
 import de.danoeh.antennapod.core.service.download.DownloadService;
 import de.danoeh.antennapod.core.storage.DBTasks;
 import de.danoeh.antennapod.core.storage.DownloadRequester;
 import de.danoeh.antennapod.core.util.StorageUtils;
+import de.danoeh.antennapodsp.BuildConfig;
+import de.danoeh.antennapodsp.R;
+import de.danoeh.antennapodsp.SPAUtil;
+import de.danoeh.antennapodsp.fragment.EpisodesFragment;
+import de.danoeh.antennapodsp.fragment.ExternalPlayerFragment;
 
 /**
  * The activity that is shown when the user launches the app.
@@ -132,16 +138,27 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private SlidingUpPanelLayout.PanelSlideListener panelSlideListener = new SlidingUpPanelLayout.PanelSlideListener() {
+
+        float lastOffset = 0.0f;
+
         @Override
         public void onPanelSlide(View panel, float slideOffset) {
-            if (slideOffset < 0.2) {
-                if (getSupportActionBar().isShowing()) {
+            Log.i("Panel", "offset:" + slideOffset + ", " + slidingUpPanelLayout.isPanelAnchored());
+            final float THRESHOLD = 0.2f;
+
+            if (slideOffset > lastOffset) {
+                // panel is moved up
+                if (slideOffset > THRESHOLD && getSupportActionBar().isShowing()) {
                     getSupportActionBar().hide();
                 }
-            } else {
-                if (!getSupportActionBar().isShowing()) {
+            } else if (0 < slideOffset && slideOffset < lastOffset) {
+                // panel is moved down
+                if (slideOffset < THRESHOLD && !getSupportActionBar().isShowing()) {
                     getSupportActionBar().show();
                 }
+            }
+            if (slideOffset >= 0) {
+                lastOffset = slideOffset;
             }
         }
 
