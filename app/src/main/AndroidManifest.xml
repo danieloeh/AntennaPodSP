@@ -55,7 +55,7 @@
             android:label="@string/about_label">
         </activity>
 
-        <receiver android:name=".core.receiver.AlarmUpdateReceiver">
+        <receiver android:name="de.danoeh.antennapod.core.receiver.AlarmUpdateReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
