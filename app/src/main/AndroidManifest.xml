@@ -8,10 +8,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
-    <uses-sdk
-        android:minSdkVersion="10"
-        android:targetSdkVersion="19"/>
-
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <supports-screens
@@ -36,8 +32,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:logo="@drawable/ic_launcher"
-        android:theme="@style/Theme.AntennaPod.Light"
-        android:debuggable="true">
+        android:theme="@style/Theme.AntennaPod.Light">
 
         <activity
             android:name=".activity.InitActivity"
