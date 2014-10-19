@@ -23,7 +23,7 @@ public class ApplicationCallbacksImpl implements ApplicationCallbacks{
     }
 
     @Override
-    public void setUpateInterval(long upateInterval) {
+    public void setUpdateInterval(long updateInterval) {
         new AppPreferences().setUpdateAlarm();
     }
 }
