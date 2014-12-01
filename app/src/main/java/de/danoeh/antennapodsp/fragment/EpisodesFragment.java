@@ -217,7 +217,7 @@ public class EpisodesFragment extends ListFragment {
             }
         });
         // add header so that list is below actionbar
-        int actionBarHeight = getResources().getDimensionPixelSize(android.support.v7.appcompat.R.dimen.abc_action_bar_default_height);
+        int actionBarHeight = getResources().getDimensionPixelSize(android.support.v7.appcompat.R.dimen.abc_action_bar_default_height_material);
         LinearLayout header = new LinearLayout(getActivity());
         header.setOrientation(LinearLayout.HORIZONTAL);
         AbsListView.LayoutParams lp = new AbsListView.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, actionBarHeight);

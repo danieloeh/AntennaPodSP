@@ -9,7 +9,7 @@ import de.danoeh.antennapod.core.storage.PodDBAdapter;
 
 public class StorageCallbacksImpl implements StorageCallbacks {
 
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     @Override
     public int getDatabaseVersion() {
@@ -22,11 +22,12 @@ public class StorageCallbacksImpl implements StorageCallbacks {
                 + newVersion + ".");
         if (oldVersion == 1 && newVersion == 2) upgrade1to2(db);
         if (oldVersion < 3) upgradeTo3(db);
+        if (oldVersion < 4) upgradeTo4(db);
 
     }
 
     private void upgrade1to2(final SQLiteDatabase db) {
-        db.execSQL("ALTER TABLE "+ PodDBAdapter.TABLE_NAME_FEED_ITEMS
+        db.execSQL("ALTER TABLE " + PodDBAdapter.TABLE_NAME_FEED_ITEMS
                 + " ADD " + PodDBAdapter.KEY_IMAGE + " INTEGER;");
 
     }
@@ -63,6 +64,15 @@ public class StorageCallbacksImpl implements StorageCallbacks {
 
 
         db.setTransactionSuccessful();
+        db.endTransaction();
+    }
+
+    private void upgradeTo4(final SQLiteDatabase db) {
+        db.beginTransaction();
+        db.execSQL("ALTER TABLE " + PodDBAdapter.TABLE_NAME_FEEDS
+                + " ADD COLUMN " + PodDBAdapter.KEY_IS_PAGED + " INTEGER DEFAULT 0");
+        db.execSQL("ALTER TABLE " + PodDBAdapter.TABLE_NAME_FEEDS
+                + " ADD COLUMN " + PodDBAdapter.KEY_NEXT_PAGE_LINK + " TEXT");
         db.endTransaction();
     }
 }

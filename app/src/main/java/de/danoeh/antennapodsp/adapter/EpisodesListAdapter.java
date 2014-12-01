@@ -11,7 +11,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import de.danoeh.antennapod.core.asynctask.PicassoProvider;
+import com.squareup.picasso.Picasso;
+
 import de.danoeh.antennapod.core.feed.FeedItem;
 import de.danoeh.antennapod.core.feed.FeedMedia;
 import de.danoeh.antennapod.core.storage.DownloadRequester;
@@ -134,7 +135,7 @@ public class EpisodesListAdapter extends BaseAdapter {
             holder.downloadStatus.setVisibility(View.INVISIBLE);
         }
 
-        PicassoProvider.getMediaMetadataPicassoInstance(context)
+        Picasso.with(context)
                 .load(item.getImageUri())
                 .fit()
                 .into(holder.imageView);

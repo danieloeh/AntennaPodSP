@@ -26,12 +26,13 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import de.danoeh.antennapod.core.asynctask.PicassoProvider;
 import de.danoeh.antennapod.core.feed.Chapter;
 import de.danoeh.antennapod.core.service.playback.PlaybackService;
 import de.danoeh.antennapod.core.util.ChapterUtils;
@@ -422,11 +423,11 @@ public class ExternalPlayerFragment extends Fragment {
             if (media != null) {
                 txtvTitleExpanded.setText(media.getEpisodeTitle());
                 txtvTitleAnchored.setText(media.getEpisodeTitle());
-                PicassoProvider.getMediaMetadataPicassoInstance(getActivity())
+                Picasso.with(getActivity())
                         .load(media.getImageUri())
                         .fit()
                         .into(imgvCoverExpanded);
-                PicassoProvider.getMediaMetadataPicassoInstance(getActivity())
+                Picasso.with(getActivity())
                         .load(media.getImageUri())
                         .fit()
                         .into(imgvCoverAnchored);

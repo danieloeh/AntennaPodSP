@@ -4,20 +4,20 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    compile 'com.android.support:appcompat-v7:20.0.0'
+    compile 'com.android.support:appcompat-v7:21.0.2'
     compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'commons-io:commons-io:2.4'
-    compile 'com.sothree.slidinguppanel:library:2.0.1'
+    compile 'com.sothree.slidinguppanel:library:2.0.2'
     compile project(':core:core')
 }
 
 android {
-    compileSdkVersion 20
-    buildToolsVersion "20.0"
+    compileSdkVersion 21
+    buildToolsVersion "21.1.1"
 
     defaultConfig {
         minSdkVersion 10
-        targetSdkVersion 20
+        targetSdkVersion 21
         applicationId "de.danoeh.antennapodsp.custom"
         testApplicationId "de.test.antennapod"
         testInstrumentationRunner "instrumentationTest.de.test.antennapod.AntennaPodTestRunner"
@@ -53,7 +53,7 @@ android {
             applicationIdSuffix ".debug"
         }
         release {
-            runProguard true
+            minifyEnabled true
             proguardFile 'proguard.cfg'
             signingConfig signingConfigs.releaseConfig
         }
@@ -70,5 +70,5 @@ android {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.1'
+    gradleVersion = '2.2.1'
 }
