@@ -69,7 +69,8 @@ public class ExternalPlayerFragment extends Fragment {
     private ImageButton butRevExpanded;
     private ImageButton butFFExpanded;
     private ImageButton butShowChapters;
-    private Button butSleep;
+    private ImageButton butSleep;
+    private TextView txtvSleepTime;
     private TextView txtvPositionExpanded;
     private TextView txtvLengthExpanded;
     private WebView webvDescription;
@@ -143,7 +144,8 @@ public class ExternalPlayerFragment extends Fragment {
         butRevExpanded = (ImageButton) root.findViewById(R.id.butRevExpanded);
         butFFExpanded = (ImageButton) root.findViewById(R.id.butFFExpanded);
         butShowChapters = (ImageButton) root.findViewById(R.id.butShowChapters);
-        butSleep = (Button) root.findViewById(R.id.butSleep);
+        butSleep = (ImageButton) root.findViewById(R.id.butSleep);
+        txtvSleepTime = (TextView) root.findViewById(R.id.txtvSleepTime);
         txtvPositionExpanded = (TextView) root.findViewById(R.id.txtvPositionExpanded);
         txtvLengthExpanded = (TextView) root.findViewById(R.id.txtvLengthExpanded);
         sbPositionExanded = (SeekBar) root.findViewById(R.id.sbPositionExpanded);
@@ -271,10 +273,6 @@ public class ExternalPlayerFragment extends Fragment {
         setFragmentState(fragmentState);
     }
 
-    public void setButSleepText(String text) {
-        butSleep.setText(text);
-    }
-
     private void updateTimeDisplay() {
         int duration = controller.getDuration();
         int position = controller.getPosition();
@@ -287,9 +285,10 @@ public class ExternalPlayerFragment extends Fragment {
         }
         if (controller.sleepTimerActive()) {
             int sleepLeft = (int) controller.getSleepTimerTimeLeft();
-            butSleep.setText(Converter.getDurationStringLong(sleepLeft));
+            txtvSleepTime.setText(Converter.getDurationStringLong(sleepLeft));
+            txtvSleepTime.setVisibility(View.VISIBLE);
         } else {
-            butSleep.setText("");
+            txtvSleepTime.setVisibility(View.GONE);
         }
     }
 
@@ -434,9 +433,10 @@ public class ExternalPlayerFragment extends Fragment {
                 txtvPositionExpanded.setText(Converter.getDurationStringLong(media.getPosition()));
                 txtvLengthExpanded.setText(Converter.getDurationStringLong(media.getDuration()));
                 if (controller.sleepTimerActive()) {
-                    butSleep.setText(Converter.getDurationStringLong((int) controller.getSleepTimerTimeLeft()));
+                    txtvSleepTime.setText(Converter.getDurationStringLong((int) controller.getSleepTimerTimeLeft()));
+                    txtvSleepTime.setVisibility(View.VISIBLE);
                 } else {
-                    butSleep.setText("");
+                    txtvSleepTime.setVisibility(View.GONE);
                 }
                 loadDescriptionWebview(media);
 
@@ -494,7 +494,7 @@ public class ExternalPlayerFragment extends Fragment {
         txtvTitleAnchored.setText(getString(R.string.no_media_playing_label));
         txtvPositionExpanded.setText("");
         txtvLengthExpanded.setText("");
-        butSleep.setText("");
+        txtvSleepTime.setVisibility(View.GONE);
         webvDescription.clearView();
     }
 

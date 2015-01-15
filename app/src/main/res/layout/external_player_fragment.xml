@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/fragmentLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-    >
+    android:id="@+id/fragmentLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <FrameLayout
         android:id="@+id/top_layout"
-        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="@dimen/external_player_height"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        android:background="@color/white">
 
         <LinearLayout
-            android:orientation="vertical"
+            android:id="@+id/topviewExpanded"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/topviewExpanded"
+            android:orientation="vertical"
             android:visibility="gone">
 
             <RelativeLayout
@@ -26,14 +25,13 @@
 
                 <ImageButton
                     android:id="@+id/butActionExpanded"
-                    android:contentDescription="@string/pause_label"
                     android:layout_width="@dimen/external_player_height"
                     android:layout_height="@dimen/external_player_height"
-                    android:background="?attr/borderless_button"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
-                    android:src="?attr/location_web_site"
-                    />
+                    android:background="?attr/selectableItemBackground"
+                    android:contentDescription="@string/pause_label"
+                    android:src="?attr/location_web_site" />
 
                 <RelativeLayout
                     android:id="@+id/layoutInfo_expanded"
@@ -41,19 +39,19 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_toLeftOf="@id/butActionExpanded"
-                    android:background="?attr/borderless_button">
+                    android:background="?attr/selectableItemBackground">
 
                     <ImageView
                         android:id="@+id/imgvCoverExpanded"
-                        android:clickable="true"
-                        android:contentDescription="@string/cover_label"
                         android:layout_width="@dimen/external_player_height"
                         android:layout_height="@dimen/external_player_height"
-                        android:padding="4dp"
                         android:layout_alignParentLeft="true"
                         android:adjustViewBounds="true"
+                        android:clickable="true"
+                        android:contentDescription="@string/cover_label"
                         android:cropToPadding="true"
-                        android:scaleType="fitXY"/>
+                        android:padding="4dp"
+                        android:scaleType="fitXY" />
 
                     <TextView
                         android:id="@+id/txtvTitleExpanded"
@@ -65,9 +63,9 @@
                         android:layout_marginTop="8dp"
                         android:layout_toRightOf="@id/imgvCoverExpanded"
                         android:ellipsize="end"
+                        android:fontFamily="sans-serif-condensed"
                         android:maxLines="2"
-                        android:textSize="18sp"
-                        android:fontFamily="sans-serif-condensed"/>
+                        android:textSize="18sp" />
                 </RelativeLayout>
             </RelativeLayout>
         </LinearLayout>
@@ -88,18 +86,18 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="?attr/borderless_button">
+                    android:background="?attr/selectableItemBackground">
 
                     <ImageView
                         android:id="@+id/imgvCoverAnchored"
-                        android:contentDescription="@string/cover_label"
                         android:layout_width="@dimen/external_player_height"
                         android:layout_height="@dimen/external_player_height"
-                        android:padding="4dp"
                         android:layout_alignParentLeft="true"
                         android:adjustViewBounds="true"
+                        android:contentDescription="@string/cover_label"
                         android:cropToPadding="true"
-                        android:scaleType="fitXY"/>
+                        android:padding="4dp"
+                        android:scaleType="fitXY" />
 
                     <TextView
                         android:id="@+id/txtvTitleAnchored"
@@ -111,17 +109,17 @@
                         android:layout_marginTop="8dp"
                         android:layout_toRightOf="@id/imgvCoverAnchored"
                         android:ellipsize="end"
+                        android:fontFamily="sans-serif-condensed"
                         android:maxLines="2"
-                        android:textSize="18sp"
-                        android:fontFamily="sans-serif-condensed"/>
+                        android:textSize="18sp" />
                 </RelativeLayout>
 
                 <ImageButton
                     android:id="@+id/butPlayAnchored"
-                    android:contentDescription="@string/pause_label"
                     android:layout_width="@dimen/external_player_height"
                     android:layout_height="@dimen/external_player_height"
-                    android:background="?attr/borderless_button"/>
+                    android:background="?attr/selectableItemBackground"
+                    android:contentDescription="@string/pause_label" />
             </LinearLayout>
 
         </LinearLayout>
@@ -131,13 +129,13 @@
         android:layout_width="match_parent"
         android:layout_height="1.5dp"
         android:layout_below="@id/top_layout"
-        android:background="#AAAAAA"/>
+        android:background="#AAAAAA" />
 
     <RelativeLayout
-        android:clickable="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/top_layout">
+        android:layout_below="@id/top_layout"
+        android:clickable="true">
 
 
         <RelativeLayout
@@ -149,50 +147,66 @@
 
             <ImageButton
                 android:id="@+id/butPlayExpanded"
-                android:contentDescription="@string/pause_label"
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:layout_centerHorizontal="true"
-                android:background="?attr/borderless_button"
-                android:src="?attr/av_pause"/>
+                android:background="?attr/selectableItemBackground"
+                android:contentDescription="@string/pause_label"
+                android:src="?attr/av_pause" />
 
             <ImageButton
                 android:id="@+id/butRevExpanded"
-                android:contentDescription="@string/rewind_label"
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:layout_toLeftOf="@id/butPlayExpanded"
-                android:background="?attr/borderless_button"
-                android:src="?attr/av_rewind"/>
+                android:background="?attr/selectableItemBackground"
+                android:contentDescription="@string/rewind_label"
+                android:src="?attr/av_rewind" />
 
             <ImageButton
                 android:id="@+id/butShowChapters"
-                android:contentDescription="@string/show_chapters_label"
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:layout_toLeftOf="@id/butRevExpanded"
-                android:background="?attr/borderless_button"
-                android:src="?attr/navigation_chapters"/>
+                android:background="?attr/selectableItemBackground"
+                android:contentDescription="@string/show_chapters_label"
+                android:src="?attr/navigation_chapters" />
 
             <ImageButton
                 android:id="@+id/butFFExpanded"
-                android:contentDescription="@string/fast_forward_label"
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:layout_toRightOf="@id/butPlayExpanded"
-                android:background="?attr/borderless_button"
-                android:src="?attr/av_fast_forward"/>
+                android:background="?attr/selectableItemBackground"
+                android:contentDescription="@string/fast_forward_label"
+                android:src="?attr/av_fast_forward" />
 
-            <Button
-                android:id="@+id/butSleep"
-                android:contentDescription="@string/sleep_timer_label"
+            <LinearLayout
                 android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_height="64dp"
+                android:layout_alignParentTop="true"
                 android:layout_toRightOf="@id/butFFExpanded"
-                android:gravity="center_horizontal|bottom"
-                android:background="?attr/sleeptimer_drawable"
-                android:textColor="?android:attr/textColorSecondary"
-                android:textSize="@dimen/text_size_micro"/>
+                android:background="?attr/selectableItemBackground"
+                android:orientation="vertical">
+
+                <ImageButton
+                    android:id="@+id/butSleep"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:contentDescription="@string/sleep_timer_label"
+                    android:src="?attr/device_access_time" />
+
+                <TextView
+                    android:id="@+id/txtvSleepTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="@dimen/text_size_micro" />
+            </LinearLayout>
 
         </RelativeLayout>
 
@@ -214,7 +228,7 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/position_default_label"
                 android:textColor="?android:attr/textColorSecondary"
-                android:textSize="@dimen/text_size_micro"/>
+                android:textSize="@dimen/text_size_micro" />
 
 
             <TextView
@@ -228,7 +242,7 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/position_default_label"
                 android:textColor="?android:attr/textColorSecondary"
-                android:textSize="@dimen/text_size_micro"/>
+                android:textSize="@dimen/text_size_micro" />
 
 
             <SeekBar
@@ -241,24 +255,24 @@
                 android:layout_marginTop="16dp"
                 android:layout_toLeftOf="@id/txtvLengthExpanded"
                 android:layout_toRightOf="@id/txtvPositionExpanded"
-                android:max="500"/>
+                android:max="500" />
 
         </RelativeLayout>
 
         <LinearLayout
-            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_above="@id/playtime_layout"
             android:layout_alignParentTop="true"
-            android:clickable="true"
-            android:layout_marginTop="1.5dp">
+            android:layout_marginTop="1.5dp"
+            android:background="@color/white"
+            android:clickable="true">
 
             <WebView
                 android:id="@+id/webvDescription"
-                android:background="@color/white"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:background="@color/white" />
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

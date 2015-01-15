@@ -2,7 +2,11 @@ package de.danoeh.antennapodsp.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,9 +15,11 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import de.danoeh.antennapodsp.BuildConfig;
-import de.danoeh.antennapodsp.R;
-import de.danoeh.antennapodsp.adapter.EpisodesListAdapter;
+
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
+
 import de.danoeh.antennapod.core.asynctask.DownloadObserver;
 import de.danoeh.antennapod.core.dialog.DownloadRequestErrorDialogCreator;
 import de.danoeh.antennapod.core.feed.EventDistributor;
@@ -27,9 +33,9 @@ import de.danoeh.antennapod.core.storage.DBReader;
 import de.danoeh.antennapod.core.storage.DBTasks;
 import de.danoeh.antennapod.core.storage.DownloadRequestException;
 import de.danoeh.antennapod.core.storage.DownloadRequester;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.List;
+import de.danoeh.antennapodsp.BuildConfig;
+import de.danoeh.antennapodsp.R;
+import de.danoeh.antennapodsp.adapter.EpisodesListAdapter;
 
 public class EpisodesFragment extends ListFragment {
     private static final String TAG = "EpisodesFragment";
