@@ -5,7 +5,7 @@
         android:id="@+id/all_feed_refresh"
         android:title="@string/refresh_label"
         android:icon="?attr/navigation_refresh"
-        custom:showAsAction="ifRoom|collapseActionView">
+        custom:showAsAction="ifRoom">
     </item>
     <item
         android:id="@+id/about_item"

@@ -19,6 +19,7 @@ import android.view.Window;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import de.danoeh.antennapod.core.feed.EventDistributor;
+import de.danoeh.antennapod.core.menuhandler.MenuItemUtils;
 import de.danoeh.antennapod.core.preferences.UserPreferences;
 import de.danoeh.antennapod.core.service.download.DownloadService;
 import de.danoeh.antennapod.core.storage.DBTasks;
@@ -45,6 +46,8 @@ public class MainActivity extends ActionBarActivity {
 
     private SlidingUpPanelLayout slidingUpPanelLayout;
     private ExternalPlayerFragment externalPlayerFragment;
+
+    private boolean isUpdatingFeeds;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -110,7 +113,6 @@ public class MainActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
         StorageUtils.checkStorageAvailability(this);
-        updateProgressBarVisibility();
         EventDistributor.getInstance().register(contentUpdate);
 
     }
@@ -122,20 +124,19 @@ public class MainActivity extends ActionBarActivity {
             if ((EVENTS & arg) != 0) {
                 if (BuildConfig.DEBUG)
                     Log.d(TAG, "Received contentUpdate Intent.");
-                updateProgressBarVisibility();
+                if (isUpdatingFeeds != updateChecker.isRefreshing()) {
+                    supportInvalidateOptionsMenu();
+                }
             }
         }
     };
 
-    private void updateProgressBarVisibility() {
-        if (DownloadService.isRunning
-                && DownloadRequester.getInstance().isDownloadingFeeds()) {
-            setSupportProgressBarIndeterminateVisibility(true);
-        } else {
-            setSupportProgressBarIndeterminateVisibility(false);
+    private static final MenuItemUtils.UpdateRefreshMenuItemChecker updateChecker = new MenuItemUtils.UpdateRefreshMenuItemChecker() {
+        @Override
+        public boolean isRefreshing() {
+            return DownloadService.isRunning && DownloadRequester.getInstance().isDownloadingFeeds();
         }
-        supportInvalidateOptionsMenu();
-    }
+    };
 
     private SlidingUpPanelLayout.PanelSlideListener panelSlideListener = new SlidingUpPanelLayout.PanelSlideListener() {
 
@@ -209,19 +210,14 @@ public class MainActivity extends ActionBarActivity {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
+
+        isUpdatingFeeds = MenuItemUtils.updateRefreshMenuItem(menu, R.id.all_feed_refresh, updateChecker);
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        MenuItem refreshAll = menu.findItem(R.id.all_feed_refresh);
-        if (DownloadService.isRunning
-                && DownloadRequester.getInstance().isDownloadingFeeds()) {
-            refreshAll.setVisible(false);
-        } else {
-            refreshAll.setVisible(true);
-        }
         return true;
     }
 
