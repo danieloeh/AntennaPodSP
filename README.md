@@ -45,7 +45,17 @@ Since a single-purpose app are supposed to attract *new* podcast listeners, ther
 
 ## Who is using AntennaPod SP?
 
-So far, the app for listening to the [Einschlafen Podcast](http://einschlafen-podcast.de/) is based on AntennaPod SP. Its source code can be found [here](https://github.com/danieloeh/EinschlafenPodcastAndroidApp).
+Here are some apps that are based on AntennaPod SP:
+
+- [Einschlafen Podcast](https://play.google.com/store/apps/details?id=de.danoeh.antennapodsp.einschlafenpodcast) ([Source](https://github.com/danieloeh/EinschlafenPodcastAndroidApp))
+- [Sternengeschichten](https://play.google.com/store/apps/details?id=de.danoeh.antennapodsp.sternengeschichten)
+- [Culinaricast](https://play.google.com/store/apps/details?id=de.danoeh.antennapodsp.culinaricast)
+- [Das tägliche Wort](https://play.google.com/store/apps/details?id=de.danoeh.antennapodsp.daswort)
+- [BredowCast](https://play.google.com/store/apps/details?id=de.danoeh.antennapodsp.bredowcast)
+- [Wrint](https://play.google.com/store/apps/details?id=de.danoeh.antennapodsp.wrint)
+- [Hitmist Germany](https://play.google.com/store/apps/details?id=de.danoeh.antennapodsp.hitmist)
+- [PresseSchall](https://play.google.com/store/apps/details?id=de.danoeh.antennapodsp.presseschall)
+- [Space Rocket History](https://play.google.com/store/apps/details?id=de.danoeh.antennapodsp.spacerockethistory)
 
 
 ## How do i build an app for my podcasts that is based on AntennaPod SP?
