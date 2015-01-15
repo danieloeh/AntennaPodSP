@@ -50,6 +50,8 @@ public class AppPreferences {
     public long episodeCacheSize = 300 * 1024 * 1024;
     public boolean pauseForFocusLoss = true;
     public int numberOfNewAutomaticallyDownloadedEpisodes = 1;
+    public boolean expandNotification = false;
+    public boolean persistentNotification = false;
 
 
     /**
