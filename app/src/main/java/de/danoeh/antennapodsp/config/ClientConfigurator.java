@@ -14,5 +14,6 @@ public class ClientConfigurator {
         ClientConfig.gpodnetCallbacks = new GpodnetCallbacksImpl();
         ClientConfig.playbackServiceCallbacks = new PlaybackServiceCallbacksImpl();
         ClientConfig.applicationCallbacks = new ApplicationCallbacksImpl();
+        ClientConfig.dbTasksCallbacks = new DBTasksCallbacksImpl();
     }
 }
