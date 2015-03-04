@@ -33,8 +33,6 @@ import static de.danoeh.antennapod.core.preferences.UserPreferences.PREF_EPISODE
 import static de.danoeh.antennapod.core.preferences.UserPreferences.PREF_MOBILE_UPDATE;
 import static de.danoeh.antennapod.core.preferences.UserPreferences.PREF_PAUSE_ON_HEADSET_DISCONNECT;
 import static de.danoeh.antennapod.core.preferences.UserPreferences.PREF_PAUSE_PLAYBACK_FOR_FOCUS_LOSS;
-import static de.danoeh.antennapod.core.preferences.UserPreferences.PREF_EXPANDED_NOTIFICATION;
-import static de.danoeh.antennapod.core.preferences.UserPreferences.PREF_PERSISTENT_NOTIFICATION;
 
 /**
  * The AppInitializer processes the preferences that were specified in AppPreferences.
@@ -45,6 +43,9 @@ public class AppInitializer {
     private static final String PREFS_APP_INITIALIZER = "PrefAppInit";
     private static final String PREF_IS_FIRST_LAUNCH = "prefIsFirstLaunch";
     private static final String PREF_PREF_VERSION_NUMBER = "prefPrefVersionNumber";
+
+  private static final String PREF_EXPANDED_NOTIFICATION = "prefExpandNotify";
+  private static final String PREF_PERSISTENT_NOTIFICATION = "prefPersistNotify";
 
     public static void initializeApp(Context context) throws ExecutionException, InterruptedException, InitializerException {
         if (context == null) throw new IllegalArgumentException("context = null");
