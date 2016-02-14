@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.13.3'
+        classpath 'com.android.tools.build:gradle:1.5.0'
     }
 }
 apply plugin: 'com.android.application'
@@ -74,8 +74,8 @@ android {
             applicationIdSuffix ".debug"
         }
         release {
-            runProguard true
-            proguardFile 'proguard.cfg'
+            // runProguard true
+            // proguardFile 'proguard.cfg'
             signingConfig signingConfigs.releaseConfig
         }
     }
