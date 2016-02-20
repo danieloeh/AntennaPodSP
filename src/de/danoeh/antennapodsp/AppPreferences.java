@@ -47,7 +47,7 @@ public class AppPreferences {
     public boolean downloadMediaOnWifiOnly = true;
     public boolean allowMobileUpdates = false;
     public boolean enableAutodownload = true;
-    public long episodeCacheSize = 300 * 1024 * 1024;
+    public long episodeCacheSize = 150 * 1024 * 1024;
     public boolean pauseForFocusLoss = true;
     public int numberOfNewAutomaticallyDownloadedEpisodes = 1;
 
